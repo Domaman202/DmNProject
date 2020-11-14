@@ -63,10 +63,19 @@ open class DmNPVM
     }
 }
 
-open class DmNPVMInterpreter: DmNPVM()
+open class DmNPVMInterpreter : DmNPVM
 {
     var e: Boolean = true
+    var eStack: Stack<Throwable>? = null
     var um: Boolean = false
+
+    constructor() : super()
+    constructor(e: Boolean) : super()
+    {
+        this.e = e
+        if (e)
+            eStack = Stack()
+    }
 
     fun parse(code: ArrayList<Any?>) {
         val codeIterator = code.listIterator()

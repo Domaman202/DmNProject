@@ -136,36 +136,43 @@ class OpCodeManager {
                     val n = vm.stack.pop() as ArrayList<String>
                     val o = DmNPUtils.findElement(vm, n)
                     if (o != null && o.value != null) {
-                        (o.value as (vm: DmNPVM, c: ArrayList<Any?>, ci: ListIterator<Any?>) -> Unit)(vm, c, ci)
+                        if (vm.e) {
+                            try {
+                                (o.value as (vm: DmNPVM, c: ArrayList<Any?>, ci: ListIterator<Any?>) -> Unit)(vm, c, ci)
+                            } catch (e: Throwable) {
+                                if (vm.e)
+                                    vm.stack.push(e)
+                            }
+                        } else (o.value as (vm: DmNPVM, c: ArrayList<Any?>, ci: ListIterator<Any?>) -> Unit)(vm, c, ci)
+                    } else if (vm.e) {
+                        if (o == null)
+                            vm.eStack!!.push(ObjectNullPointerException(n[n.size]))
+                        else
+                            vm.eStack!!.push(ObjectValueNullPointerException(n[n.size]))
                     }
                 } // ISK
                 OpCodes.UnsafeInvokeKotlin -> {
                     val n = vm.stack.pop() as ArrayList<String>
-                    val o = DmNPUtils.findElement(vm, n)
-                    if (o != null && o.value != null) {
-                        try {
-                            (o.value as (vm: DmNPVM, c: ArrayList<Any?>, ci: ListIterator<Any?>) -> Unit)(vm, c, ci)
-                        } catch (e: Throwable) {
-                            vm.stack.push(e)
-                        }
-                    } else if (vm.e) {
-                        if (o == null) {
-                            vm.stack.push(ObjectNotFoundedException(n.toTypedArray()))
-                        } else if (o.value == null) {
-                            vm.stack.push(ObjectValueNullPointerException(n.get(n.size)))
-                        }
-                    }
+                    (DmNPUtils.findElement(vm, n) as (vm: DmNPVM, c: ArrayList<Any?>, ci: ListIterator<Any?>) -> Unit)(vm, c, ci)
                 } // UIK
                 OpCodes.InvokeVirtualStatic -> {
-                    val m = DmNPUtils.findElement(vm, vm.stack.pop() as ArrayList<String>)
+                    val n = vm.stack.pop() as ArrayList<String>
+                    val m = DmNPUtils.findElement(vm, n)
                     if (m != null) {
                         val m_vm = DmNPVMInterpreter()
                         m_vm.add_prev_vm(vm)
                         vm.add_next_vm(m_vm)
 
-                        m_vm.parse(m.value as ArrayList<Any?>)
+                        val v = m.value as ArrayList<Any?>
+                        if (v != null)
+                            m_vm.parse(v)
+                        else if (vm.e) {
+                            vm.eStack!!.push(ObjectValueNullPointerException(m.name))
+                        }
 
                         vm.remove_next_vm(m_vm)
+                    } else if (vm.e) {
+                        vm.eStack!!.push(ObjectNullPointerException(n[n.size]))
                     }
                 } // IS
                 OpCodes.UnsafeInvokeVirtual -> {
