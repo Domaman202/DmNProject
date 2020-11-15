@@ -86,18 +86,39 @@ open class DmNPData
     var name: String
     var type: DmNPType
     var modifiers: List<DmNPModifiers>
-
     open var value: Any? = null
-
     var reference: DmNPDataArray
+
     // Constructors
+    /**
+     * @param name Имя обьекта
+     * @param type Тип обьекта
+     */
     constructor(name: String, type: DmNPType) {
         this.name = name
         this.type = type
         this.reference = DmNPDataArray()
         this.modifiers = ArrayList()
     }
+
+    /**
+     * @param name Имя обьекта
+     * @param type Тип обьекта
+     * @param modifiers Модификаторы обьекта
+     */
+    constructor(name: String, type: DmNPType, modifiers: List<DmNPModifiers>)
+    {
+        this.name = name
+        this.type = type
+        this.reference = DmNPDataArray()
+        this.modifiers = modifiers
+    }
+
     // Functions
+    /**
+     * Добавляет ссылку в список ссылок, если такового нет то создаёт его с последующим добавлением ссылки
+     * @param r Ссылка которую вы желаете добавить
+     */
     fun addReference(r: DmNPData) {
         if (reference == null)
             reference = DmNPDataArray()

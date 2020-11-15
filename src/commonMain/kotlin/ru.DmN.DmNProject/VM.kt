@@ -2,6 +2,7 @@ package ru.DmN.DmNProject
 
 /**
  * @author  DomamaN202
+ * @since 1.0
  */
 open class DmNPVM
 {
@@ -68,6 +69,7 @@ open class DmNPVM
 
 /**
  * @author  DomamaN202
+ * @since 1.0
  */
 open class DmNPVMInterpreter : DmNPVM
 {
@@ -96,6 +98,7 @@ open class DmNPVMInterpreter : DmNPVM
 
 /**
  * @author  DomamaN202
+ * @since 1.0
  */
 class DmNPUtils
 {
