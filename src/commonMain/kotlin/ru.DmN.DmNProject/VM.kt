@@ -13,6 +13,9 @@ open class DmNPVM
     var stack:   Stack<Any>
     var heap:    DmNPDataArray
 
+    /**
+     * Стандартный конструктор, создаёт полностью новый обьект
+     */
     constructor() {
         stack   = Stack()
         heap    = DmNPDataArray()
@@ -21,6 +24,9 @@ open class DmNPVM
         next = ArrayList()
     }
 
+    /**
+     * Конструктор, но поля для обьекта задаёт пользыватель
+     */
     constructor(stack: Stack<Any>, heap: DmNPDataArray, prev: ArrayList<DmNPVM>, next: ArrayList<DmNPVM>) {
         this.stack  = stack
         this.heap   = heap
@@ -29,6 +35,21 @@ open class DmNPVM
         this.next = next
     }
 
+    /**
+     * Клонирует обект
+     *
+     * @param vm обьект который будем клонировать
+     */
+    constructor(vm: DmNPVM) {
+        this.stack  = vm.stack
+        this.heap   = vm.heap
+        this.prev   = vm.prev
+        this.next   = vm.next
+    }
+
+    /**
+     * Инициализатор виртуальной машины
+     */
     fun init() {
         // Package_System
         val Package_System = DmNPData("System", DmNPType.PACKAGE)
@@ -49,21 +70,6 @@ open class DmNPVM
         Method_WriteLine.reference.add(Class_Console)
         Method_WriteLine.value = fun(vm: DmNPVM, c: ArrayList<Any?>, ci: ListIterator<Any?>) { println(vm.stack.pop()) }
         Class_Console_Data.add(Method_WriteLine)
-    }
-
-    //
-    fun add_prev_vm(vm: DmNPVM) {
-        prev.add(vm)
-    }
-    fun add_next_vm(vm: DmNPVM) {
-        next.add(vm)
-    }
-
-    fun remove_prev_vm(vm: DmNPVM) {
-        prev.remove(vm)
-    }
-    fun remove_next_vm(vm: DmNPVM) {
-        next.remove(vm)
     }
 }
 

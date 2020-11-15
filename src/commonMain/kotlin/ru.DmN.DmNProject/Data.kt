@@ -6,17 +6,17 @@ package ru.DmN.DmNProject
 open class DmNPDataArray: MutableMap<String, DmNPData>
 {
     // Fields
-    var DM: HashMap<String, DmNPData>
+    var dataMap: HashMap<String, DmNPData>
 
     // Constructors
     constructor() {
-        DM = HashMap()
+        dataMap = HashMap()
     }
     constructor(size: Int) {
-        DM = HashMap(size)
+        dataMap = HashMap(size)
     }
     constructor(data: Map<String, DmNPData>) {
-        DM = data as HashMap<String, DmNPData>
+        dataMap = data as HashMap<String, DmNPData>
     }
 
     // Methods
@@ -27,27 +27,27 @@ open class DmNPDataArray: MutableMap<String, DmNPData>
     }
 
     fun add(data: DmNPData) {
-        DM[data.name] = data
+        dataMap[data.name] = data
     }
 
     // From map
     override val size
-        get() = DM.size
-    override fun isEmpty(): Boolean = DM.isEmpty()
-    override fun containsKey(key: String): Boolean = DM.containsKey(key)
-    override fun containsValue(value: @UnsafeVariance DmNPData): Boolean = DM.containsValue(value)
-    override operator fun get(key: String): DmNPData? = DM[key]
+        get() = dataMap.size
+    override fun isEmpty(): Boolean = dataMap.isEmpty()
+    override fun containsKey(key: String): Boolean = dataMap.containsKey(key)
+    override fun containsValue(value: @UnsafeVariance DmNPData): Boolean = dataMap.containsValue(value)
+    override operator fun get(key: String): DmNPData? = dataMap[key]
     // From MutableMap
-    override fun put(key: String, value: DmNPData): DmNPData? = DM.put(key, value)
-    override fun remove(key: String): DmNPData? = DM.remove(key)
-    override fun putAll(from: Map<out String, DmNPData>) = DM.putAll(from)
-    override fun clear() = DM.clear()
+    override fun put(key: String, value: DmNPData): DmNPData? = dataMap.put(key, value)
+    override fun remove(key: String): DmNPData? = dataMap.remove(key)
+    override fun putAll(from: Map<out String, DmNPData>) = dataMap.putAll(from)
+    override fun clear() = dataMap.clear()
     override val keys: MutableSet<String>
-        get() = DM.keys
+        get() = dataMap.keys
     override val values: MutableCollection<DmNPData>
-        get() = DM.values
+        get() = dataMap.values
     override val entries: MutableSet<MutableMap.MutableEntry<String, DmNPData>>
-        get() = DM.entries
+        get() = dataMap.entries
 }
 
 /**
@@ -112,17 +112,6 @@ open class DmNPData
         this.type = type
         this.reference = DmNPDataArray()
         this.modifiers = modifiers
-    }
-
-    // Functions
-    /**
-     * Добавляет ссылку в список ссылок, если такового нет то создаёт его с последующим добавлением ссылки
-     * @param r Ссылка которую вы желаете добавить
-     */
-    fun addReference(r: DmNPData) {
-        if (reference == null)
-            reference = DmNPDataArray()
-        reference.add(r)
     }
 }
 

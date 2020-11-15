@@ -5,12 +5,18 @@ package ru.DmN.DmNProject
  */
 class OpCodeManager {
     companion object {
-        @Suppress("NON_EXHAUSTIVE_WHEN")
+        @Suppress("NON_EXHAUSTIVE_WHEN", "UNCHECKED_CAST")
         fun parse(oc: OpCodes, vm: DmNPVMInterpreter, c: ArrayList<Any?>, ci: ListIterator<*>) {
             when(oc) {
                 OpCodes.LoadConstant -> {
                     vm.stack.push(ci.next()!!)
                 } // LC
+                OpCodes.LoadException -> {
+                    if (vm.e)
+                        vm.eStack!!.push(ci.next()!! as Throwable)
+                    else
+                        ci.next()
+                } // LE
                 OpCodes.CloneStackElement -> {
                     vm.stack.push(vm.stack.peek()!!)
                 } // CSE
@@ -24,7 +30,8 @@ class OpCodeManager {
                                 le = vm.heap[ns[i]]
                             } else {
                                 le = DmNPData(ns[i], DmNPType.PACKAGE)
-                                le.addReference(vm.heap.DmNPData())
+//                                le.addReference(vm.heap.DmNPData())
+                                le.reference.add(vm.heap.DmNPData())
                                 le.value = DmNPDataArray()
                                 vm.stack.push(le)
                             }
@@ -34,7 +41,8 @@ class OpCodeManager {
                                 d[ns[i]]
                             } else {
                                 val ne = DmNPData(ns[i], DmNPType.PACKAGE)
-                                ne.addReference(le)
+//                                ne.addReference(le)
+                                ne.reference.add(le)
                                 ne.value = DmNPDataArray()
                                 d.add(ne)
                                 ne
@@ -72,7 +80,8 @@ class OpCodeManager {
                             (r.value as DmNPDataArray).remove(n)
                         val clss = DmNPDataObject(n, DmNPType.CLASS)
                         clss.modifiers = m
-                        clss.addReference(r)
+//                        clss.addReference(r)
+                        clss.reference.add(r)
                         (r.value as DmNPDataArray).add(clss)
                         vm.stack.push(clss)
                     } else if (r.type == DmNPType.CLASS || r.type == DmNPType.OBJECT) {
@@ -82,7 +91,8 @@ class OpCodeManager {
                             r.fm.remove(n)
                         val clss = DmNPDataObject(n, DmNPType.CLASS)
                         clss.modifiers = m
-                        clss.addReference(r)
+//                        clss.addReference(r)
+                        clss.reference.add(r)
                         r.fm.add(clss)
                         vm.stack.push(clss)
                     }
@@ -97,7 +107,8 @@ class OpCodeManager {
 
                     val method = DmNPDataObject(n, DmNPType.METHOD)
                     method.modifiers = m
-                    method.addReference(r)
+//                    method.addReference(r)
+                    method.reference.add(r)
 
                     r.fm.add(method)
                     vm.stack.push(method)
@@ -138,20 +149,28 @@ class OpCodeManager {
                 OpCodes.InvokeStaticKotlin -> {
                     val n = vm.stack.pop() as ArrayList<String>
                     val o = DmNPUtils.findElement(vm, n)
-                    if (o != null && o.value != null) {
+                    if (o?.value != null) {
                         if (vm.e) {
-                            try {
-                                (o.value as (vm: DmNPVM, c: ArrayList<Any?>, ci: ListIterator<Any?>) -> Unit)(vm, c, ci)
-                            } catch (e: Throwable) {
-                                if (vm.e)
-                                    vm.stack.push(e)
-                            }
-                        } else (o.value as (vm: DmNPVM, c: ArrayList<Any?>, ci: ListIterator<Any?>) -> Unit)(vm, c, ci)
+                            if (o.modifiers.contains(DmNPModifiers.STATIC)) {
+                                try {
+                                    (o.value as (vm: DmNPVM, c: ArrayList<Any?>, ci: ListIterator<Any?>) -> Unit)(
+                                        vm,
+                                        c,
+                                        ci
+                                    )
+                                } catch (e: Throwable) {
+                                    if (vm.e)
+                                        vm.eStack!!.push(e)
+                                }
+                            } else
+                                vm.eStack!!.push(ObjectNoStaticException())
+                        } else
+                            (o.value as (vm: DmNPVM, c: ArrayList<Any?>, ci: ListIterator<Any?>) -> Unit)(vm, c, ci)
                     } else if (vm.e) {
                         if (o == null)
-                            vm.eStack!!.push(ObjectNullPointerException(n[n.size]))
+                            vm.eStack!!.push(ObjectNullPointerException())
                         else
-                            vm.eStack!!.push(ObjectValueNullPointerException(n[n.size]))
+                            vm.eStack!!.push(ObjectValueNullPointerException())
                     }
                 } // ISK
                 OpCodes.UnsafeInvokeKotlin -> {
@@ -162,32 +181,40 @@ class OpCodeManager {
                     val n = vm.stack.pop() as ArrayList<String>
                     val m = DmNPUtils.findElement(vm, n)
                     if (m != null) {
-                        val m_vm = DmNPVMInterpreter()
-                        m_vm.add_prev_vm(vm)
-                        vm.add_next_vm(m_vm)
+                        if (vm.e && m.modifiers.contains(DmNPModifiers.STATIC)) {
+                            val m_vm = DmNPVMInterpreter()
+//                        m_vm.add_prev_vm(vm)
+                            m_vm.prev.add(vm)
+//                        vm.add_next_vm(m_vm)
+                            vm.next.add(m_vm)
 
-                        val v = m.value as ArrayList<Any?>
-                        if (v != null)
-                            m_vm.parse(v)
-                        else if (vm.e) {
-                            vm.eStack!!.push(ObjectValueNullPointerException(m.name))
-                        }
+                            if (m.value is ArrayList<*>) {
+                                val v = m.value as ArrayList<Any?>
+                                m_vm.parse(v)
+                            } else if (vm.e)
+                                vm.eStack!!.push(ObjectValueNullPointerException())
 
-                        vm.remove_next_vm(m_vm)
+//                        vm.remove_next_vm(m_vm)
+                            vm.next.remove(m_vm)
+                        } else if (vm.e)
+                            vm.eStack!!.push(ObjectNoStaticException())
                     } else if (vm.e) {
-                        vm.eStack!!.push(ObjectNullPointerException(n[n.size]))
+                        vm.eStack!!.push(ObjectNullPointerException())
                     }
                 } // IS
                 OpCodes.UnsafeInvokeVirtual -> {
                     val m = DmNPUtils.findElement(vm, vm.stack.pop() as ArrayList<String>)
                     if (m != null) {
-                        val m_vm = DmNPVMInterpreter()
-                        m_vm.add_prev_vm(vm)
-                        vm.add_next_vm(m_vm)
+                        val mVM = DmNPVMInterpreter()
+//                        m_vm.add_prev_vm(vm)
+                        mVM.prev.add(vm)
+//                        vm.add_next_vm(m_vm)
+                        vm.next.add(mVM)
 
-                        m_vm.parse(m.value as ArrayList<Any?>)
+                        mVM.parse(m.value as ArrayList<Any?>)
 
-                        vm.remove_next_vm(m_vm)
+//                        vm.remove_next_vm(m_vm)
+                        vm.next.remove(mVM)
                     }
                 } // UIV
                 else -> throw OpCodeNotFoundedException()
@@ -201,6 +228,7 @@ class OpCodeManager {
  */
 enum class OpCodes {
     LoadConstant,
+    LoadException,
     CloneStackElement,
     CreatePackage,
     CreateClass,
