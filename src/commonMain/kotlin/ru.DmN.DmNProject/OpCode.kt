@@ -1,5 +1,8 @@
 package ru.DmN.DmNProject
 
+/**
+ * @author  DomamaN202
+ */
 class OpCodeManager {
     companion object {
         @Suppress("NON_EXHAUSTIVE_WHEN")
@@ -193,6 +196,9 @@ class OpCodeManager {
     }
 }
 
+/**
+ * @author  DomamaN202
+ */
 enum class OpCodes {
     LoadConstant,
     CloneStackElement,

@@ -1,5 +1,8 @@
 package ru.DmN.DmNProject
 
+/**
+ * @author  DomamaN202
+ */
 open class DmNPDataArray: MutableMap<String, DmNPData>
 {
     // Fields
@@ -47,6 +50,9 @@ open class DmNPDataArray: MutableMap<String, DmNPData>
         get() = DM.entries
 }
 
+/**
+ * @author  DomamaN202
+ */
 class DmNPDataObject: DmNPData
 {
     // Fields and methods
@@ -72,6 +78,9 @@ class DmNPDataObject: DmNPData
     }
 }
 
+/**
+ * @author  DomamaN202
+ */
 open class DmNPData
 {
     var name: String
@@ -96,6 +105,9 @@ open class DmNPData
     }
 }
 
+/**
+ * @author  DomamaN202
+ */
 enum class DmNPType
 {
     NULL,
@@ -109,6 +121,9 @@ enum class DmNPType
     PACKAGE
 }
 
+/**
+ * @author  DomamaN202
+ */
 enum class DmNPModifiers
 {
     // Access
@@ -141,6 +156,9 @@ class Stack<T> {
     override fun toString(): String = elements.toString()
 }
 
+/**
+ * @author DomamaN202
+ */
 interface IDmNPFunction
 {
     fun run(vm: DmNPVM, o: DmNPData, c: ArrayList<Any?>, ci: ListIterator<Any?>): Unit

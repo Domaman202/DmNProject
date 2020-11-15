@@ -1,6 +1,10 @@
 import ru.DmN.DmNProject.*
 import kotlin.test.Test
 
+/**
+ * @author DomamaN202
+ * <p>Это примеры-тесты использования DomamaNProject
+ */
 class testing
 {
     @Test

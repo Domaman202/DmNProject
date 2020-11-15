@@ -1,5 +1,8 @@
 package ru.DmN.DmNProject
 
+/**
+ * @author  DomamaN202
+ */
 open class DmNPVM
 {
     var instance:    DmNPVM  = this
@@ -63,6 +66,9 @@ open class DmNPVM
     }
 }
 
+/**
+ * @author  DomamaN202
+ */
 open class DmNPVMInterpreter : DmNPVM
 {
     var e: Boolean = true
@@ -88,6 +94,9 @@ open class DmNPVMInterpreter : DmNPVM
     }
 }
 
+/**
+ * @author  DomamaN202
+ */
 class DmNPUtils
 {
     companion object {
