@@ -178,42 +178,49 @@ class OpCodeManager {
                     (DmNPUtils.findElement(vm, n) as (vm: DmNPVM, c: ArrayList<Any?>, ci: ListIterator<Any?>) -> Unit)(vm, c, ci)
                 } // UIK
                 OpCodes.InvokeVirtualStatic -> {
-                    val n = vm.stack.pop() as ArrayList<String>
-                    val m = DmNPUtils.findElement(vm, n)
-                    if (m != null) {
-                        if (vm.e && m.modifiers.contains(DmNPModifiers.STATIC)) {
-                            val m_vm = DmNPVMInterpreter()
-//                        m_vm.add_prev_vm(vm)
-                            m_vm.prev.add(vm)
-//                        vm.add_next_vm(m_vm)
-                            vm.next.add(m_vm)
+                    if (vm.e) {
+                        val n = vm.stack.pop() as ArrayList<String>
+                        val m = DmNPUtils.findElement(vm, n)
+                        if (m != null) {
+                            if (vm.e && m.modifiers.contains(DmNPModifiers.STATIC)) {
+                                val m_vm = DmNPVMInterpreter()
+                                m_vm.prev.add(vm)
+                                vm.next.add(m_vm)
 
-                            if (m.value is ArrayList<*>) {
-                                val v = m.value as ArrayList<Any?>
-                                m_vm.parse(v)
+                                if (m.value is ArrayList<*>) {
+                                    val v = m.value as ArrayList<Any?>
+                                    m_vm.parse(v)
+                                } else if (vm.e)
+                                    vm.eStack!!.push(ObjectValueNullPointerException())
+
+                                vm.next.remove(m_vm)
                             } else if (vm.e)
-                                vm.eStack!!.push(ObjectValueNullPointerException())
+                                vm.eStack!!.push(ObjectNoStaticException())
+                        } else if (vm.e) {
+                            vm.eStack!!.push(ObjectNullPointerException())
+                        }
+                    } else {
+                        val m = DmNPUtils.findElement(vm, vm.stack.pop() as ArrayList<String>)
+                        if (m != null) {
+                            val mVM = DmNPVMInterpreter()
+                            mVM.prev.add(vm)
+                            vm.next.add(mVM)
 
-//                        vm.remove_next_vm(m_vm)
-                            vm.next.remove(m_vm)
-                        } else if (vm.e)
-                            vm.eStack!!.push(ObjectNoStaticException())
-                    } else if (vm.e) {
-                        vm.eStack!!.push(ObjectNullPointerException())
+                            mVM.parse(m.value as ArrayList<Any?>)
+
+                            vm.next.remove(mVM)
+                        }
                     }
-                } // IS
+                } // IVS
                 OpCodes.UnsafeInvokeVirtual -> {
                     val m = DmNPUtils.findElement(vm, vm.stack.pop() as ArrayList<String>)
                     if (m != null) {
                         val mVM = DmNPVMInterpreter()
-//                        m_vm.add_prev_vm(vm)
                         mVM.prev.add(vm)
-//                        vm.add_next_vm(m_vm)
                         vm.next.add(mVM)
 
                         mVM.parse(m.value as ArrayList<Any?>)
 
-//                        vm.remove_next_vm(m_vm)
                         vm.next.remove(mVM)
                     }
                 } // UIV
