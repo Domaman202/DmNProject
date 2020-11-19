@@ -96,9 +96,169 @@ open class DmNPVMInterpreter : DmNPVM
 
         while (codeIterator.hasNext()) {
             val codeLine = codeIterator.next()
-            if (codeLine is OpCodes)
+            if (codeLine is IOpCode)
                 OpCodeManager.parse(codeLine, this, code, codeIterator)
         }
+    }
+}
+
+open class DmNPCompiler : DmNPVM()
+{
+    fun compile(code: ArrayList<Any?>): ArrayList<String>
+    {
+        val ocl = StringBuilder()
+        val oc = ArrayList<String>()
+
+        val ci = code.listIterator()
+
+        while (ci.hasNext()) {
+            var cl = ci.next()
+            when (cl) {
+                OpCodes.LoadConstant -> {
+                    ocl.append("LC ")
+
+                    cl = ci.next()
+                    if (cl is ArrayList<*>) {
+                        ocl.append('[')
+                        for (e in cl) {
+                            if (e != null) {
+                                TypeToString(e, ocl)
+                                ocl.append('.')
+                                if (e is String)
+                                    ocl.append(TF1(e))
+                                else
+                                    ocl.append(e)
+                                ocl.append(',')
+                            } else
+                                ocl.append("Null")
+                        }
+                        ocl.deleteAt(ocl.count() - 1)
+                        ocl.append(']')
+                    } else
+                        TypeToString(cl, ocl)
+
+                    oc.add(ocl.toString())
+                    ocl.clear()
+                }
+            }
+        }
+
+        return oc
+    }
+
+    fun decompile(code: ArrayList<String>): ArrayList<Any?>
+    {
+        val out = ArrayList<Any?>()
+        val ci = code.iterator()
+
+        while (ci.hasNext()) {
+            val cl = ci.next()
+            val oc = cl.substring(0, cl.indexOfAny(charArrayOf('[', ']', '\'', '\"', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'))).trim()
+            val poc = cl.substring(cl.indexOfAny(charArrayOf('[', ']', '\'', '\"', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9')), cl.length)
+            when (oc) {
+                "LC" -> {
+                    out.add(OpCodes.LoadConstant)
+                    if (poc.indexOf('[') > -1)
+                        out.add(ParseStringToArray(poc))
+                    else
+                        out.add(poc)
+                }
+            }
+        }
+
+        return out
+    }
+
+    fun TF1(str: String): String
+    {
+        val os = StringBuilder()
+
+        for (c in str) {
+            if (c == '}') {
+                os.append('\\')
+                os.append(c)
+            } else
+                os.append(c)
+        }
+
+        return os.toString()
+    }
+
+    fun TF2(str: String): String
+    {
+        val os = StringBuilder()
+
+        var i = 1
+        while (i < str.length) {
+            if (str[i] == '\\' && str[i + 1] == '}')
+                i++
+            os.append(str[i++])
+        }
+
+        return os.toString()
+    }
+    fun TF3(e: String, ia: Boolean): Any?
+    {
+        val t =  e.substring(0, e.indexOf('.'))
+        val v = e.substring(e.indexOf('.'))
+
+        when (t) {
+            "Boolean"   -> return v.toBoolean()
+            "Byte"      -> return v.toByte()
+            "Char"      -> return v[0]
+            "Short"     -> return v.toShort()
+            "Int"       -> return v.toInt()
+            "Long"      -> return v.toLong()
+            "Double"    -> return v.toDouble()
+            "String"    -> return (if (ia) TF2(v) else v)
+            "Null"      -> return null
+            "Nothing"   -> return null
+        }
+
+        return null
+    }
+
+    fun ParseStringToArray(str: String): ArrayList<Any?> {
+        val out = ArrayList<Any?>()
+        val si = str.toCharArray().dropLast(1).iterator()
+
+        while (si.next() != '[');
+
+        while (si.hasNext()) {
+            val e = StringBuilder()
+
+            var c = si.next()
+            while (c != ',') {
+                e.append(c)
+                if (si.hasNext()) {
+                    c = si.next()
+                } else
+                    break
+            }
+
+            out.add(TF3(e.toString(), true))
+        }
+
+        return out
+    }
+
+    fun TypeToString(e: Any?, ocl: StringBuilder)
+    {
+        if (e != null) {
+            when (e) {
+                is Boolean  -> ocl.append("Boolean")
+                is Byte     -> ocl.append("Byte")
+                is Char     -> ocl.append("Char")
+                is Short    -> ocl.append("Short")
+                is Int      -> ocl.append("Int")
+                is Long     -> ocl.append("Long")
+                is Float    -> ocl.append("Float")
+                is Double   -> ocl.append("Double")
+                is String   -> ocl.append("String")
+                is Nothing  -> ocl.append("Nothing")
+            }
+        } else
+            ocl.append("Null")
     }
 }
 

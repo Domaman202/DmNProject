@@ -45,6 +45,7 @@ kotlin {
         val jvmTest by getting {
             dependencies {
                 implementation(kotlin("test-junit"))
+                implementation("org.junit.jupiter:junit-jupiter-api:5.0.2")
             }
         }
         val jsMain by getting

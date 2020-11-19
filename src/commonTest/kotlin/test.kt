@@ -1,9 +1,10 @@
 import ru.DmN.DmNProject.*
+import kotlin.jvm.Synchronized
 import kotlin.test.Test
 
 /**
  * @author DomamaN202
- * <p>Это примеры-тесты использования DomamaNProject
+ * Это примеры-тесты использования DomamaNProject
  */
 class testing
 {
@@ -63,7 +64,7 @@ class testing
             "Дарова, Пасаны!!!",
             OpCodes.LoadConstant,
             arrayListOf("System", "Console", "println"),
-            OpCodes.InvokeStaticKotlin
+            OpCodes.UnsafeInvokeKotlin
         ))
         code.add(OpCodes.SetValue) // Устанавливаем значение из стека в тело функции
         //
@@ -74,7 +75,7 @@ class testing
         val ct = ArrayList<Any?>()
         ct.add(OpCodes.LoadConstant)
         ct.add(arrayListOf("ru", "DmN", "testing", "Main", "main"))
-        ct.add(OpCodes.InvokeVirtualStatic)
+        ct.add(OpCodes.UnsafeInvokeVirtual)
         vm.parse(ct)
         //
         println("\n\nTesting completed!")
@@ -82,15 +83,20 @@ class testing
 
     @Test
     fun test() {
-        val vm1 = DmNPVM()
-        val vm2 = DmNPVM()
-        vm2.prev.add(vm1); vm1.next.add(vm2)
+        //
+        val code = ArrayList<Any?>()
 
-        vm1.heap.add(DmNPData("ru", DmNPType.NULL))
-        vm2.heap.add(DmNPData("com", DmNPType.NULL))
+        code.add(OpCodes.LoadConstant) // Выполняем выгрузку в стек имён пакетов
+        code.add(arrayListOf("ru", "DmN", "testing")) // Имена пакетов которые отправятся в стек
+        //
+        val cvm = DmNPCompiler()
+        val out = cvm.compile(code)
+        val cc = cvm.decompile(out)
+    }
 
-        println(DmNPUtils.findElement(vm2, arrayListOf("ru")))
-        println(DmNPUtils.findElement(vm1, arrayListOf("com")))
+    @Test
+    fun test_() {
+        println("\'\"[]{}0123456789".indexOfAny(charArrayOf('[', ']', '{', '}')))
     }
 }
 

@@ -6,7 +6,7 @@ package ru.DmN.DmNProject
 class OpCodeManager {
     companion object {
         @Suppress("NON_EXHAUSTIVE_WHEN", "UNCHECKED_CAST")
-        fun parse(oc: OpCodes, vm: DmNPVMInterpreter, c: ArrayList<Any?>, ci: ListIterator<*>) {
+        fun parse(oc: IOpCode, vm: DmNPVMInterpreter, c: ArrayList<Any?>, ci: ListIterator<*>) {
             when(oc) {
                 OpCodes.LoadConstant -> {
                     vm.stack.push(ci.next()!!)
@@ -146,72 +146,10 @@ class OpCodeManager {
                     vm.stack.push(o.fm[n])
                     o.fm.remove(n)
                 } // GRD
-                OpCodes.InvokeStaticKotlin -> {
-                    val n = vm.stack.pop() as ArrayList<String>
-                    val o = DmNPUtils.findElement(vm, n)
-                    if (o?.value != null) {
-                        if (vm.e) {
-                            if (o.modifiers.contains(DmNPModifiers.STATIC)) {
-                                try {
-                                    (o.value as (vm: DmNPVM, c: ArrayList<Any?>, ci: ListIterator<Any?>) -> Unit)(
-                                        vm,
-                                        c,
-                                        ci
-                                    )
-                                } catch (e: Throwable) {
-                                    if (vm.e)
-                                        vm.eStack!!.push(e)
-                                }
-                            } else
-                                vm.eStack!!.push(ObjectNoStaticException())
-                        } else
-                            (o.value as (vm: DmNPVM, c: ArrayList<Any?>, ci: ListIterator<Any?>) -> Unit)(vm, c, ci)
-                    } else if (vm.e) {
-                        if (o == null)
-                            vm.eStack!!.push(ObjectNullPointerException())
-                        else
-                            vm.eStack!!.push(ObjectValueNullPointerException())
-                    }
-                } // ISK
                 OpCodes.UnsafeInvokeKotlin -> {
                     val n = vm.stack.pop() as ArrayList<String>
-                    (DmNPUtils.findElement(vm, n) as (vm: DmNPVM, c: ArrayList<Any?>, ci: ListIterator<Any?>) -> Unit)(vm, c, ci)
+                    (DmNPUtils.findElement(vm, n)!!.value as (vm: DmNPVM, c: ArrayList<Any?>, ci: ListIterator<Any?>) -> Unit)(vm, c, ci)
                 } // UIK
-                OpCodes.InvokeVirtualStatic -> {
-                    if (vm.e) {
-                        val n = vm.stack.pop() as ArrayList<String>
-                        val m = DmNPUtils.findElement(vm, n)
-                        if (m != null) {
-                            if (vm.e && m.modifiers.contains(DmNPModifiers.STATIC)) {
-                                val m_vm = DmNPVMInterpreter()
-                                m_vm.prev.add(vm)
-                                vm.next.add(m_vm)
-
-                                if (m.value is ArrayList<*>) {
-                                    val v = m.value as ArrayList<Any?>
-                                    m_vm.parse(v)
-                                } else if (vm.e)
-                                    vm.eStack!!.push(ObjectValueNullPointerException())
-
-                                vm.next.remove(m_vm)
-                            } else if (vm.e)
-                                vm.eStack!!.push(ObjectNoStaticException())
-                        } else if (vm.e) {
-                            vm.eStack!!.push(ObjectNullPointerException())
-                        }
-                    } else {
-                        val m = DmNPUtils.findElement(vm, vm.stack.pop() as ArrayList<String>)
-                        if (m != null) {
-                            val mVM = DmNPVMInterpreter()
-                            mVM.prev.add(vm)
-                            vm.next.add(mVM)
-
-                            mVM.parse(m.value as ArrayList<Any?>)
-
-                            vm.next.remove(mVM)
-                        }
-                    }
-                } // IVS
                 OpCodes.UnsafeInvokeVirtual -> {
                     val m = DmNPUtils.findElement(vm, vm.stack.pop() as ArrayList<String>)
                     if (m != null) {
@@ -230,10 +168,11 @@ class OpCodeManager {
     }
 }
 
+interface IOpCode
 /**
  * @author  DomamaN202
  */
-enum class OpCodes {
+enum class OpCodes : IOpCode {
     LoadConstant,
     LoadException,
     CloneStackElement,
@@ -250,11 +189,7 @@ enum class OpCodes {
     CopySetValue,
     GetValue,
     CopyGetValue,
-    InvokeStaticKotlin,
-    InvokeKotlin,
     UnsafeInvokeKotlin,
-    InvokeVirtualStatic,
-    InvokeVirtual,
     UnsafeInvokeVirtual
 }
 
