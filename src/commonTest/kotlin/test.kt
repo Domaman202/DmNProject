@@ -99,11 +99,3 @@ class testing
         println("\'\"[]{}0123456789".indexOfAny(charArrayOf('[', ']', '{', '}')))
     }
 }
-
-class TC {
-    var i = 0
-
-    constructor(i: Int) {
-        this.i = i
-    }
-}

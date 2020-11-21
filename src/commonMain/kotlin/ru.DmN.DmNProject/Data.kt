@@ -172,7 +172,7 @@ class DmNPDataMap : MutableMap<String, DmNPData>
     var da: ArrayList<DmNPData>
     //
     override val size: Int
-        get() = TODO("Not yet implemented")
+        get() = da.size
     //
     constructor()
     {

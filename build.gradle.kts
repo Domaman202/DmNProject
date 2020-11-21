@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.ir.backend.js.compile
+
 plugins {
     kotlin("multiplatform") version "1.4.10"
 }
@@ -6,6 +8,7 @@ version = "1.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
+    jcenter()
 }
 kotlin {
     jvm {
@@ -32,7 +35,6 @@ kotlin {
         else -> throw GradleException("Host OS is not supported in Kotlin/Native.")
     }
 
-    
     sourceSets {
         val commonMain by getting
         val commonTest by getting {
@@ -46,6 +48,10 @@ kotlin {
             dependencies {
                 implementation(kotlin("test-junit"))
                 implementation("org.junit.jupiter:junit-jupiter-api:5.0.2")
+
+                implementation("io.kotest:kotest-runner-junit5:4.3.1") // for kotest framework
+                implementation("io.kotest:kotest-assertions-core:4.3.1") // for kotest core jvm assertions
+                implementation("io.kotest:kotest-property:4.3.1") // for kotest property test
             }
         }
         val jsMain by getting
