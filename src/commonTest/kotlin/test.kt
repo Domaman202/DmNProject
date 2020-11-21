@@ -1,5 +1,6 @@
 import ru.DmN.DmNProject.*
-import kotlin.jvm.Synchronized
+import ru.DmN.DmNProject.Data.*
+import ru.DmN.DmNProject.OpCode.*
 import kotlin.test.Test
 
 /**

@@ -1,5 +1,7 @@
 package ru.DmN.DmNProject
 
+import ru.DmN.DmNProject.Data.*
+
 /**
  * @author  DomamaN202
  * @since 1.0
@@ -10,8 +12,8 @@ open class DmNPVM
     var prev:        ArrayList<DmNPVM>
     var next:        ArrayList<DmNPVM>
 
-    var stack:   Stack<Any>
-    var heap:    DmNPDataArray
+    var stack: Stack<Any>
+    var heap: DmNPDataArray
 
     /**
      * Стандартный конструктор, создаёт полностью новый обьект
@@ -52,21 +54,21 @@ open class DmNPVM
      */
     fun init() {
         // Package_System
-        val Package_System = DmNPData("System", DmNPType.PACKAGE)
+        val Package_System = DmNPAData("System", DmNPType.PACKAGE)
         Package_System.reference.add(heap.DmNPData())
         Package_System.value = DmNPDataArray()
         heap.add(Package_System)
 
         val Package_System_Data = Package_System.value as DmNPDataArray
         // Class_Console
-        val Class_Console = DmNPData("Console", DmNPType.CLASS)
+        val Class_Console = DmNPAData("Console", DmNPType.CLASS)
         Class_Console.reference.add(Package_System)
         Class_Console.value = DmNPDataArray()
         Package_System_Data.add(Class_Console)
 
         val Class_Console_Data = Class_Console.value as DmNPDataArray
         // Class_Console functions
-        val Method_WriteLine = DmNPData("println", DmNPType.KMETHOD)
+        val Method_WriteLine = DmNPAData("println", DmNPType.KMETHOD)
         Method_WriteLine.reference.add(Class_Console)
         Method_WriteLine.value = fun(vm: DmNPVM, c: ArrayList<Any?>, ci: ListIterator<Any?>) { println(vm.stack.pop()) }
         Class_Console_Data.add(Method_WriteLine)

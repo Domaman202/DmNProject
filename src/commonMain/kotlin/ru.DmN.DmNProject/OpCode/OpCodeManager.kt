@@ -1,4 +1,8 @@
-package ru.DmN.DmNProject
+package ru.DmN.DmNProject.OpCode
+
+import ru.DmN.DmNProject.*
+import ru.DmN.DmNProject.Data.*
+import ru.DmN.DmNProject.Data.Containers.DmNPDataArray
 
 /**
  * @author  DomamaN202
@@ -29,8 +33,7 @@ class OpCodeManager {
                             if (vm.heap.containsKey(ns[i])) {
                                 le = vm.heap[ns[i]]
                             } else {
-                                le = DmNPData(ns[i], DmNPType.PACKAGE)
-//                                le.addReference(vm.heap.DmNPData())
+                                le = DmNPAData(ns[i], DmNPType.PACKAGE)
                                 le.reference.add(vm.heap.DmNPData())
                                 le.value = DmNPDataArray()
                                 vm.stack.push(le)
@@ -40,8 +43,7 @@ class OpCodeManager {
                             le = if (d.containsKey(ns[i])) {
                                 d[ns[i]]
                             } else {
-                                val ne = DmNPData(ns[i], DmNPType.PACKAGE)
-//                                ne.addReference(le)
+                                val ne = DmNPAData(ns[i], DmNPType.PACKAGE)
                                 ne.reference.add(le)
                                 ne.value = DmNPDataArray()
                                 d.add(ne)
@@ -167,30 +169,3 @@ class OpCodeManager {
         }
     }
 }
-
-interface IOpCode
-/**
- * @author  DomamaN202
- */
-enum class OpCodes : IOpCode {
-    LoadConstant,
-    LoadException,
-    CloneStackElement,
-    CreatePackage,
-    CreateClass,
-    CreateMethod,
-    PushData,
-    LoadData,
-    AddData,
-    CopyAddData,
-    RemoveData,
-    GetRemoveData,
-    SetValue,
-    CopySetValue,
-    GetValue,
-    CopyGetValue,
-    UnsafeInvokeKotlin,
-    UnsafeInvokeVirtual
-}
-
-class OpCodeNotFoundedException: Error()
