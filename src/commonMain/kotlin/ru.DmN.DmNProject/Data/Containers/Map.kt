@@ -2,7 +2,7 @@ package ru.DmN.DmNProject.Data.Containers
 
 import ru.DmN.DmNProject.Data.DmNPData
 
-class DmNPDataMap : MutableMap<String, DmNPData>
+open class DmNPDataMap : MutableMap<String, DmNPData>
 {
     // data array
     var da: ArrayList<DmNPData>
@@ -26,7 +26,7 @@ class DmNPDataMap : MutableMap<String, DmNPData>
     override fun clear() = da.clear()
     override fun containsKey(key: String): Boolean = get(key) != null
     override fun containsValue(value: DmNPData): Boolean = da.contains(value)
-    override fun equals(other: Any?): Boolean = da.equals(other)
+    override fun equals(other: Any?): Boolean = (da == other || this == other)
     override fun hashCode(): Int = da.hashCode()
     override fun get(key: String): DmNPData? {
         for (i in 0 until da.size)
@@ -64,7 +64,7 @@ class DmNPDataMap : MutableMap<String, DmNPData>
         get() {
             val m = mutableMapOf<String, DmNPData>()
             for (i in 0 until da.size)
-                m.put(da[i].name, da[i])
+                m[da[i].name] = da[i]
             return m.entries
         }
 }

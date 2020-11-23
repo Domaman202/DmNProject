@@ -1,26 +1,50 @@
 package ru.DmN.DmNProject.OpCode
 
 interface IOpCode
-/**
- * @author  DomamaN202
- */
-enum class OpCodes : IOpCode {
+
+enum class OCStack: IOpCode {
     LoadConstant,
+    UnLoadConstant,
+    CloneStackElement
+}
+
+enum class OCException: IOpCode {
     LoadException,
-    CloneStackElement,
+    UnLoadException,
+    ThrowOnVM
+}
+
+enum class OCData: IOpCode {
     CreatePackage,
     CreateClass,
     CreateMethod,
-    PushData,
-    LoadData,
-    AddData,
-    CopyAddData,
-    RemoveData,
-    GetRemoveData,
+
     SetValue,
     CopySetValue,
     GetValue,
     CopyGetValue,
+
+    AddData,
+    CopyAddData,
+    RemoveData,
+    GetRemoveData,
+}
+
+enum class OCStackHeap: IOpCode {
+    PushData,
+    LoadData
+}
+
+enum class OCInvoke: IOpCode {
     UnsafeInvokeKotlin,
     UnsafeInvokeVirtual
+}
+
+enum class OCMath: IOpCode {
+    Inc,
+    Dec,
+    Add,
+    Sub,
+    Mul,
+    Div
 }
