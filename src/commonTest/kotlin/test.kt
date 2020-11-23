@@ -61,9 +61,4 @@ class testing
         //
         println("\n\nTesting completed!")
     }
-
-    @Test
-    fun test() {
-
-    }
 }

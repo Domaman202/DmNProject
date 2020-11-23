@@ -26,7 +26,7 @@ open class DmNPDataMap : MutableMap<String, DmNPData>
     override fun clear() = da.clear()
     override fun containsKey(key: String): Boolean = get(key) != null
     override fun containsValue(value: DmNPData): Boolean = da.contains(value)
-    override fun equals(other: Any?): Boolean = (da == other || this == other)
+    override fun equals(other: Any?): Boolean = da == other
     override fun hashCode(): Int = da.hashCode()
     override fun get(key: String): DmNPData? {
         for (i in 0 until da.size)
