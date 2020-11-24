@@ -10,7 +10,12 @@ import ru.DmN.DmNProject.Data.DmNPDataObject
 class DmNPUtils
 {
     companion object {
-        fun findElement(vm: DmNPVM, names: ArrayList<String>, p: Boolean = true, n: Boolean = true): DmNPData? {
+        fun findElement(
+            vm: DmNPVM,
+            names: ArrayList<String>,
+            p: Boolean = true,
+            n: Boolean = true
+        ): DmNPData? {
             var le: DmNPData? = null
             for (i in 0 until names.size) {
                 le = if (le == null) {
@@ -31,43 +36,22 @@ class DmNPUtils
             return le
         }
 
-        private fun findElement(vm: DmNPVM, names: ArrayList<String>, i: Int, p: Boolean = true, n: Boolean = true): Pair<DmNPData?, Boolean> {
+        private fun findElement(
+            vm: DmNPVM,
+            names: ArrayList<String>,
+            i: Int,
+            p: Boolean = true,
+            n: Boolean = true
+        ): Pair<DmNPData?, Boolean> {
             var le: DmNPData? = null
 
             if (vm.heap.containsKey(names[i])) {
                 le = vm.heap[names[i]]
             } else {
-                if (vm.prev.size > 0 && p) {
-                    for (v in vm.prev) {
-                        le = findElement(v, names, p = true, n = false)
+                le = f4(vm, names, p)
 
-                        if (le != null)
-                            break
-                    }
-                } else if (vm.prev.size > 1 && !p) {
-                    for (counter in 1..vm.prev.size + 1) {
-                        le = findElement(vm.prev[counter], names, p = true, n = false)
-
-                        if (le != null)
-                            break
-                    }
-                }
-
-                if (le == null && vm.next.size > 0 && n) {
-                    for (v in vm.next) {
-                        le = findElement(v, names, p = false, n = true)
-
-                        if (le != null)
-                            break
-                    }
-                } else if (le == null && vm.next.size > 1 && !n) {
-                    for (counter in 1..vm.next.size + 1) {
-                        le = findElement(vm.next[counter], names, p = true, n = false)
-
-                        if (le != null)
-                            break
-                    }
-                }
+                if (le == null)
+                    le = f5(vm, names, n)
 
                 return Pair(le, true)
             }
@@ -75,7 +59,14 @@ class DmNPUtils
             return Pair(le, false)
         }
 
-        private fun findElement(vm: DmNPVM, names: ArrayList<String>, le_: DmNPData?, i: Int, p: Boolean = true, n: Boolean = true): Pair<DmNPData?, Boolean> {
+        private fun findElement(
+            vm: DmNPVM,
+            names: ArrayList<String>,
+            le_: DmNPData?,
+            i: Int,
+            p: Boolean = true,
+            n: Boolean = true
+        ): Pair<DmNPData?, Boolean> {
             var le = le_
 
             val r = f1(vm, names, le, i)
@@ -84,15 +75,14 @@ class DmNPUtils
             else
                 le = r.first
 
-            le = f2(vm, names, le, i, p)
-            le = f3(vm, names, le, i, n)
+            le = f2(vm, names, le)
+            le = f3(vm, names, le)
 
 
             return Pair(le, false)
         }
 
-        private fun f1(vm: DmNPVM, names: ArrayList<String>, le: DmNPData?, i: Int): Pair<DmNPData?, Boolean>
-        {
+        private fun f1(vm: DmNPVM, names: ArrayList<String>, le: DmNPData?, i: Int): Pair<DmNPData?, Boolean> {
             return when (le!!.value) {
                 is Any ->
                     Pair(
@@ -107,8 +97,12 @@ class DmNPUtils
             }
         }
 
-        private fun f2(vm: DmNPVM, names: ArrayList<String>, le_: DmNPData?, i: Int, p: Boolean = true): DmNPData?
-        {
+        private fun f2(
+            vm: DmNPVM,
+            names: ArrayList<String>,
+            le_: DmNPData?,
+            p: Boolean = true
+        ): DmNPData? {
             var le = le_
 
             if (le == null && vm.prev.size > 0 && p) {
@@ -130,11 +124,68 @@ class DmNPUtils
             return le
         }
 
-        private fun f3(vm: DmNPVM, names: ArrayList<String>, le_: DmNPData?, i: Int, n: Boolean = true): DmNPData?
-        {
+        private fun f3(
+            vm: DmNPVM,
+            names: ArrayList<String>,
+            le_: DmNPData?,
+            n: Boolean = true
+        ): DmNPData? {
             var le = le_
 
             if (le == null && vm.next.size > 0 && n) {
+                for (v in vm.next) {
+                    le = findElement(v, names, p = false, n = true)
+
+                    if (le != null)
+                        break
+                }
+            } else if (le == null && vm.next.size > 1 && !n) {
+                for (counter in 1..vm.next.size + 1) {
+                    le = findElement(vm.next[counter], names, p = true, n = false)
+
+                    if (le != null)
+                        break
+                }
+            }
+
+            return le
+        }
+
+        private fun f4(
+            vm: DmNPVM,
+            names: ArrayList<String>,
+            p: Boolean = true
+        ): DmNPData?
+        {
+            var le: DmNPData? = null
+
+            if (vm.prev.size > 0 && p) {
+                for (v in vm.prev) {
+                    le = findElement(v, names, p = true, n = false)
+
+                    if (le != null)
+                        break
+                }
+            } else if (vm.prev.size > 1 && !p) {
+                for (counter in 1..vm.prev.size + 1) {
+                    le = findElement(vm.prev[counter], names, p = true, n = false)
+
+                    if (le != null)
+                        break
+                }
+            }
+
+            return le
+        }
+
+        private fun f5(
+            vm: DmNPVM,
+            names: ArrayList<String>,
+            n: Boolean = true
+        ): DmNPData? {
+            var le: DmNPData? = null
+
+            if (vm.next.size > 0 && n) {
                 for (v in vm.next) {
                     le = findElement(v, names, p = false, n = true)
 
