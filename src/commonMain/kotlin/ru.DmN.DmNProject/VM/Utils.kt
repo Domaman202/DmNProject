@@ -48,10 +48,10 @@ class DmNPUtils
             if (vm.heap.containsKey(names[i])) {
                 le = vm.heap[names[i]]
             } else {
-                le = f4(vm, names, p)
+                le = findPrev(vm, names, le, p)
 
                 if (le == null)
-                    le = f5(vm, names, n)
+                    le = findNext(vm, names, le, p)
 
                 return Pair(le, true)
             }
@@ -77,13 +77,13 @@ class DmNPUtils
                 }
             }
 
-            le = f2(vm, names, le)
-            le = f3(vm, names, le)
+            le = findPrev(vm, names, le, p)
+            le = findNext(vm, names, le, n)
 
             return Pair(le, false)
         }
 
-        private fun f2(
+        private fun findPrev(
             vm: DmNPVM,
             names: ArrayList<String>,
             le_: DmNPData?,
@@ -110,7 +110,7 @@ class DmNPUtils
             return le
         }
 
-        private fun f3(
+        private fun findNext(
             vm: DmNPVM,
             names: ArrayList<String>,
             le_: DmNPData?,
@@ -119,59 +119,6 @@ class DmNPUtils
             var le = le_
 
             if (le == null && vm.next.size > 0 && n) {
-                for (v in vm.next) {
-                    le = findElement(v, names, p = false, n = true)
-
-                    if (le != null)
-                        break
-                }
-            } else if (le == null && vm.next.size > 1 && !n) {
-                for (counter in 1..vm.next.size + 1) {
-                    le = findElement(vm.next[counter], names, p = true, n = false)
-
-                    if (le != null)
-                        break
-                }
-            }
-
-            return le
-        }
-
-        private fun f4(
-            vm: DmNPVM,
-            names: ArrayList<String>,
-            p: Boolean = true
-        ): DmNPData?
-        {
-            var le: DmNPData? = null
-
-            if (vm.prev.size > 0 && p) {
-                for (v in vm.prev) {
-                    le = findElement(v, names, p = true, n = false)
-
-                    if (le != null)
-                        break
-                }
-            } else if (vm.prev.size > 1 && !p) {
-                for (counter in 1..vm.prev.size + 1) {
-                    le = findElement(vm.prev[counter], names, p = true, n = false)
-
-                    if (le != null)
-                        break
-                }
-            }
-
-            return le
-        }
-
-        private fun f5(
-            vm: DmNPVM,
-            names: ArrayList<String>,
-            n: Boolean = true
-        ): DmNPData? {
-            var le: DmNPData? = null
-
-            if (vm.next.size > 0 && n) {
                 for (v in vm.next) {
                     le = findElement(v, names, p = false, n = true)
 
