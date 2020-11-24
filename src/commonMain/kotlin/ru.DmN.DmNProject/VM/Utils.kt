@@ -82,6 +82,17 @@ class DmNPUtils
                 else -> if (le is DmNPDataObject) le.fm[names[i]] else return Pair(le, true)
             }
 
+            le = f1(vm, names, le, i, p)
+            le = f2(vm, names, le, i, n)
+
+
+            return Pair(le, false)
+        }
+
+        private fun f1(vm: DmNPVM, names: ArrayList<String>, le_: DmNPData?, i: Int, p: Boolean = true): DmNPData?
+        {
+            var le = le_
+
             if (le == null && vm.prev.size > 0 && p) {
                 for (v in vm.prev) {
                     le = findElement(v, names, p = true, n = false)
@@ -97,6 +108,13 @@ class DmNPUtils
                         break
                 }
             }
+
+            return le
+        }
+
+        private fun f2(vm: DmNPVM, names: ArrayList<String>, le_: DmNPData?, i: Int, n: Boolean = true): DmNPData?
+        {
+            var le = le_
 
             if (le == null && vm.next.size > 0 && n) {
                 for (v in vm.next) {
@@ -114,7 +132,7 @@ class DmNPUtils
                 }
             }
 
-            return Pair(le, false)
+            return le
         }
     }
 }
