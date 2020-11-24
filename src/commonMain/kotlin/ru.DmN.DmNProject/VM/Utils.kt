@@ -69,11 +69,20 @@ class DmNPUtils
         ): Pair<DmNPData?, Boolean> {
             var le = le_
 
-            val r = f1(vm, names, le, i)
-            if (r.second)
-                return r
-            else
-                le = r.first
+//            val r = f1(vm, names, le, i)
+//            if (r.second)
+//                return r
+//            else
+//                le = r.first
+            le = when (le!!.value) {
+                is Any -> (le.value as Map<String, DmNPData>)[names[i]]
+                else -> {
+                    if (le is DmNPDataObject) le.fm[names[i]]
+                    else return Pair(le, true)
+                }
+            }
+
+
 
             le = f2(vm, names, le)
             le = f3(vm, names, le)
