@@ -77,19 +77,37 @@ class DmNPUtils
 
         private fun findElement(vm: DmNPVM, names: ArrayList<String>, le_: DmNPData?, i: Int, p: Boolean = true, n: Boolean = true): Pair<DmNPData?, Boolean> {
             var le = le_
-            le = when (le!!.value) {
-                is Any -> (le.value as Map<String, DmNPData>)[names[i]]
-                else -> if (le is DmNPDataObject) le.fm[names[i]] else return Pair(le, true)
-            }
 
-            le = f1(vm, names, le, i, p)
-            le = f2(vm, names, le, i, n)
+            val r = f1(vm, names, le, i)
+            if (r.second)
+                return r
+            else
+                le = r.first
+
+            le = f2(vm, names, le, i, p)
+            le = f3(vm, names, le, i, n)
 
 
             return Pair(le, false)
         }
 
-        private fun f1(vm: DmNPVM, names: ArrayList<String>, le_: DmNPData?, i: Int, p: Boolean = true): DmNPData?
+        private fun f1(vm: DmNPVM, names: ArrayList<String>, le: DmNPData?, i: Int): Pair<DmNPData?, Boolean>
+        {
+            return when (le!!.value) {
+                is Any ->
+                    Pair(
+                        (le.value as Map<String, DmNPData>)[names[i]],
+                        false
+                    )
+                else ->
+                    if (le is DmNPDataObject)
+                        Pair(le.fm[names[i]], false)
+                    else
+                        return Pair(le, true)
+            }
+        }
+
+        private fun f2(vm: DmNPVM, names: ArrayList<String>, le_: DmNPData?, i: Int, p: Boolean = true): DmNPData?
         {
             var le = le_
 
@@ -112,7 +130,7 @@ class DmNPUtils
             return le
         }
 
-        private fun f2(vm: DmNPVM, names: ArrayList<String>, le_: DmNPData?, i: Int, n: Boolean = true): DmNPData?
+        private fun f3(vm: DmNPVM, names: ArrayList<String>, le_: DmNPData?, i: Int, n: Boolean = true): DmNPData?
         {
             var le = le_
 
