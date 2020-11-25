@@ -4,7 +4,6 @@ import ru.DmN.DmNProject.Data.*
 import ru.DmN.DmNProject.Data.Containers.*
 import ru.DmN.DmNProject.*
 import ru.DmN.DmNProject.VM.*
-import kotlin.reflect.KFunction
 
 /**
  * @author  DomamaN202
@@ -156,7 +155,8 @@ class OpCodeManager {
             // Invoke
             OpCodes[OCInvoke.UnsafeInvokeKotlin] = { _, vm, c, ci ->
                 val n = vm.stack.pop() as ArrayList<String>
-                (DmNPUtils.findElement(vm, n)!!.value as (vm: DmNPVM, c: ArrayList<Any?>, ci: ListIterator<Any?>) -> Unit)(vm, c, ci)
+                val debug = (DmNPUtils.findElement(vm, n)!!.value as (vm: DmNPVM, c: ArrayList<Any?>, ci: ListIterator<Any?>) -> Unit)
+                debug(vm, c, ci)
             }
             OpCodes[OCInvoke.UnsafeInvokeVirtual] = { oc, vm, c, ci ->
                 val m = DmNPUtils.findElement(vm, vm.stack.pop() as ArrayList<String>)

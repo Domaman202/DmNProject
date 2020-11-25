@@ -51,7 +51,7 @@ class DmNPUtils
                 le = findPrev(vm, names, le, p)
 
                 if (le == null)
-                    le = findNext(vm, names, le, p)
+                    le = findNext(vm, names, le, n)
 
                 return Pair(le, true)
             }

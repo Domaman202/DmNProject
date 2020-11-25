@@ -75,5 +75,10 @@ open class DmNPVM
         mwl.reference.add(cc)
         mwl.value = fun(vm: DmNPVM, _: ArrayList<Any?>, _: ListIterator<Any?>) { println(vm.stack.pop()) }
         ccd.add(mwl)
+
+        //
+        val oi = DmNPData("_ObjectId_", DmNPType.VAR)
+        oi.value = ArrayList<String>()
+        heap.add(oi)
     }
 }

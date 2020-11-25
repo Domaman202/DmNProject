@@ -61,4 +61,13 @@ class testing
         //
         println("\n\nTesting completed!")
     }
+
+    @Test
+    fun test()
+    {
+        val vm = DmNPVM()
+        vm.init()
+
+        var o = DmNPDataId("Test", DmNPType.NULL, vm)
+    }
 }
