@@ -1,9 +1,13 @@
-import ru.DmN.DmNProject.*
-import ru.DmN.DmNProject.Data.*
-import ru.DmN.DmNProject.OpCode.*
+import ru.DmN.DmNProject.Data.Containers.DmNPDataMap
+import ru.DmN.DmNProject.Data.Containers.Stack
+import ru.DmN.DmNProject.Data.DmNPData
+import ru.DmN.DmNProject.Data.DmNPModifiers
+import ru.DmN.DmNProject.Data.DmNPType
+import ru.DmN.DmNProject.OpCode.OCData
+import ru.DmN.DmNProject.OpCode.OCInvoke
+import ru.DmN.DmNProject.OpCode.OCStack
+import ru.DmN.DmNProject.OpCode.OCStackHeap
 import ru.DmN.DmNProject.VM.*
-import kotlin.reflect.cast
-import kotlin.reflect.safeCast
 import kotlin.test.Test
 
 /**
@@ -13,7 +17,7 @@ import kotlin.test.Test
 class testing
 {
     @Test
-    fun PackageClassMethodTest() {
+    fun packageClassMethodTest() {
         println("Testing started!\n")
         //
         val code = ArrayList<Any?>()
@@ -41,7 +45,7 @@ class testing
         code.add(
             arrayListOf(
                 OCStack.LoadConstant, // Выполняем выгрузку теста в стек
-                "Дарова, Пасаны!!!", // Текст который мы выгрузили в стек
+                "Тееееееееееекст)", // Текст который мы выгрузили в стек
                 OCStack.LoadConstant, // Выполняем выгрузку имён в стек
                 arrayListOf("System", "Console", "println"), // Именя которые мы выгружаем в стек
                 OCInvoke.UnsafeInvokeKotlin // Вызываем kotlin функцию
@@ -63,11 +67,53 @@ class testing
     }
 
     @Test
+    fun opExceptionTest()
+    {
+        println("Test started!!!\n\n")
+        //
+        println(ObjectNullPointerException("\"Имя\"")       .message)
+        println(ObjectValueNullPointerException("\"Имя\"")  .message)
+        println(ObjectAccessException("\"Имя\"")            .message)
+        println(ObjectNoStaticException("\"Имя\"")          .message)
+        println(OpCodeNotFoundedException("\"Имя\"")        .message)
+        //
+        println("\n\nTest competed!!!")
+    }
+
+    @Test
+    fun containersTest()
+    {
+        println("Test started!!!\n\n")
+        // DmNPDataMap Test
+        println("!!!DmNPDataMap Test!!!\n")
+        val m1 = DmNPDataMap(); m1.clear()
+        val m2 = DmNPDataMap(21); m2.clear()
+        val m3 = DmNPDataMap(arrayListOf(DmNPData("T1", DmNPType.NULL), DmNPData("T2", DmNPType.NULL)))
+        println("m3[\"T2\"] => ${m3["T2"]}")
+        println("m3.DmNPData() => ${m3.DmNPData()}")
+        println("m3.DmNPData(\"\\\"Имя\\\"\") => ${m3.DmNPData("\"Имя\"")}")
+        m3.clear()
+        // Stack Test
+        println("\n!!!Stack Test!!!\n")
+        val st = Stack<Int>()
+        st.push(12)
+        println("st.peek() => ${st.peek()}")
+        st.pop()
+        println("st.size => ${st.size}")
+        //
+        println("\n\nTest competed!!!")
+    }
+
+    @Test
     fun test()
     {
+        println("Test started!!!\n\n")
+        //
         val vm = DmNPVM()
-        vm.init()
+        vm.fastInit()
+        //
 
-        var o = DmNPDataId("Test", DmNPType.NULL, vm)
+        //
+        println("\n\nTest competed!!!")
     }
 }

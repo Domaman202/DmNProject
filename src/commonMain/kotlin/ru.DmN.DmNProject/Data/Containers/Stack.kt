@@ -1,14 +1,12 @@
 package ru.DmN.DmNProject.Data.Containers
 
 class Stack<T> {
-    val elements: MutableList<T?> = mutableListOf()
+    private val elements: MutableList<T?> = mutableListOf()
 
     fun isEmpty() = elements.isEmpty()
-
-    fun size() = elements.size
+    val size get() = elements.size
 
     fun push(item: T?) = elements.add(item)
-
     fun pop() : T? {
         val item = elements.lastOrNull()
         if (!isEmpty()){
@@ -18,5 +16,7 @@ class Stack<T> {
     }
     fun peek() : T? = elements.lastOrNull()
 
+    override fun hashCode(): Int = elements.hashCode()
+    override fun equals(other: Any?): Boolean = elements == other
     override fun toString(): String = elements.toString()
 }

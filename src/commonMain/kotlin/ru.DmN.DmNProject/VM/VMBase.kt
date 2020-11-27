@@ -13,14 +13,14 @@ open class DmNPVM
     var next:        ArrayList<DmNPVM>
 
     var stack: Stack<Any>
-    var heap: DmNPDataArray
+    var heap: DmNPDataMap
 
     /**
      * Стандартный конструктор, создаёт полностью новый обьект
      */
     constructor() {
         stack   = Stack()
-        heap    = DmNPDataArray()
+        heap    = DmNPDataMap()
 
         instance    = this
         prev        = ArrayList()
@@ -30,7 +30,7 @@ open class DmNPVM
     /**
      * Конструктор, но поля для обьекта задаёт пользыватель
      */
-    constructor(stack: Stack<Any>, heap: DmNPDataArray, prev: ArrayList<DmNPVM>, next: ArrayList<DmNPVM>) {
+    constructor(stack: Stack<Any>, heap: DmNPDataMap, prev: ArrayList<DmNPVM>, next: ArrayList<DmNPVM>) {
         this.stack  = stack
         this.heap   = heap
 
@@ -55,30 +55,29 @@ open class DmNPVM
     /**
      * Инициализатор виртуальной машины
      */
+    fun fastInit() {
+
+    }
+
     fun init() {
         // Package_System
         val ps = DmNPAData("System", DmNPType.PACKAGE)
         ps.reference.add(heap.DmNPData())
-        ps.value = DmNPDataArray()
+        ps.value = DmNPDataMap()
         heap.add(ps)
 
-        val psd = ps.value as DmNPDataArray
+        val psd = ps.value as DmNPDataMap
         // Class_Console
         val cc = DmNPAData("Console", DmNPType.CLASS)
         cc.reference.add(ps)
-        cc.value = DmNPDataArray()
+        cc.value = DmNPDataMap()
         psd.add(cc)
 
-        val ccd = cc.value as DmNPDataArray
+        val ccd = cc.value as DmNPDataMap
         // Class_Console functions
         val mwl = DmNPAData("println", DmNPType.KMETHOD)
         mwl.reference.add(cc)
         mwl.value = fun(vm: DmNPVM, _: ArrayList<Any?>, _: ListIterator<Any?>) { println(vm.stack.pop()) }
         ccd.add(mwl)
-
-        //
-        val oi = DmNPData("_ObjectId_", DmNPType.VAR)
-        oi.value = ArrayList<String>()
-        heap.add(oi)
     }
 }

@@ -1,7 +1,18 @@
 import org.jetbrains.kotlin.ir.backend.js.compile
 
+buildscript {
+    repositories { jcenter() }
+
+    dependencies {
+        val kotlinVersion = "1.4.20"
+        classpath(kotlin("gradle-plugin", version = kotlinVersion))
+        classpath(kotlin("serialization", version = kotlinVersion))
+    }
+}
+
 plugins {
     kotlin("multiplatform") version "1.4.10"
+    id("org.jetbrains.kotlin.plugin.serialization") version "1.4.10"
 }
 group = "me.user"
 version = "1.0-SNAPSHOT"
@@ -36,7 +47,12 @@ kotlin {
     }
 
     sourceSets {
-        val commonMain by getting
+        val commonMain by getting {
+            dependencies {
+                // Works as common dependency as well as the platform one
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.0.1")
+            }
+        }
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test-common"))

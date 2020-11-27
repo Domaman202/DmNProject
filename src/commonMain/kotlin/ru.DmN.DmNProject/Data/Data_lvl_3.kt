@@ -1,6 +1,6 @@
 package ru.DmN.DmNProject.Data
 
-import ru.DmN.DmNProject.Data.Containers.DmNPDataArray
+import ru.DmN.DmNProject.Data.Containers.DmNPDataMap
 
 /**
  * @author  DomamaN202
@@ -8,24 +8,13 @@ import ru.DmN.DmNProject.Data.Containers.DmNPDataArray
 class DmNPDataObject: DmNPAData
 {
     // Fields and methods
-    var fm: DmNPDataArray
+    var fm: DmNPDataMap
     // Extends
-    var e: DmNPDataArray
+    var e: DmNPDataMap
     // Constructors
-    constructor(name: String, type: DmNPType): super(name, type)
+    constructor(name: String, type: DmNPType, fm: DmNPDataMap? = null, e: DmNPDataMap? = null, modifiers: ArrayList<DmNPModifiers>? = null, reference: DmNPDataMap? = null): super(name, type, modifiers, reference)
     {
-        this.name = name
-        this.type = type
-
-        fm = DmNPDataArray()
-        e = DmNPDataArray()
-    }
-    constructor(name: String, type: DmNPType, fm: DmNPDataArray, e: DmNPDataArray): super(name, type)
-    {
-        this.name = name
-        this.type = type
-
-        this.fm = fm
-        this.e = e
+        this.fm = fm ?: DmNPDataMap()
+        this.e  = e ?:  DmNPDataMap()
     }
 }

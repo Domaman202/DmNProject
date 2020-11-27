@@ -1,16 +1,18 @@
 package ru.DmN.DmNProject.OpCode
 
 import ru.DmN.DmNProject.Data.*
-import ru.DmN.DmNProject.Data.Containers.*
-import ru.DmN.DmNProject.*
-import ru.DmN.DmNProject.VM.*
+import ru.DmN.DmNProject.Data.Containers.DmNPDataMap
+import ru.DmN.DmNProject.VM.DmNPUtils
+import ru.DmN.DmNProject.VM.DmNPVM
+import ru.DmN.DmNProject.VM.DmNPVMInterpreter
+import ru.DmN.DmNProject.VM.OpCodeNotFoundedException
 
 /**
  * @author  DomamaN202
  */
 class OpCodeManager {
     companion object {
-        val OpCodes = HashMap<IOpCode, (oc: IOpCode, vm: DmNPVMInterpreter, c: ArrayList<Any?>, ci: ListIterator<*>) -> Unit>()
+        val OpCodes = HashMap<IOpCode, (oc: IOpCode, vm: DmNPVMInterpreter, c: ArrayList<Any?>, ci: ListIterator<Any?>) -> Unit>()
 
         @Suppress("NON_EXHAUSTIVE_WHEN", "UNCHECKED_CAST")
         fun parse(oc: IOpCode, vm: DmNPVMInterpreter, c: ArrayList<Any?>, ci: ListIterator<*>) {
@@ -18,7 +20,7 @@ class OpCodeManager {
             if (f != null)
                 f(oc, vm, c, ci)
             else
-                throw OpCodeNotFoundedException()
+                throw OpCodeNotFoundedException(oc.toString())
         }
 
         init {
@@ -61,35 +63,35 @@ class OpCodeManager {
                         } else {
                             le = DmNPAData(ns[i], DmNPType.PACKAGE)
                             le.reference.add(vm.heap.DmNPData())
-                            le.value = DmNPDataArray()
+                            le.value = DmNPDataMap()
                             vm.stack.push(le)
                         }
                     } else {
-                        val d = le.value as DmNPDataArray
+                        val d = le.value as DmNPDataMap
                         le = if (d.containsKey(ns[i])) {
                             d[ns[i]]
                         } else {
                             val ne = DmNPAData(ns[i], DmNPType.PACKAGE)
                             ne.reference.add(le)
-                            ne.value = DmNPDataArray()
+                            ne.value = DmNPDataMap()
                             d.add(ne)
                             ne
                         }
                     }
                 }
             }
-            OpCodes[OCData.CreateClass] = { oc, vm, c, ci ->
+            OpCodes[OCData.CreateClass] = { _, vm, _, _ ->
                 val n = vm.stack.pop()!! as String
                     val m = vm.stack.pop()!! as ArrayList<DmNPModifiers>
                     var r = vm.stack.pop()!! as DmNPData
 
                     if (r.type == DmNPType.PACKAGE) {
-                        if ((r.value as DmNPDataArray).containsKey(n))
-                            (r.value as DmNPDataArray).remove(n)
+                        if ((r.value as DmNPDataMap).containsKey(n))
+                            (r.value as DmNPDataMap).remove(n)
                         val clss = DmNPDataObject(n, DmNPType.CLASS)
                         clss.modifiers = m
                         clss.reference.add(r)
-                        (r.value as DmNPDataArray).add(clss)
+                        (r.value as DmNPDataMap).add(clss)
                         vm.stack.push(clss)
                     } else if (r.type == DmNPType.CLASS || r.type == DmNPType.OBJECT) {
                         r = r as DmNPDataObject
@@ -105,18 +107,18 @@ class OpCodeManager {
             }
             OpCodes[OCData.CreateMethod] = { _, vm, _, _ ->
                 val n = vm.stack.pop() as String
-                    val m = vm.stack.pop() as ArrayList<DmNPModifiers>
-                    val r = vm.stack.pop() as DmNPDataObject
+                val m = vm.stack.pop() as ArrayList<DmNPModifiers>
+                val r = vm.stack.pop() as DmNPDataObject
 
-                    if (r.fm.containsKey(n))
-                        r.fm.remove(n)
+                if (r.fm.containsKey(n))
+                    r.fm.remove(n)
 
-                    val method = DmNPDataObject(n, DmNPType.METHOD)
-                    method.modifiers = m
-                    method.reference.add(r)
+                val method = DmNPDataObject(n, DmNPType.METHOD)
+                method.modifiers = m
+                method.reference.add(r)
 
-                    r.fm.add(method)
-                    vm.stack.push(method)
+                r.fm.add(method)
+                vm.stack.push(method)
             }
             //
             OpCodes[OCData.SetValue] = { _, vm, _, _ ->
@@ -158,7 +160,7 @@ class OpCodeManager {
                 val debug = (DmNPUtils.findElement(vm, n)!!.value as (vm: DmNPVM, c: ArrayList<Any?>, ci: ListIterator<Any?>) -> Unit)
                 debug(vm, c, ci)
             }
-            OpCodes[OCInvoke.UnsafeInvokeVirtual] = { oc, vm, c, ci ->
+            OpCodes[OCInvoke.UnsafeInvokeVirtual] = { _, vm, _, _ ->
                 val m = DmNPUtils.findElement(vm, vm.stack.pop() as ArrayList<String>)
                 if (m != null) {
                     val mVM = DmNPVMInterpreter()
