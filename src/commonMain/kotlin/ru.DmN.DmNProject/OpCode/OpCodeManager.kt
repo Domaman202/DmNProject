@@ -157,8 +157,7 @@ class OpCodeManager {
             // Invoke
             OpCodes[OCInvoke.UnsafeInvokeKotlin] = { _, vm, c, ci ->
                 val n = vm.stack.pop() as ArrayList<String>
-                val debug = (DmNPUtils.findElement(vm, n)!!.value as (vm: DmNPVM, c: ArrayList<Any?>, ci: ListIterator<Any?>) -> Unit)
-                debug(vm, c, ci)
+                (DmNPUtils.findElement(vm, n)!!.value as (vm: DmNPVM, c: ArrayList<Any?>, ci: ListIterator<Any?>) -> Unit)(vm, c, ci)
             }
             OpCodes[OCInvoke.UnsafeInvokeVirtual] = { _, vm, _, _ ->
                 val m = DmNPUtils.findElement(vm, vm.stack.pop() as ArrayList<String>)

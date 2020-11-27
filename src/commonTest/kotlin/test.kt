@@ -110,9 +110,8 @@ class testing
         println("Test started!!!\n\n")
         //
         val vm = DmNPVM()
-        vm.fastInit()
         //
-
+        vm.init()
         //
         println("\n\nTest competed!!!")
     }

@@ -55,9 +55,9 @@ open class DmNPVM
     /**
      * Инициализатор виртуальной машины
      */
-    fun fastInit() {
-
-    }
+//    fun fastInit() {
+//
+//    }
 
     fun init() {
         // Package_System

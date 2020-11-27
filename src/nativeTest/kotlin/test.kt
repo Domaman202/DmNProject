@@ -4,7 +4,7 @@ class test {
     @Test
     fun test()
     {
-        kotlin.native.
+        println("1234567890")
     }
 }
 
