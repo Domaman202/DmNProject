@@ -8,14 +8,14 @@ import ru.DmN.DmNProject.OpCode.OCInvoke
 import ru.DmN.DmNProject.OpCode.OCStack
 import ru.DmN.DmNProject.OpCode.OCStackHeap
 import ru.DmN.DmNProject.VM.*
+import kotlin.jvm.Volatile
 import kotlin.test.Test
 
 /**
  * @author DomamaN202
  * Это примеры-тесты использования DomamaNProject
  */
-class testing
-{
+class testing {
     @Test
     fun packageClassMethodTest() {
         println("Testing started!\n")
@@ -67,22 +67,20 @@ class testing
     }
 
     @Test
-    fun opExceptionTest()
-    {
+    fun opExceptionTest() {
         println("Test started!!!\n\n")
         //
-        println(ObjectNullPointerException("\"Имя\"")       .message)
-        println(ObjectValueNullPointerException("\"Имя\"")  .message)
-        println(ObjectAccessException("\"Имя\"")            .message)
-        println(ObjectNoStaticException("\"Имя\"")          .message)
-        println(OpCodeNotFoundedException("\"Имя\"")        .message)
+        println(ObjectNullPointerException("\"Имя\"").message)
+        println(ObjectValueNullPointerException("\"Имя\"").message)
+        println(ObjectAccessException("\"Имя\"").message)
+        println(ObjectNoStaticException("\"Имя\"").message)
+        println(OpCodeNotFoundedException("\"Имя\"").message)
         //
         println("\n\nTest competed!!!")
     }
 
     @Test
-    fun containersTest()
-    {
+    fun containersTest() {
         println("Test started!!!\n\n")
         // DmNPDataMap Test
         println("!!!DmNPDataMap Test!!!\n")
@@ -105,13 +103,10 @@ class testing
     }
 
     @Test
-    fun test()
-    {
+    fun test() {
         println("Test started!!!\n\n")
         //
-        val vm = DmNPVM()
-        //
-        vm.init()
+        
         //
         println("\n\nTest competed!!!")
     }

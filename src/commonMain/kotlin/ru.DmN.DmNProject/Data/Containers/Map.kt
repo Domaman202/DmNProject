@@ -3,7 +3,7 @@ package ru.DmN.DmNProject.Data.Containers
 import ru.DmN.DmNProject.Data.DmNPData
 import ru.DmN.DmNProject.Data.DmNPType
 
-open class DmNPDataMap : MutableMap<String, DmNPData>
+open class DmNPDataMap : MutableMap<String, DmNPData>, Iterable<DmNPData>
 {
     // Fields
     var da: ArrayList<DmNPData>
@@ -32,14 +32,42 @@ open class DmNPDataMap : MutableMap<String, DmNPData>
         data.value = this
         return data
     }
-
     fun DmNPData(name: String): DmNPData {
         val data = DmNPData(name, DmNPType.REFERENCE)
         data.value = this
         return data
     }
-
+    //
     fun add(data: DmNPData) = put(data.name, data)
+    override fun iterator(): DmNPDataIterator {
+        return object : DmNPDataIterator {
+            val size: Int get() = da.size
+            var c: Int = 0
+
+            override fun prevName(): String = da[--c].name
+            override fun lastName(): String = da[c].name
+            override fun nextName(): String = da[c++].name
+
+            override fun prevType(): DmNPType = da[--c].type
+            override fun lastType(): DmNPType = da[c].type
+            override fun nextType(): DmNPType = da[++c].type
+
+            override fun prevValue(): Any? = da[--c].value
+            override fun lastValue(): Any? = da[c].value
+            override fun nextValue(): Any? = da[++c].value
+
+            override fun hasNext():     Boolean = c < size
+            override fun next():        DmNPData = da[++c]
+            override fun nextIndex():   Int = c + 1
+
+            override fun last():        DmNPData = da[c]
+            override fun lastIndex():   Int = c
+
+            override fun hasPrevious():     Boolean = c > 0
+            override fun previous():        DmNPData = da[--c]
+            override fun previousIndex():   Int = c - 1
+        }
+    }
 
     // Default methods
     override fun equals(other: Any?): Boolean = da == other
