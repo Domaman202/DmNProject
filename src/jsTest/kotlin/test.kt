@@ -7,9 +7,9 @@ class test {
     @Test
     fun test()
     {
-        val c = DmNPCompiler()
+        val compiler = DmNPCompiler()
         //
-        val m = c.MethodCompiler({ vm, c, ci ->
+        val m = compiler.MethodCompiler({ vm, c, ci ->
             println("Test!")
         }, arrayListOf(DmNPModifiers.PUBLIC), DmNPVM())
     }

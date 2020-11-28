@@ -18,6 +18,7 @@ enum class OCData: IOpCode {
     CreatePackage,
     CreateClass,
     CreateMethod,
+    CreateVariable,
 
     SetValue,
     CopySetValue,

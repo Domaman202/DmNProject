@@ -1,6 +1,8 @@
 package ru.DmN.DmNProject.Data.Containers
 
+import ru.DmN.DmNProject.Data.DmNPAData
 import ru.DmN.DmNProject.Data.DmNPData
+import ru.DmN.DmNProject.Data.DmNPModifiers
 import ru.DmN.DmNProject.Data.DmNPType
 
 open class DmNPDataMap : MutableMap<String, DmNPData>, Iterable<DmNPData>
@@ -55,6 +57,14 @@ open class DmNPDataMap : MutableMap<String, DmNPData>, Iterable<DmNPData>
             override fun prevValue(): Any? = da[--c].value
             override fun lastValue(): Any? = da[c].value
             override fun nextValue(): Any? = da[++c].value
+
+            override fun prevModifiers(): ArrayList<DmNPModifiers>? = if (da[--c] is DmNPAData) (da[c] as DmNPAData).modifiers else null
+            override fun lastModifiers(): ArrayList<DmNPModifiers>? = if (da[c] is DmNPAData) (da[c] as DmNPAData).modifiers else null
+            override fun nextModifiers(): ArrayList<DmNPModifiers>? = if (da[++c] is DmNPAData) (da[c] as DmNPAData).modifiers else null
+
+            override fun prevReference(): DmNPDataMap? = if (da[--c] is DmNPAData) (da[c] as DmNPAData).reference else null
+            override fun lastReference(): DmNPDataMap? = if (da[c] is DmNPAData) (da[c] as DmNPAData).reference else null
+            override fun nextReference(): DmNPDataMap? = if (da[++c] is DmNPAData) (da[c] as DmNPAData).reference else null
 
             override fun hasNext():     Boolean = c < size
             override fun next():        DmNPData = da[++c]

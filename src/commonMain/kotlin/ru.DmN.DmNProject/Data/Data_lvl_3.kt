@@ -5,16 +5,19 @@ import ru.DmN.DmNProject.Data.Containers.DmNPDataMap
 /**
  * @author  DomamaN202
  */
-class DmNPDataObject: DmNPAData
+class DmNPDataObject// Constructors
+    (
+    name: String,
+    type: DmNPType,
+    fm: DmNPDataMap? = null,
+    e: DmNPDataMap? = null,
+    modifiers: ArrayList<DmNPModifiers>? = null,
+    reference: DmNPDataMap? = null
+) : DmNPAData(name, type, modifiers, reference)
 {
     // Fields and methods
-    var fm: DmNPDataMap
+    var fm: DmNPDataMap = fm ?: DmNPDataMap()
     // Extends
-    var e: DmNPDataMap
-    // Constructors
-    constructor(name: String, type: DmNPType, fm: DmNPDataMap? = null, e: DmNPDataMap? = null, modifiers: ArrayList<DmNPModifiers>? = null, reference: DmNPDataMap? = null): super(name, type, modifiers, reference)
-    {
-        this.fm = fm ?: DmNPDataMap()
-        this.e  = e ?:  DmNPDataMap()
-    }
+    var e: DmNPDataMap = e ?:  DmNPDataMap()
+
 }

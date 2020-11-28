@@ -3,6 +3,9 @@ package ru.DmN.DmNProject.VM
 import ru.DmN.DmNProject.Data.DmNPData
 import ru.DmN.DmNProject.Data.DmNPDataObject
 
+typealias kotlin_function = (vm: DmNPVM, c: ArrayList<Any?>, ci: ListIterator<Any?>) -> Unit
+inline fun <In, reified Out> throwCast(v: In): Out = if (v is Out) v else throw ClassCastException()
+
 /**
  * @author  DomamaN202
  * @since 1.0
@@ -70,7 +73,8 @@ class DmNPUtils
             var le = le_
 
             le = when (le!!.value) {
-                is Any -> (le.value as Map<String, DmNPData>)[names[i]]
+//                is Any -> (le.value as Map<String, DmNPData>)[names[i]]
+                is Any -> throwCast<Any?, Map<String, DmNPData>>(le.value)[names[i]]
                 else -> {
                     if (le is DmNPDataObject) le.fm[names[i]]
                     else return Pair(le, true)
@@ -138,7 +142,3 @@ class DmNPUtils
         }
     }
 }
-
-class FieldContainer<T>(
-    var field: T
-)
