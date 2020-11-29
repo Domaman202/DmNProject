@@ -9,7 +9,8 @@ import ru.DmN.DmNProject.VM.*
  */
 class OpCodeManager {
     companion object {
-        val OpCodes = HashMap<IOpCode, (oc: IOpCode, vm: DmNPVMInterpreter, c: ArrayList<Any?>, ci: ListIterator<Any?>) -> Unit>()
+        val OpCodes =
+            HashMap<IOpCode, (oc: IOpCode, vm: DmNPVMInterpreter, c: ArrayList<Any?>, ci: ListIterator<Any?>) -> Unit>()
 
         @Suppress("NON_EXHAUSTIVE_WHEN", "UNCHECKED_CAST")
         fun parse(oc: IOpCode, vm: DmNPVMInterpreter, c: ArrayList<Any?>, ci: ListIterator<*>) {
@@ -22,13 +23,13 @@ class OpCodeManager {
 
         init {
             // Stack
-            OpCodes[OCStack.LoadConstant]       = { _, vm, _, ci -> vm.stack.push(ci.next()) }
-            OpCodes[OCStack.UnLoadConstant]     = { _, vm, _, _ -> vm.stack.pop() }
-            OpCodes[OCStack.CloneStackElement]  = { _, vm, _, _ -> vm.stack.push(vm.stack.peek()) }
+            OpCodes[OCStack.LoadConstant] = { _, vm, _, ci -> vm.stack.push(ci.next()) }
+            OpCodes[OCStack.UnLoadConstant] = { _, vm, _, _ -> vm.stack.pop() }
+            OpCodes[OCStack.CloneStackElement] = { _, vm, _, _ -> vm.stack.push(vm.stack.peek()) }
             // Exception
-            OpCodes[OCException.LoadException]      = { _, vm, _, ci -> vm.eStack!!.push(ci.next() as Throwable) }
-            OpCodes[OCException.UnLoadException]    = { _, vm, _, _ -> vm.eStack!!.pop() }
-            OpCodes[OCException.ThrowOnVM]          = { _, vm, _, _ -> throw vm.eStack!!.pop()!! }
+            OpCodes[OCException.LoadException] = { _, vm, _, ci -> vm.eStack!!.push(ci.next() as Throwable) }
+            OpCodes[OCException.UnLoadException] = { _, vm, _, _ -> vm.eStack!!.pop() }
+            OpCodes[OCException.ThrowOnVM] = { _, vm, _, _ -> throw vm.eStack!!.pop()!! }
             // Stack Heap
             OpCodes[OCStackHeap.LoadData] = { _, vm, _, _ ->
                 val le = DmNPUtils.findElement(vm, throwCast(vm.stack.pop()))
@@ -120,33 +121,40 @@ class OpCodeManager {
                 vm.stack.push(method)
             }
             OpCodes[OCData.CreateVariable] = { _, vm, _, _ ->
-                vm.stack.push(DmNPAData(
-                    vm.stack.pop() as String,
-                    DmNPType.VAR,
-                    throwCast(vm.stack.pop())
-                ))
+                vm.stack.push(
+                    DmNPAData(
+                        vm.stack.pop() as String,
+                        DmNPType.VAR,
+                        throwCast(vm.stack.pop())
+                    )
+                )
             }
             OpCodes[OCData.CreateObject] = { _, vm, _, _ ->
-                vm.stack.push(when (throwCast<Any?, DmNPDataType>(vm.stack.pop())) {
-                    DmNPDataType.DmNPData -> DmNPData(
-                        throwCast(vm.stack.pop()),
-                        throwCast(vm.stack.pop()),
-                        vm.stack.pop())
-                    DmNPDataType.DmNPAData -> DmNPAData(
-                        throwCast(vm.stack.pop()),
-                        throwCast(vm.stack.pop()),
-                        throwCast(vm.stack.pop()),
-                        throwCast(vm.stack.pop()),
-                        vm.stack.pop())
-                    DmNPDataType.DmNPDataObject -> DmNPDataObject(
-                        throwCast(vm.stack.pop()),
-                        throwCast(vm.stack.pop()),
-                        throwCast(vm.stack.pop()),
-                        throwCast(vm.stack.pop()),
-                        throwCast(vm.stack.pop()),
-                        throwCast(vm.stack.pop()),
-                        vm.stack.pop())
-                })
+                vm.stack.push(
+                    when (throwCast<Any?, DmNPDataType>(vm.stack.pop())) {
+                        DmNPDataType.DmNPData -> DmNPData(
+                            throwCast(vm.stack.pop()),
+                            throwCast(vm.stack.pop()),
+                            vm.stack.pop()
+                        )
+                        DmNPDataType.DmNPAData -> DmNPAData(
+                            throwCast(vm.stack.pop()),
+                            throwCast(vm.stack.pop()),
+                            throwCast(vm.stack.pop()),
+                            throwCast(vm.stack.pop()),
+                            vm.stack.pop()
+                        )
+                        DmNPDataType.DmNPDataObject -> DmNPDataObject(
+                            throwCast(vm.stack.pop()),
+                            throwCast(vm.stack.pop()),
+                            throwCast(vm.stack.pop()),
+                            throwCast(vm.stack.pop()),
+                            throwCast(vm.stack.pop()),
+                            throwCast(vm.stack.pop()),
+                            vm.stack.pop()
+                        )
+                    }
+                )
             }
             //
             OpCodes[OCData.SetValue] = { _, vm, _, _ ->
@@ -184,10 +192,12 @@ class OpCodeManager {
             }
             // Invoke
             OpCodes[OCInvoke.UnsafeInvokeKotlin] = { _, vm, c, ci ->
-                throwCast<Any?, kotlin_function>(DmNPUtils.findElement(
-                    vm,
-                    throwCast(vm.stack.pop())
-                )!!.value)(vm, c, ci)
+                throwCast<Any?, kotlin_function>(
+                    DmNPUtils.findElement(
+                        vm,
+                        throwCast(vm.stack.pop())
+                    )!!.value
+                )(vm, c, ci)
             }
             OpCodes[OCInvoke.UnsafeInvokeVirtual] = { _, vm, _, _ ->
                 val m = DmNPUtils.findElement(vm, throwCast(vm.stack.pop()))
