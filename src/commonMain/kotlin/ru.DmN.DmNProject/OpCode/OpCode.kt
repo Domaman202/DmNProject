@@ -19,6 +19,7 @@ enum class OCData: IOpCode {
     CreateClass,
     CreateMethod,
     CreateVariable,
+    CreateObject,
 
     SetValue,
     CopySetValue,

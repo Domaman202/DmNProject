@@ -126,6 +126,28 @@ class OpCodeManager {
                     throwCast(vm.stack.pop())
                 ))
             }
+            OpCodes[OCData.CreateObject] = { _, vm, _, _ ->
+                vm.stack.push(when (throwCast<Any?, DmNPDataType>(vm.stack.pop())) {
+                    DmNPDataType.DmNPData -> DmNPData(
+                        throwCast(vm.stack.pop()),
+                        throwCast(vm.stack.pop()),
+                        vm.stack.pop())
+                    DmNPDataType.DmNPAData -> DmNPAData(
+                        throwCast(vm.stack.pop()),
+                        throwCast(vm.stack.pop()),
+                        throwCast(vm.stack.pop()),
+                        throwCast(vm.stack.pop()),
+                        vm.stack.pop())
+                    DmNPDataType.DmNPDataObject -> DmNPDataObject(
+                        throwCast(vm.stack.pop()),
+                        throwCast(vm.stack.pop()),
+                        throwCast(vm.stack.pop()),
+                        throwCast(vm.stack.pop()),
+                        throwCast(vm.stack.pop()),
+                        throwCast(vm.stack.pop()),
+                        vm.stack.pop())
+                })
+            }
             //
             OpCodes[OCData.SetValue] = { _, vm, _, _ ->
                 val v = vm.stack.pop()

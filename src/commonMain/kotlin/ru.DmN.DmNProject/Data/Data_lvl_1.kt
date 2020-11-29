@@ -12,6 +12,17 @@ open class DmNPData(
 )
 
 /**
+ * @author DomamaN202
+ */
+@Serializable
+enum class DmNPDataType
+{
+    DmNPData,
+    DmNPAData,
+    DmNPDataObject
+}
+
+/**
  * @author  DomamaN202
  */
 @Serializable

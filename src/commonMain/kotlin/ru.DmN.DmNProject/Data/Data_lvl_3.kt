@@ -12,8 +12,9 @@ class DmNPDataObject// Constructors
     fm: DmNPDataMap? = null,
     e: DmNPDataMap? = null,
     modifiers: ArrayList<DmNPModifiers>? = null,
-    reference: DmNPDataMap? = null
-) : DmNPAData(name, type, modifiers, reference)
+    reference: DmNPDataMap? = null,
+    value: Any? = null
+) : DmNPAData(name, type, modifiers, reference, value)
 {
     // Fields and methods
     var fm: DmNPDataMap = fm ?: DmNPDataMap()

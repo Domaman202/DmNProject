@@ -15,8 +15,9 @@ open class DmNPAData
     name: String,
     type: DmNPType,
     modifiers: ArrayList<DmNPModifiers>? = null,
-    reference: DmNPDataMap? = null
-) : DmNPData(name, type), IModifiersStorage, IReferenceStorage
+    reference: DmNPDataMap? = null,
+    value: Any? = null
+) : DmNPData(name, type, value), IModifiersStorage, IReferenceStorage
 {
     var modifiers: ArrayList<DmNPModifiers> = modifiers ?: ArrayList()
     var reference: DmNPDataMap = reference ?: DmNPDataMap()
