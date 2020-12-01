@@ -8,12 +8,10 @@ import ru.DmN.DmNProject.VM.*
  * @author  DomamaN202
  */
 class OpCodeManager {
-    companion object {
-        val OpCodes =
-            HashMap<IOpCode, (oc: IOpCode, vm: DmNPVMInterpreter, c: ArrayList<Any?>, ci: ListIterator<Any?>) -> Unit>()
+    companion object : IOpCodeManager {
+        val OpCodes = HashMap<IOpCode, (oc: IOpCode, vm: DmNPVMInterpreter, c: ArrayList<Any?>, ci: ListIterator<Any?>) -> Unit>()
 
-        @Suppress("NON_EXHAUSTIVE_WHEN", "UNCHECKED_CAST")
-        fun parse(oc: IOpCode, vm: DmNPVMInterpreter, c: ArrayList<Any?>, ci: ListIterator<*>) {
+        override fun parse(oc: IOpCode, vm: DmNPVMInterpreter, c: ArrayList<Any?>, ci: ListIterator<*>) {
             val f = OpCodes[oc]
             if (f != null)
                 f(oc, vm, c, ci)
@@ -51,7 +49,6 @@ class OpCodeManager {
             // Data
             // Data.Object
             OpCodes[OCData.CreatePackage] = { _, vm, _, _ ->
-//                val ns = vm.stack.pop() as ArrayList<String>
                 val ns = throwCast<Any?, ArrayList<String>>(vm.stack.pop())
 
                 var le: DmNPData? = null
@@ -191,6 +188,7 @@ class OpCodeManager {
                 o.fm.remove(n)
             }
             // Invoke
+            // Kotlin
             OpCodes[OCInvoke.UnsafeInvokeKotlin] = { _, vm, c, ci ->
                 throwCast<Any?, kotlin_function>(
                     DmNPUtils.findElement(
@@ -199,6 +197,37 @@ class OpCodeManager {
                     )!!.value
                 )(vm, c, ci)
             }
+            OpCodes[OCInvoke.InvokeKotlin] = { _, vm, c, ci ->
+                try {
+                    throwCast<Any?, kotlin_function>(
+                        DmNPUtils.findElement(
+                            vm,
+                            throwCast(vm.stack.pop())
+                        )!!.value
+                    )(vm, c, ci)
+                } catch (e: Throwable) {
+                    if (vm.e)
+                        vm.eStack!!.push(e)
+                    else
+                        throw e
+                }
+            }
+            OpCodes[OCInvoke.InvokeStaticKotlin] = { _, vm, c, ci ->
+                try {
+                    throwCast<Any?, kotlin_function>(
+                        DmNPUtils.findElement(
+                            vm,
+                            throwCast(vm.stack.pop())
+                        )!!.value
+                    )(vm, c, ci)
+                } catch (e: Throwable) {
+                    if (vm.e)
+                        vm.eStack!!.push(e)
+                    else
+                        throw e
+                }
+            }
+            // Virtual
             OpCodes[OCInvoke.UnsafeInvokeVirtual] = { _, vm, _, _ ->
                 val m = DmNPUtils.findElement(vm, throwCast(vm.stack.pop()))
                 if (m != null) {
@@ -209,6 +238,50 @@ class OpCodeManager {
                     mVM.parse(throwCast(m.value))
 
                     vm.next.remove(mVM)
+                }
+            }
+            OpCodes[OCInvoke.InvokeVirtual] = { _, vm, _, _ ->
+                try {
+                    val n = throwCast<Any?, ArrayList<String>>(vm.stack.pop())
+                    val m = DmNPUtils.findElement(vm, n)
+                    if (m != null) {
+                        val mVM = DmNPVMInterpreter()
+                        mVM.prev.add(vm)
+                        vm.next.add(mVM)
+
+                        mVM.parse(throwCast(m.value))
+
+                        vm.next.remove(mVM)
+                    } else {
+                        throw ObjectNullPointerException(n[n.size])
+                    }
+                } catch (e: Throwable) {
+                    if (vm.e)
+                        vm.eStack!!.push(e)
+                    else
+                        throw e
+                }
+            }
+            OpCodes[OCInvoke.InvokeStaticVirtual] = { _, vm, _, _ ->
+                try {
+                    val n = throwCast<Any?, ArrayList<String>>(vm.stack.pop())
+                    val m = DmNPUtils.findElement(vm, n)
+                    if (m != null) {
+                        val mVM = DmNPVMInterpreter()
+                        mVM.prev.add(vm)
+                        vm.next.add(mVM)
+
+                        mVM.parse(throwCast(m.value))
+
+                        vm.next.remove(mVM)
+                    } else {
+                        throw ObjectNullPointerException(n[n.size])
+                    }
+                } catch (e: Throwable) {
+                    if (vm.e)
+                        vm.eStack!!.push(e)
+                    else
+                        throw e
                 }
             }
         }

@@ -1,7 +1,5 @@
 package ru.DmN.DmNProject.OpCode
 
-interface IOpCode
-
 enum class OCStack: IOpCode {
     LoadConstant,
     UnLoadConstant,
@@ -38,8 +36,14 @@ enum class OCStackHeap: IOpCode {
 }
 
 enum class OCInvoke: IOpCode {
+    // Kotlin
     UnsafeInvokeKotlin,
-    UnsafeInvokeVirtual
+    InvokeKotlin,
+    InvokeStaticKotlin,
+    // Virtual
+    UnsafeInvokeVirtual,
+    InvokeVirtual,
+    InvokeStaticVirtual
 }
 
 enum class OCMath: IOpCode {

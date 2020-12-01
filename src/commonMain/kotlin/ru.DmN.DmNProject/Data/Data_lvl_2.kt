@@ -1,8 +1,6 @@
 package ru.DmN.DmNProject.Data
 
 import ru.DmN.DmNProject.Data.Containers.DmNPDataMap
-import ru.DmN.DmNProject.impl.IModifiersStorage
-import ru.DmN.DmNProject.impl.IReferenceStorage
 
 /**
  * @author DomamaN202

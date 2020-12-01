@@ -10,6 +10,7 @@ import ru.DmN.DmNProject.OpCode.OCStackHeap
 import ru.DmN.DmNProject.VM.*
 import kotlin.jvm.Volatile
 import kotlin.test.Test
+import kotlin.time.measureTime
 
 /**
  * @author DomamaN202
@@ -106,8 +107,35 @@ class testing {
     fun test() {
         println("Test started!!!\n\n")
         //
-        
+        val c1 = cls(12)
+        val c2 = cls(c1)
+        println(c2.v.v)
+        c1.v++
+        println(c2.v.v)
         //
         println("\n\nTest competed!!!")
+    }
+}
+
+//class cls(var v: Any? = null)
+class cls<T>
+{
+    var v: T
+    set(value) {
+        if (instance.i > 0) {
+            instance.v = value
+            instance.i--
+        } else {
+            i++
+            field = value
+        }
+    }
+    private val instance: cls<T>
+    private var i = 0
+
+    constructor(v: T, instance: cls<T>? = null)
+    {
+        this.instance = instance ?: this
+        this.v = v
     }
 }
