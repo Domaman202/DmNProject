@@ -73,7 +73,6 @@ class DmNPUtils
             var le = le_
 
             le = when (le!!.value) {
-//                is Any -> (le.value as Map<String, DmNPData>)[names[i]]
                 is Any -> throwCast<Any?, Map<String, DmNPData>>(le.value)[names[i]]
                 else -> {
                     if (le is DmNPDataObject) le.fm[names[i]]
@@ -140,5 +139,7 @@ class DmNPUtils
 
             return le
         }
+
+        private fun find
     }
 }

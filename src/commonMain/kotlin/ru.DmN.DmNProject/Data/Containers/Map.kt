@@ -90,9 +90,12 @@ open class DmNPDataMap : MutableMap<String, DmNPData>, Iterable<DmNPData>
     override fun containsKey(key: String): Boolean = get(key) != null
     override fun containsValue(value: DmNPData): Boolean = da.contains(value)
     override fun get(key: String): DmNPData? {
-        for (i in 0 until da.size)
+        for (i in 0 until da.size) {
             if (da[i].name == key)
                 return da[i]
+            else if (da[i - da.size - 1].name == key)
+                return da[i - da.size - 1]
+        }
         return null
     }
 
