@@ -20,6 +20,9 @@ version = "1.0-SNAPSHOT"
 repositories {
     mavenCentral()
     jcenter()
+
+//    maven { url = "https://jitpack.io" }
+    maven ("https://jitpack.io")
 }
 kotlin {
     jvm {
@@ -59,7 +62,16 @@ kotlin {
                 implementation(kotlin("test-annotations-common"))
             }
         }
-        val jvmMain by getting
+        val jvmMain by getting {
+            dependencies {
+                implementation("com.github.Mouse0w0:FastReflection:1.0.1")
+
+                implementation(kotlin("script-runtime", "1.4.20"))
+                implementation(kotlin("reflect", "1.4.20"))
+
+                implementation("org.codehaus.groovy:groovy-all:2.4.15")
+            }
+        }
         val jvmTest by getting {
             dependencies {
                 implementation(kotlin("test-junit"))
@@ -68,12 +80,23 @@ kotlin {
                 implementation("io.kotest:kotest-runner-junit5:4.3.1") // for kotest framework
                 implementation("io.kotest:kotest-assertions-core:4.3.1") // for kotest core jvm assertions
                 implementation("io.kotest:kotest-property:4.3.1") // for kotest property test
+
+//                implementation(kotlin("script-runtime", "1.4.20"))
+//                implementation(kotlin("reflect", "1.4.20"))
             }
         }
-        val jsMain by getting
+        val jsMain by getting {
+            dependencies {
+                implementation(kotlin("script-runtime", "1.4.20"))
+                implementation(kotlin("reflect", "1.4.20"))
+            }
+        }
         val jsTest by getting {
             dependencies {
                 implementation(kotlin("test-js"))
+
+                implementation(kotlin("script-runtime", "1.4.20"))
+                implementation(kotlin("reflect", "1.4.20"))
             }
         }
         val nativeMain by getting

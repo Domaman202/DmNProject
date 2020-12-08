@@ -13,6 +13,20 @@ inline fun <In, reified Out> throwCast(v: In): Out = if (v is Out) v else throw 
 class DmNPUtils
 {
     companion object {
+        fun callFunction(f: Any?, vm: DmNPVM, c: ArrayList<Any?>, ci: ListIterator<Any?>) {
+            if (f is ArrayList<*>) {
+                val mVM = DmNPVMInterpreter()
+                mVM.prev.add(vm)
+                vm.next.add(mVM)
+
+                mVM.parse(throwCast(f))
+
+                vm.next.remove(mVM)
+            } else {
+                throwCast<Any?, kotlin_function>(f)(vm, c, ci)
+            }
+        }
+
         fun findElement(
             vm: DmNPVM,
             names: ArrayList<String>,
@@ -139,7 +153,10 @@ class DmNPUtils
 
             return le
         }
-
-        
     }
+}
+
+expect class MFileReader(name: String)
+{
+
 }

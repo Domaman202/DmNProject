@@ -287,3 +287,10 @@ class OpCodeManager {
         }
     }
 }
+
+expect class PROpCodeManager
+{
+    companion object {
+        fun init()
+    }
+}
