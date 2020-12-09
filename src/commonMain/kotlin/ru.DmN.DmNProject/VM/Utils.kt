@@ -156,7 +156,92 @@ class DmNPUtils
     }
 }
 
-expect class MFileReader(name: String)
+interface IDmNPNumber
 {
+    fun inc(): IDmNPNumber
+    fun dec(): IDmNPNumber
+    //
+    fun add(v: IDmNPNumber): IDmNPNumber
+    fun sub(v: IDmNPNumber): IDmNPNumber
+    fun mul(v: IDmNPNumber): IDmNPNumber
+    fun div(v: IDmNPNumber): IDmNPNumber
+    //
 
+    //
+    val type: IDmNPNumberType
+    //
+    companion object {
+        fun of(value: Any?): IDmNPNumber? {
+            var n = null
+
+
+
+            return n
+        }
+
+        fun ofType(value: Any?): IDmNPNumber? = null
+    }
+}
+
+enum class IDmNPNumberType
+{
+    B,  // Byte
+    S,  // Short
+    C,  // Char
+    I,  // Int
+    F,  // Float
+    L,  // Long
+    D   // Double
+}
+
+class DmNPNByte(var value: Byte = 0) : IDmNPNumber {
+    override val type: IDmNPNumberType
+        get() = IDmNPNumberType.B
+
+    override fun inc(): IDmNPNumber = IDmNPNumber.of(value++)!!
+    override fun dec(): IDmNPNumber = IDmNPNumber.of(value++)!!
+    override fun add(v: IDmNPNumber): IDmNPNumber {
+        when (v.type) {
+            IDmNPNumberType.B -> {
+
+            }
+        }
+    }
+}
+
+class DmNPNShort(var value: Short) : IDmNPNumber
+{
+    override val type: IDmNPNumberType
+        get() = IDmNPNumberType.S
+}
+
+
+class DmNPNChar(var value: Char) : IDmNPNumber
+{
+    override val type: IDmNPNumberType
+        get() = IDmNPNumberType.C
+}
+
+class DmNPNInt(var value: Int) : IDmNPNumber
+{
+    override val type: IDmNPNumberType
+        get() = IDmNPNumberType.I
+}
+
+class DmNPNFloat(var value: Float) : IDmNPNumber
+{
+    override val type: IDmNPNumberType
+        get() = IDmNPNumberType.F
+}
+
+class DmNPNLong(var value: Long) : IDmNPNumber
+{
+    override val type: IDmNPNumberType
+        get() = IDmNPNumberType.L
+}
+
+class DmNPNDouble(var value: Double) : IDmNPNumber
+{
+    override val type: IDmNPNumberType
+        get() = IDmNPNumberType.D
 }

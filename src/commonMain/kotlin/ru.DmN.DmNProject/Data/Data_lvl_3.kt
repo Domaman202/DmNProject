@@ -21,4 +21,6 @@ class DmNPDataObject// Constructors
     // Extends
     var e: DmNPDataMap = e ?:  DmNPDataMap()
 
+    operator fun set(name: String, value: DmNPData) { fm[name] = value }
+    operator fun get(name: String) = fm[name]
 }

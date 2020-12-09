@@ -69,7 +69,7 @@ kotlin {
                 implementation(kotlin("script-runtime", "1.4.20"))
                 implementation(kotlin("reflect", "1.4.20"))
 
-                implementation("org.codehaus.groovy:groovy-all:2.4.15")
+                implementation("org.codehaus.groovy:groovy-all:2.6.0-alpha-4")
             }
         }
         val jvmTest by getting {
@@ -80,9 +80,6 @@ kotlin {
                 implementation("io.kotest:kotest-runner-junit5:4.3.1") // for kotest framework
                 implementation("io.kotest:kotest-assertions-core:4.3.1") // for kotest core jvm assertions
                 implementation("io.kotest:kotest-property:4.3.1") // for kotest property test
-
-//                implementation(kotlin("script-runtime", "1.4.20"))
-//                implementation(kotlin("reflect", "1.4.20"))
             }
         }
         val jsMain by getting {
