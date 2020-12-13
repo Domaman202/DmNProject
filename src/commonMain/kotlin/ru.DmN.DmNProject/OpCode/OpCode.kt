@@ -46,7 +46,16 @@ enum class OCInvoke: IOpCode {
     InvokeStaticVirtual
 }
 
-enum class OCMath: IPlatformOpCode {
+enum class OCSMath: IOpCode {
+    Inc,
+    Dec,
+    Add,
+    Sub,
+    Mul,
+    Div
+}
+
+enum class OCHMath: IOpCode {
     Inc,
     Dec,
     Add,
