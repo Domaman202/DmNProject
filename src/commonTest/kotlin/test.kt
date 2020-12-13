@@ -74,6 +74,9 @@ class testing {
         code.add(OCStack.LoadConstant)
         code.add(21)
         code.add(OCMath.Add)
+        code.add(OCStack.LoadConstant)
+        code.add(35)
+        code.add(OCMath.Sub)
 
         val vm = DmNPVMInterpreter()
         vm.parse(code)

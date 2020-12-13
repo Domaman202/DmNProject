@@ -287,7 +287,12 @@ class OpCodeManager {
             //
             OpCodes[OCMath.Inc] = { _, vm, _, _ ->
                 try {
-                    vm.stack.push((vm.stack.pop() as IDmNPNumber).inc())
+                    var v = vm.stack.pop()
+
+                    if (v is Number)
+                        v = IDmNPNumber.ofType(v)
+
+                    vm.stack.push((v as IDmNPNumber).inc())
                 } catch (e: Throwable) {
                     if (vm.e)
                         vm.eStack!!.push(e)
@@ -297,7 +302,12 @@ class OpCodeManager {
             }
             OpCodes[OCMath.Dec] = { _, vm, _, _ ->
                 try {
-                    vm.stack.push((vm.stack.pop() as IDmNPNumber).dec())
+                    var v = vm.stack.pop()
+
+                    if (v is Number)
+                        v = IDmNPNumber.ofType(v)
+
+                    vm.stack.push((v as IDmNPNumber).dec())
                 } catch (e: Throwable) {
                     if (vm.e)
                         vm.eStack!!.push(e)
@@ -325,7 +335,15 @@ class OpCodeManager {
             }
             OpCodes[OCMath.Sub] = { _, vm, _, _ ->
                 try {
-                    vm.stack.push((vm.stack.pop() as IDmNPNumber).sub(vm.stack.pop() as IDmNPNumber))
+                    var v1 = vm.stack.pop()
+                    var v2 = vm.stack.pop()
+                    //
+                    if (v1 is Number)
+                        v1 = IDmNPNumber.ofType(v1)
+                    if (v2 is Number)
+                        v2 = IDmNPNumber.ofType(v2)
+                    //
+                    vm.stack.push((v1 as IDmNPNumber).sub(v2 as IDmNPNumber))
                 } catch (e: Throwable) {
                     if (vm.e)
                         vm.eStack!!.push(e)
@@ -335,7 +353,15 @@ class OpCodeManager {
             }
             OpCodes[OCMath.Mul] = { _, vm, _, _ ->
                 try {
-                    vm.stack.push((vm.stack.pop() as IDmNPNumber).mul(vm.stack.pop() as IDmNPNumber))
+                    var v1 = vm.stack.pop()
+                    var v2 = vm.stack.pop()
+                    //
+                    if (v1 is Number)
+                        v1 = IDmNPNumber.ofType(v1)
+                    if (v2 is Number)
+                        v2 = IDmNPNumber.ofType(v2)
+                    //
+                    vm.stack.push((v1 as IDmNPNumber).mul(v2 as IDmNPNumber))
                 } catch (e: Throwable) {
                     if (vm.e)
                         vm.eStack!!.push(e)
@@ -345,7 +371,15 @@ class OpCodeManager {
             }
             OpCodes[OCMath.Div] = { _, vm, _, _ ->
                 try {
-                    vm.stack.push((vm.stack.pop() as IDmNPNumber).div(vm.stack.pop() as IDmNPNumber))
+                    var v1 = vm.stack.pop()
+                    var v2 = vm.stack.pop()
+                    //
+                    if (v1 is Number)
+                        v1 = IDmNPNumber.ofType(v1)
+                    if (v2 is Number)
+                        v2 = IDmNPNumber.ofType(v2)
+                    //
+                    vm.stack.push((v1 as IDmNPNumber).div(v2 as IDmNPNumber))
                 } catch (e: Throwable) {
                     if (vm.e)
                         vm.eStack!!.push(e)
