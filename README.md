@@ -15,4 +15,7 @@ DmNP (DomamanProject) is a virtual machine project that aims to combine AOP and 
 2. https://vk.com/nedish_01
 3. https://vk.com/id591334354
 4. https://vk.com/lover_of_suffer_bullshit
-5. https://vk.com/kenbi_fult
+5. https://vk.com/id387188449
+6. https://vk.com/kenbi_fult
+7. https://vk.com/nikol5555
+8. https://vk.com/id590071408
