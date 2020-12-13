@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
  * @author  DomamaN202
  */
 open class DmNPData(
-    open var name: String,
+    var name: String,
     var type: DmNPType,
     var value: Any? = null
 )

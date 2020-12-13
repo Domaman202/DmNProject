@@ -2,6 +2,7 @@ package ru.DmN.DmNProject.VM
 
 import ru.DmN.DmNProject.Data.DmNPData
 import ru.DmN.DmNProject.Data.DmNPDataObject
+import kotlin.math.roundToLong
 
 typealias kotlin_function = (vm: DmNPVM, c: ArrayList<Any?>, ci: ListIterator<Any?>) -> Unit
 inline fun <In, reified Out> throwCast(v: In): Out = if (v is Out) v else throw ClassCastException()
@@ -166,25 +167,92 @@ interface IDmNPNumber
     fun mul(v: IDmNPNumber): IDmNPNumber
     fun div(v: IDmNPNumber): IDmNPNumber
     //
-
+    fun set(value: Number)
+    fun get(): Number
     //
-    val type: IDmNPNumberType
+    val type: DmNPNType
     //
     companion object {
         fun of(value: Any?): IDmNPNumber? {
-            var n = null
+            var n: IDmNPNumber? = null
 
-
+            if (value is Double) {
+                if (value - value.roundToLong() == 0.0) {
+                    n = if (value >= Byte.MIN_VALUE && value <= Byte.MAX_VALUE)
+                        DmNPNByte(value.toInt().toByte())
+                    else if (value >= Short.MIN_VALUE && value <= Short.MAX_VALUE)
+                        DmNPNShort(value.toInt().toShort())
+                    else if (value >= Int.MIN_VALUE && value <= Int.MAX_VALUE)
+                        DmNPNInt(value.toInt())
+                    else if (value >= Float.MIN_VALUE && value <= Float.MAX_VALUE)
+                        DmNPNFloat(value.toFloat())
+                    else if (value >= Long.MIN_VALUE && value <= Long.MAX_VALUE)
+                        DmNPNLong(value.toLong())
+                    else
+                        DmNPNDouble(value)
+                } else {
+                    n = if (value >= Float.MIN_VALUE && value <= Float.MAX_VALUE)
+                        DmNPNFloat(value.toFloat())
+                    else
+                        DmNPNDouble(value)
+                }
+            } else if (value is Float) {
+                n = if (value - value.roundToLong() == 0.0F) {
+                    if (value >= Byte.MIN_VALUE && value <= Byte.MAX_VALUE)
+                        DmNPNByte(value.toInt().toByte())
+                    else if (value >= Short.MIN_VALUE && value <= Short.MAX_VALUE)
+                        DmNPNShort(value.toInt().toShort())
+                    else if (value >= Int.MIN_VALUE && value <= Int.MAX_VALUE)
+                        DmNPNInt(value.toInt())
+                    else
+                        DmNPNFloat(value)
+                } else
+                    DmNPNFloat(value)
+            } else if (value is Long) {
+                n = if (value >= Byte.MIN_VALUE && value <= Byte.MAX_VALUE)
+                    DmNPNByte(value.toByte())
+                else if (value >= Short.MIN_VALUE && value <= Short.MAX_VALUE)
+                    DmNPNShort(value.toShort())
+                else if (value >= Int.MIN_VALUE && value <= Int.MAX_VALUE)
+                    DmNPNInt(value.toInt())
+                else
+                    DmNPNLong(value)
+            } else if (value is Int) {
+                n = if (value >= Byte.MIN_VALUE && value <= Byte.MAX_VALUE)
+                    DmNPNByte(value.toByte())
+                else if (value >= Short.MIN_VALUE && value <= Short.MAX_VALUE)
+                    DmNPNShort(value.toShort())
+                else
+                    DmNPNInt(value)
+            } else if (value is Short) {
+                n = if (value >= Byte.MIN_VALUE && value <= Byte.MAX_VALUE)
+                    DmNPNByte(value.toByte())
+                else
+                    DmNPNShort(value)
+            } else if (value is Byte)
+                n = DmNPNByte(value)
 
             return n
         }
 
-        fun ofType(value: Any?): IDmNPNumber? = null
+        fun ofType(value: Any?): IDmNPNumber? {
+            return when (value) {
+                0 -> DmNPNNull()
+                is Byte -> DmNPNByte(value)
+                is Short -> DmNPNShort(value)
+                is Char -> DmNPNChar(value)
+                is Int -> DmNPNInt(value)
+                is Float -> DmNPNFloat(value)
+                is Double -> DmNPNDouble(value)
+                else -> null
+            }
+        }
     }
 }
 
-enum class IDmNPNumberType
+enum class DmNPNType
 {
+    N,  // Null
     B,  // Byte
     S,  // Short
     C,  // Char
@@ -194,54 +262,421 @@ enum class IDmNPNumberType
     D   // Double
 }
 
+class DmNPNNull: IDmNPNumber {
+    override val type: DmNPNType get() = DmNPNType.N
+    override fun set(value: Number) = TODO("Not yet implemented")
+    override fun get(): Number = 0
+
+    override fun inc(): IDmNPNumber = DmNPNByte(1)
+    override fun dec(): IDmNPNumber = DmNPNByte(-1)
+    override fun add(v: IDmNPNumber): IDmNPNumber = v
+    override fun sub(v: IDmNPNumber): IDmNPNumber = v
+    override fun mul(v: IDmNPNumber): IDmNPNumber = v
+    override fun div(v: IDmNPNumber): IDmNPNumber = v
+}
+
 class DmNPNByte(var value: Byte = 0) : IDmNPNumber {
-    override val type: IDmNPNumberType
-        get() = IDmNPNumberType.B
+    override val type: DmNPNType get() = DmNPNType.B
+    override fun set(value: Number) { this.value = value as Byte }
+    override fun get(): Byte = value
 
     override fun inc(): IDmNPNumber = IDmNPNumber.of(value++)!!
     override fun dec(): IDmNPNumber = IDmNPNumber.of(value++)!!
     override fun add(v: IDmNPNumber): IDmNPNumber {
-        when (v.type) {
-            IDmNPNumberType.B -> {
-
-            }
+        return when (v.type) {
+            DmNPNType.N -> v
+            DmNPNType.B -> IDmNPNumber.of(v.get() as Byte    + value)!!
+            DmNPNType.S -> IDmNPNumber.of(v.get() as Short   + value)!!
+            DmNPNType.C -> IDmNPNumber.of(v.get() as Int     + value)!!
+            DmNPNType.I -> IDmNPNumber.of(v.get() as Int     + value)!!
+            DmNPNType.F -> IDmNPNumber.of(v.get() as Float   + value)!!
+            DmNPNType.L -> IDmNPNumber.of(v.get() as Long    + value)!!
+            DmNPNType.D -> IDmNPNumber.of(v.get() as Double  + value)!!
+        }
+    }
+    override fun sub(v: IDmNPNumber): IDmNPNumber {
+        return when (v.type) {
+            DmNPNType.N -> v
+            DmNPNType.B -> IDmNPNumber.of(v.get() as Byte    - value)!!
+            DmNPNType.S -> IDmNPNumber.of(v.get() as Short   - value)!!
+            DmNPNType.C -> IDmNPNumber.of(v.get() as Int     - value)!!
+            DmNPNType.I -> IDmNPNumber.of(v.get() as Int     - value)!!
+            DmNPNType.F -> IDmNPNumber.of(v.get() as Float   - value)!!
+            DmNPNType.L -> IDmNPNumber.of(v.get() as Long    - value)!!
+            DmNPNType.D -> IDmNPNumber.of(v.get() as Double  - value)!!
+        }
+    }
+    override fun mul(v: IDmNPNumber): IDmNPNumber {
+        return when (v.type) {
+            DmNPNType.N -> v
+            DmNPNType.B -> IDmNPNumber.of(v.get() as Byte    * value)!!
+            DmNPNType.S -> IDmNPNumber.of(v.get() as Short   * value)!!
+            DmNPNType.C -> IDmNPNumber.of(v.get() as Int     * value)!!
+            DmNPNType.I -> IDmNPNumber.of(v.get() as Int     * value)!!
+            DmNPNType.F -> IDmNPNumber.of(v.get() as Float   * value)!!
+            DmNPNType.L -> IDmNPNumber.of(v.get() as Long    * value)!!
+            DmNPNType.D -> IDmNPNumber.of(v.get() as Double  * value)!!
+        }
+    }
+    override fun div(v: IDmNPNumber): IDmNPNumber {
+        return when (v.type) {
+            DmNPNType.N -> v
+            DmNPNType.B -> IDmNPNumber.of(v.get() as Byte    / value)!!
+            DmNPNType.S -> IDmNPNumber.of(v.get() as Short   / value)!!
+            DmNPNType.C -> IDmNPNumber.of(v.get() as Int     / value)!!
+            DmNPNType.I -> IDmNPNumber.of(v.get() as Int     / value)!!
+            DmNPNType.F -> IDmNPNumber.of(v.get() as Float   / value)!!
+            DmNPNType.L -> IDmNPNumber.of(v.get() as Long    / value)!!
+            DmNPNType.D -> IDmNPNumber.of(v.get() as Double  / value)!!
         }
     }
 }
 
 class DmNPNShort(var value: Short) : IDmNPNumber
 {
-    override val type: IDmNPNumberType
-        get() = IDmNPNumberType.S
+    override val type: DmNPNType get() = DmNPNType.S
+    override fun set(value: Number) { this.value = value as Short }
+    override fun get(): Number = value
+
+    override fun inc(): IDmNPNumber = IDmNPNumber.of(value++)!!
+    override fun dec(): IDmNPNumber = IDmNPNumber.of(value++)!!
+    override fun add(v: IDmNPNumber): IDmNPNumber {
+        return when (v.type) {
+            DmNPNType.N -> v
+            DmNPNType.B -> IDmNPNumber.of(v.get() as Byte    + value)!!
+            DmNPNType.S -> IDmNPNumber.of(v.get() as Short   + value)!!
+            DmNPNType.C -> IDmNPNumber.of(v.get() as Int     + value)!!
+            DmNPNType.I -> IDmNPNumber.of(v.get() as Int     + value)!!
+            DmNPNType.F -> IDmNPNumber.of(v.get() as Float   + value)!!
+            DmNPNType.L -> IDmNPNumber.of(v.get() as Long    + value)!!
+            DmNPNType.D -> IDmNPNumber.of(v.get() as Double  + value)!!
+        }
+    }
+    override fun sub(v: IDmNPNumber): IDmNPNumber {
+        return when (v.type) {
+            DmNPNType.N -> v
+            DmNPNType.B -> IDmNPNumber.of(v.get() as Byte    - value)!!
+            DmNPNType.S -> IDmNPNumber.of(v.get() as Short   - value)!!
+            DmNPNType.C -> IDmNPNumber.of(v.get() as Int     - value)!!
+            DmNPNType.I -> IDmNPNumber.of(v.get() as Int     - value)!!
+            DmNPNType.F -> IDmNPNumber.of(v.get() as Float   - value)!!
+            DmNPNType.L -> IDmNPNumber.of(v.get() as Long    - value)!!
+            DmNPNType.D -> IDmNPNumber.of(v.get() as Double  - value)!!
+        }
+    }
+    override fun mul(v: IDmNPNumber): IDmNPNumber {
+        return when (v.type) {
+            DmNPNType.N -> v
+            DmNPNType.B -> IDmNPNumber.of(v.get() as Byte    * value)!!
+            DmNPNType.S -> IDmNPNumber.of(v.get() as Short   * value)!!
+            DmNPNType.C -> IDmNPNumber.of(v.get() as Int     * value)!!
+            DmNPNType.I -> IDmNPNumber.of(v.get() as Int     * value)!!
+            DmNPNType.F -> IDmNPNumber.of(v.get() as Float   * value)!!
+            DmNPNType.L -> IDmNPNumber.of(v.get() as Long    * value)!!
+            DmNPNType.D -> IDmNPNumber.of(v.get() as Double  * value)!!
+        }
+    }
+    override fun div(v: IDmNPNumber): IDmNPNumber {
+        return when (v.type) {
+            DmNPNType.N -> v
+            DmNPNType.B -> IDmNPNumber.of(v.get() as Byte    / value)!!
+            DmNPNType.S -> IDmNPNumber.of(v.get() as Short   / value)!!
+            DmNPNType.C -> IDmNPNumber.of(v.get() as Int     / value)!!
+            DmNPNType.I -> IDmNPNumber.of(v.get() as Int     / value)!!
+            DmNPNType.F -> IDmNPNumber.of(v.get() as Float   / value)!!
+            DmNPNType.L -> IDmNPNumber.of(v.get() as Long    / value)!!
+            DmNPNType.D -> IDmNPNumber.of(v.get() as Double  / value)!!
+        }
+    }
 }
 
 
 class DmNPNChar(var value: Char) : IDmNPNumber
 {
-    override val type: IDmNPNumberType
-        get() = IDmNPNumberType.C
+    override val type: DmNPNType get() = DmNPNType.C
+    override fun set(value: Number) { this.value = value.toChar() }
+    override fun get(): Number = value.toInt()
+
+    override fun inc(): IDmNPNumber = IDmNPNumber.of(value++)!!
+    override fun dec(): IDmNPNumber = IDmNPNumber.of(value++)!!
+    override fun add(v: IDmNPNumber): IDmNPNumber {
+        return when (v.type) {
+            DmNPNType.N -> v
+            DmNPNType.B -> IDmNPNumber.of(v.get() as Byte    + value.toInt())!!
+            DmNPNType.S -> IDmNPNumber.of(v.get() as Short   + value.toInt())!!
+            DmNPNType.C -> IDmNPNumber.of(v.get() as Int     + value.toInt())!!
+            DmNPNType.I -> IDmNPNumber.of(v.get() as Int     + value.toInt())!!
+            DmNPNType.F -> IDmNPNumber.of(v.get() as Float   + value.toInt())!!
+            DmNPNType.L -> IDmNPNumber.of(v.get() as Long    + value.toInt())!!
+            DmNPNType.D -> IDmNPNumber.of(v.get() as Double  + value.toInt())!!
+        }
+    }
+    override fun sub(v: IDmNPNumber): IDmNPNumber {
+        return when (v.type) {
+            DmNPNType.N -> v
+            DmNPNType.B -> IDmNPNumber.of(v.get() as Byte    - value.toInt())!!
+            DmNPNType.S -> IDmNPNumber.of(v.get() as Short   - value.toInt())!!
+            DmNPNType.C -> IDmNPNumber.of(v.get() as Int     - value.toInt())!!
+            DmNPNType.I -> IDmNPNumber.of(v.get() as Int     - value.toInt())!!
+            DmNPNType.F -> IDmNPNumber.of(v.get() as Float   - value.toInt())!!
+            DmNPNType.L -> IDmNPNumber.of(v.get() as Long    - value.toInt())!!
+            DmNPNType.D -> IDmNPNumber.of(v.get() as Double  - value.toInt())!!
+        }
+    }
+    override fun mul(v: IDmNPNumber): IDmNPNumber {
+        return when (v.type) {
+            DmNPNType.N -> v
+            DmNPNType.B -> IDmNPNumber.of(v.get() as Byte    * value.toInt())!!
+            DmNPNType.S -> IDmNPNumber.of(v.get() as Short   * value.toInt())!!
+            DmNPNType.C -> IDmNPNumber.of(v.get() as Int     * value.toInt())!!
+            DmNPNType.I -> IDmNPNumber.of(v.get() as Int     * value.toInt())!!
+            DmNPNType.F -> IDmNPNumber.of(v.get() as Float   * value.toInt())!!
+            DmNPNType.L -> IDmNPNumber.of(v.get() as Long    * value.toInt())!!
+            DmNPNType.D -> IDmNPNumber.of(v.get() as Double  * value.toInt())!!
+        }
+    }
+    override fun div(v: IDmNPNumber): IDmNPNumber {
+        return when (v.type) {
+            DmNPNType.N -> v
+            DmNPNType.B -> IDmNPNumber.of(v.get() as Byte    / value.toInt())!!
+            DmNPNType.S -> IDmNPNumber.of(v.get() as Short   / value.toInt())!!
+            DmNPNType.C -> IDmNPNumber.of(v.get() as Int     / value.toInt())!!
+            DmNPNType.I -> IDmNPNumber.of(v.get() as Int     / value.toInt())!!
+            DmNPNType.F -> IDmNPNumber.of(v.get() as Float   / value.toInt())!!
+            DmNPNType.L -> IDmNPNumber.of(v.get() as Long    / value.toInt())!!
+            DmNPNType.D -> IDmNPNumber.of(v.get() as Double  / value.toInt())!!
+        }
+    }
 }
 
 class DmNPNInt(var value: Int) : IDmNPNumber
 {
-    override val type: IDmNPNumberType
-        get() = IDmNPNumberType.I
+    override val type: DmNPNType get() = DmNPNType.I
+    override fun set(value: Number) { this.value = value as Int }
+    override fun get(): Number = value
+
+    override fun inc(): IDmNPNumber = IDmNPNumber.of(value++)!!
+    override fun dec(): IDmNPNumber = IDmNPNumber.of(value++)!!
+    override fun add(v: IDmNPNumber): IDmNPNumber {
+        return when (v.type) {
+            DmNPNType.N -> v
+            DmNPNType.B -> IDmNPNumber.of(v.get() as Byte    + value)!!
+            DmNPNType.S -> IDmNPNumber.of(v.get() as Short   + value)!!
+            DmNPNType.C -> IDmNPNumber.of(v.get() as Int     + value)!!
+            DmNPNType.I -> IDmNPNumber.of(v.get() as Int     + value)!!
+            DmNPNType.F -> IDmNPNumber.of(v.get() as Float   + value)!!
+            DmNPNType.L -> IDmNPNumber.of(v.get() as Long    + value)!!
+            DmNPNType.D -> IDmNPNumber.of(v.get() as Double  + value)!!
+        }
+    }
+    override fun sub(v: IDmNPNumber): IDmNPNumber {
+        return when (v.type) {
+            DmNPNType.N -> v
+            DmNPNType.B -> IDmNPNumber.of(v.get() as Byte    - value)!!
+            DmNPNType.S -> IDmNPNumber.of(v.get() as Short   - value)!!
+            DmNPNType.C -> IDmNPNumber.of(v.get() as Int     - value)!!
+            DmNPNType.I -> IDmNPNumber.of(v.get() as Int     - value)!!
+            DmNPNType.F -> IDmNPNumber.of(v.get() as Float   - value)!!
+            DmNPNType.L -> IDmNPNumber.of(v.get() as Long    - value)!!
+            DmNPNType.D -> IDmNPNumber.of(v.get() as Double  - value)!!
+        }
+    }
+    override fun mul(v: IDmNPNumber): IDmNPNumber {
+        return when (v.type) {
+            DmNPNType.N -> v
+            DmNPNType.B -> IDmNPNumber.of(v.get() as Byte    * value)!!
+            DmNPNType.S -> IDmNPNumber.of(v.get() as Short   * value)!!
+            DmNPNType.C -> IDmNPNumber.of(v.get() as Int     * value)!!
+            DmNPNType.I -> IDmNPNumber.of(v.get() as Int     * value)!!
+            DmNPNType.F -> IDmNPNumber.of(v.get() as Float   * value)!!
+            DmNPNType.L -> IDmNPNumber.of(v.get() as Long    * value)!!
+            DmNPNType.D -> IDmNPNumber.of(v.get() as Double  * value)!!
+        }
+    }
+    override fun div(v: IDmNPNumber): IDmNPNumber {
+        return when (v.type) {
+            DmNPNType.N -> v
+            DmNPNType.B -> IDmNPNumber.of(v.get() as Byte    / value)!!
+            DmNPNType.S -> IDmNPNumber.of(v.get() as Short   / value)!!
+            DmNPNType.C -> IDmNPNumber.of(v.get() as Int     / value)!!
+            DmNPNType.I -> IDmNPNumber.of(v.get() as Int     / value)!!
+            DmNPNType.F -> IDmNPNumber.of(v.get() as Float   / value)!!
+            DmNPNType.L -> IDmNPNumber.of(v.get() as Long    / value)!!
+            DmNPNType.D -> IDmNPNumber.of(v.get() as Double  / value)!!
+        }
+    }
 }
 
 class DmNPNFloat(var value: Float) : IDmNPNumber
 {
-    override val type: IDmNPNumberType
-        get() = IDmNPNumberType.F
+    override val type: DmNPNType get() = DmNPNType.F
+    override fun set(value: Number) { this.value = value as Float }
+    override fun get(): Number = value
+
+    override fun inc(): IDmNPNumber = IDmNPNumber.of(value++)!!
+    override fun dec(): IDmNPNumber = IDmNPNumber.of(value++)!!
+    override fun add(v: IDmNPNumber): IDmNPNumber {
+        return when (v.type) {
+            DmNPNType.N -> v
+            DmNPNType.B -> IDmNPNumber.of(v.get() as Byte    + value)!!
+            DmNPNType.S -> IDmNPNumber.of(v.get() as Short   + value)!!
+            DmNPNType.C -> IDmNPNumber.of(v.get() as Int     + value)!!
+            DmNPNType.I -> IDmNPNumber.of(v.get() as Int     + value)!!
+            DmNPNType.F -> IDmNPNumber.of(v.get() as Float   + value)!!
+            DmNPNType.L -> IDmNPNumber.of(v.get() as Long    + value)!!
+            DmNPNType.D -> IDmNPNumber.of(v.get() as Double  + value)!!
+        }
+    }
+    override fun sub(v: IDmNPNumber): IDmNPNumber {
+        return when (v.type) {
+            DmNPNType.N -> v
+            DmNPNType.B -> IDmNPNumber.of(v.get() as Byte    - value)!!
+            DmNPNType.S -> IDmNPNumber.of(v.get() as Short   - value)!!
+            DmNPNType.C -> IDmNPNumber.of(v.get() as Int     - value)!!
+            DmNPNType.I -> IDmNPNumber.of(v.get() as Int     - value)!!
+            DmNPNType.F -> IDmNPNumber.of(v.get() as Float   - value)!!
+            DmNPNType.L -> IDmNPNumber.of(v.get() as Long    - value)!!
+            DmNPNType.D -> IDmNPNumber.of(v.get() as Double  - value)!!
+        }
+    }
+    override fun mul(v: IDmNPNumber): IDmNPNumber {
+        return when (v.type) {
+            DmNPNType.N -> v
+            DmNPNType.B -> IDmNPNumber.of(v.get() as Byte    * value)!!
+            DmNPNType.S -> IDmNPNumber.of(v.get() as Short   * value)!!
+            DmNPNType.C -> IDmNPNumber.of(v.get() as Int     * value)!!
+            DmNPNType.I -> IDmNPNumber.of(v.get() as Int     * value)!!
+            DmNPNType.F -> IDmNPNumber.of(v.get() as Float   * value)!!
+            DmNPNType.L -> IDmNPNumber.of(v.get() as Long    * value)!!
+            DmNPNType.D -> IDmNPNumber.of(v.get() as Double  * value)!!
+        }
+    }
+    override fun div(v: IDmNPNumber): IDmNPNumber {
+        return when (v.type) {
+            DmNPNType.N -> v
+            DmNPNType.B -> IDmNPNumber.of(v.get() as Byte    / value)!!
+            DmNPNType.S -> IDmNPNumber.of(v.get() as Short   / value)!!
+            DmNPNType.C -> IDmNPNumber.of(v.get() as Int     / value)!!
+            DmNPNType.I -> IDmNPNumber.of(v.get() as Int     / value)!!
+            DmNPNType.F -> IDmNPNumber.of(v.get() as Float   / value)!!
+            DmNPNType.L -> IDmNPNumber.of(v.get() as Long    / value)!!
+            DmNPNType.D -> IDmNPNumber.of(v.get() as Double  / value)!!
+        }
+    }
 }
 
 class DmNPNLong(var value: Long) : IDmNPNumber
 {
-    override val type: IDmNPNumberType
-        get() = IDmNPNumberType.L
+    override val type: DmNPNType get() = DmNPNType.L
+    override fun set(value: Number) { this.value = value as Long }
+    override fun get(): Number = value
+
+    override fun inc(): IDmNPNumber = IDmNPNumber.of(value++)!!
+    override fun dec(): IDmNPNumber = IDmNPNumber.of(value++)!!
+    override fun add(v: IDmNPNumber): IDmNPNumber {
+        return when (v.type) {
+            DmNPNType.N -> v
+            DmNPNType.B -> IDmNPNumber.of(v.get() as Byte    + value)!!
+            DmNPNType.S -> IDmNPNumber.of(v.get() as Short   + value)!!
+            DmNPNType.C -> IDmNPNumber.of(v.get() as Int     + value)!!
+            DmNPNType.I -> IDmNPNumber.of(v.get() as Int     + value)!!
+            DmNPNType.F -> IDmNPNumber.of(v.get() as Float   + value)!!
+            DmNPNType.L -> IDmNPNumber.of(v.get() as Long    + value)!!
+            DmNPNType.D -> IDmNPNumber.of(v.get() as Double  + value)!!
+        }
+    }
+    override fun sub(v: IDmNPNumber): IDmNPNumber {
+        return when (v.type) {
+            DmNPNType.N -> v
+            DmNPNType.B -> IDmNPNumber.of(v.get() as Byte    - value)!!
+            DmNPNType.S -> IDmNPNumber.of(v.get() as Short   - value)!!
+            DmNPNType.C -> IDmNPNumber.of(v.get() as Int     - value)!!
+            DmNPNType.I -> IDmNPNumber.of(v.get() as Int     - value)!!
+            DmNPNType.F -> IDmNPNumber.of(v.get() as Float   - value)!!
+            DmNPNType.L -> IDmNPNumber.of(v.get() as Long    - value)!!
+            DmNPNType.D -> IDmNPNumber.of(v.get() as Double  - value)!!
+        }
+    }
+    override fun mul(v: IDmNPNumber): IDmNPNumber {
+        return when (v.type) {
+            DmNPNType.N -> v
+            DmNPNType.B -> IDmNPNumber.of(v.get() as Byte    * value)!!
+            DmNPNType.S -> IDmNPNumber.of(v.get() as Short   * value)!!
+            DmNPNType.C -> IDmNPNumber.of(v.get() as Int     * value)!!
+            DmNPNType.I -> IDmNPNumber.of(v.get() as Int     * value)!!
+            DmNPNType.F -> IDmNPNumber.of(v.get() as Float   * value)!!
+            DmNPNType.L -> IDmNPNumber.of(v.get() as Long    * value)!!
+            DmNPNType.D -> IDmNPNumber.of(v.get() as Double  * value)!!
+        }
+    }
+    override fun div(v: IDmNPNumber): IDmNPNumber {
+        return when (v.type) {
+            DmNPNType.N -> v
+            DmNPNType.B -> IDmNPNumber.of(v.get() as Byte    / value)!!
+            DmNPNType.S -> IDmNPNumber.of(v.get() as Short   / value)!!
+            DmNPNType.C -> IDmNPNumber.of(v.get() as Int     / value)!!
+            DmNPNType.I -> IDmNPNumber.of(v.get() as Int     / value)!!
+            DmNPNType.F -> IDmNPNumber.of(v.get() as Float   / value)!!
+            DmNPNType.L -> IDmNPNumber.of(v.get() as Long    / value)!!
+            DmNPNType.D -> IDmNPNumber.of(v.get() as Double  / value)!!
+        }
+    }
 }
 
 class DmNPNDouble(var value: Double) : IDmNPNumber
 {
-    override val type: IDmNPNumberType
-        get() = IDmNPNumberType.D
+    override val type: DmNPNType get() = DmNPNType.D
+    override fun set(value: Number) { this.value = value as Double }
+    override fun get(): Number = value
+
+    override fun inc(): IDmNPNumber = IDmNPNumber.of(value++)!!
+    override fun dec(): IDmNPNumber = IDmNPNumber.of(value++)!!
+    override fun add(v: IDmNPNumber): IDmNPNumber {
+        return when (v.type) {
+            DmNPNType.N -> v
+            DmNPNType.B -> IDmNPNumber.of(v.get() as Byte    + value)!!
+            DmNPNType.S -> IDmNPNumber.of(v.get() as Short   + value)!!
+            DmNPNType.C -> IDmNPNumber.of(v.get() as Int     + value)!!
+            DmNPNType.I -> IDmNPNumber.of(v.get() as Int     + value)!!
+            DmNPNType.F -> IDmNPNumber.of(v.get() as Float   + value)!!
+            DmNPNType.L -> IDmNPNumber.of(v.get() as Long    + value)!!
+            DmNPNType.D -> IDmNPNumber.of(v.get() as Double  + value)!!
+        }
+    }
+    override fun sub(v: IDmNPNumber): IDmNPNumber {
+        return when (v.type) {
+            DmNPNType.N -> v
+            DmNPNType.B -> IDmNPNumber.of(v.get() as Byte    - value)!!
+            DmNPNType.S -> IDmNPNumber.of(v.get() as Short   - value)!!
+            DmNPNType.C -> IDmNPNumber.of(v.get() as Int     - value)!!
+            DmNPNType.I -> IDmNPNumber.of(v.get() as Int     - value)!!
+            DmNPNType.F -> IDmNPNumber.of(v.get() as Float   - value)!!
+            DmNPNType.L -> IDmNPNumber.of(v.get() as Long    - value)!!
+            DmNPNType.D -> IDmNPNumber.of(v.get() as Double  - value)!!
+        }
+    }
+    override fun mul(v: IDmNPNumber): IDmNPNumber {
+        return when (v.type) {
+            DmNPNType.N -> v
+            DmNPNType.B -> IDmNPNumber.of(v.get() as Byte    * value)!!
+            DmNPNType.S -> IDmNPNumber.of(v.get() as Short   * value)!!
+            DmNPNType.C -> IDmNPNumber.of(v.get() as Int     * value)!!
+            DmNPNType.I -> IDmNPNumber.of(v.get() as Int     * value)!!
+            DmNPNType.F -> IDmNPNumber.of(v.get() as Float   * value)!!
+            DmNPNType.L -> IDmNPNumber.of(v.get() as Long    * value)!!
+            DmNPNType.D -> IDmNPNumber.of(v.get() as Double  * value)!!
+        }
+    }
+    override fun div(v: IDmNPNumber): IDmNPNumber {
+        return when (v.type) {
+            DmNPNType.N -> v
+            DmNPNType.B -> IDmNPNumber.of(v.get() as Byte    / value)!!
+            DmNPNType.S -> IDmNPNumber.of(v.get() as Short   / value)!!
+            DmNPNType.C -> IDmNPNumber.of(v.get() as Int     / value)!!
+            DmNPNType.I -> IDmNPNumber.of(v.get() as Int     / value)!!
+            DmNPNType.F -> IDmNPNumber.of(v.get() as Float   / value)!!
+            DmNPNType.L -> IDmNPNumber.of(v.get() as Long    / value)!!
+            DmNPNType.D -> IDmNPNumber.of(v.get() as Double  / value)!!
+        }
+    }
 }

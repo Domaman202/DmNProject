@@ -93,7 +93,7 @@ open class DmNPDataMap : MutableMap<String, DmNPData>, Iterable<DmNPData>
         for (i in 0 until da.size) {
             if (da[i].name == key)
                 return da[i]
-            else if (da[i - da.size - 1].name == key)
+            else if (i - da.size - 1 >= 0 && da[i - da.size - 1].name == key)
                 return da[i - da.size - 1]
         }
         return null

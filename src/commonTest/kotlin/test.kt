@@ -3,10 +3,7 @@ import ru.DmN.DmNProject.Data.Containers.Stack
 import ru.DmN.DmNProject.Data.DmNPData
 import ru.DmN.DmNProject.Data.DmNPModifiers
 import ru.DmN.DmNProject.Data.DmNPType
-import ru.DmN.DmNProject.OpCode.OCData
-import ru.DmN.DmNProject.OpCode.OCInvoke
-import ru.DmN.DmNProject.OpCode.OCStack
-import ru.DmN.DmNProject.OpCode.OCStackHeap
+import ru.DmN.DmNProject.OpCode.*
 import ru.DmN.DmNProject.VM.*
 import kotlin.test.Test
 
@@ -63,6 +60,25 @@ class testing {
         vm.parse(ct)
         //
         println("\n\nTesting completed!")
+    }
+
+    @Test
+    fun mathTest()
+    {
+        println("Test started!!!\n\n")
+        //
+        val code = ArrayList<Any?>()
+
+        code.add(OCStack.LoadConstant)
+        code.add(12)
+        code.add(OCStack.LoadConstant)
+        code.add(21)
+        code.add(OCMath.Add)
+
+        val vm = DmNPVMInterpreter()
+        vm.parse(code)
+        //
+        println("\n\nTest competed!!!")
     }
 
     @Test
