@@ -203,8 +203,6 @@ object OCMMath {
         }
         OpCodeManager.OpCodes[OCHMath.Mul] = { _, vm, c, ci ->
             try {
-                val names1 = throwCast<Any?, ArrayList<String>>(vm.stack.pop())
-                val names2 = throwCast<Any?, ArrayList<String>>(vm.stack.pop())
                 val o1 = throwCast<DmNPData?, DmNPDataObject>(DmNPUtils.findElement(vm, throwCast(vm.stack.pop())))
                 val o2 = throwCast<DmNPData?, DmNPDataObject>(DmNPUtils.findElement(vm, throwCast(vm.stack.pop())))
 
@@ -228,8 +226,6 @@ object OCMMath {
         }
         OpCodeManager.OpCodes[OCHMath.Div] = { _, vm, c, ci ->
             try {
-                val names1 = throwCast<Any?, ArrayList<String>>(vm.stack.pop())
-                val names2 = throwCast<Any?, ArrayList<String>>(vm.stack.pop())
                 val o1 = throwCast<DmNPData?, DmNPDataObject>(DmNPUtils.findElement(vm, throwCast(vm.stack.pop())))
                 val o2 = throwCast<DmNPData?, DmNPDataObject>(DmNPUtils.findElement(vm, throwCast(vm.stack.pop())))
 
