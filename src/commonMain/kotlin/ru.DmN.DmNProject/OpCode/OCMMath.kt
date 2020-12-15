@@ -157,10 +157,8 @@ object OCMMath {
         }
         OpCodeManager.OpCodes[OCHMath.Add] = { _, vm, c, ci ->
             try {
-                val names1 = throwCast<Any?, ArrayList<String>>(vm.stack.pop())
-                val names2 = throwCast<Any?, ArrayList<String>>(vm.stack.pop())
-                val o1 = throwCast<DmNPData?, DmNPDataObject>(DmNPUtils.findElement(vm, names1))
-                val o2 = throwCast<DmNPData?, DmNPDataObject>(DmNPUtils.findElement(vm, names1))
+                val o1 = throwCast<DmNPData?, DmNPDataObject>(DmNPUtils.findElement(vm, throwCast(vm.stack.pop())))
+                val o2 = throwCast<DmNPData?, DmNPDataObject>(DmNPUtils.findElement(vm, throwCast(vm.stack.pop())))
 
                 if (!o1.fm.containsKey("add")) {
                     var v = o1.value
@@ -182,10 +180,8 @@ object OCMMath {
         }
         OpCodeManager.OpCodes[OCHMath.Sub] = { _, vm, c, ci ->
             try {
-                val names1 = throwCast<Any?, ArrayList<String>>(vm.stack.pop())
-                val names2 = throwCast<Any?, ArrayList<String>>(vm.stack.pop())
-                val o1 = throwCast<DmNPData?, DmNPDataObject>(DmNPUtils.findElement(vm, names1))
-                val o2 = throwCast<DmNPData?, DmNPDataObject>(DmNPUtils.findElement(vm, names1))
+                val o1 = throwCast<DmNPData?, DmNPDataObject>(DmNPUtils.findElement(vm, throwCast(vm.stack.pop())))
+                val o2 = throwCast<DmNPData?, DmNPDataObject>(DmNPUtils.findElement(vm, throwCast(vm.stack.pop())))
 
                 if (!o1.fm.containsKey("sub")) {
                     var v = o1.value
@@ -209,8 +205,8 @@ object OCMMath {
             try {
                 val names1 = throwCast<Any?, ArrayList<String>>(vm.stack.pop())
                 val names2 = throwCast<Any?, ArrayList<String>>(vm.stack.pop())
-                val o1 = throwCast<DmNPData?, DmNPDataObject>(DmNPUtils.findElement(vm, names1))
-                val o2 = throwCast<DmNPData?, DmNPDataObject>(DmNPUtils.findElement(vm, names1))
+                val o1 = throwCast<DmNPData?, DmNPDataObject>(DmNPUtils.findElement(vm, throwCast(vm.stack.pop())))
+                val o2 = throwCast<DmNPData?, DmNPDataObject>(DmNPUtils.findElement(vm, throwCast(vm.stack.pop())))
 
                 if (!o1.fm.containsKey("mul")) {
                     var v = o1.value
@@ -234,8 +230,8 @@ object OCMMath {
             try {
                 val names1 = throwCast<Any?, ArrayList<String>>(vm.stack.pop())
                 val names2 = throwCast<Any?, ArrayList<String>>(vm.stack.pop())
-                val o1 = throwCast<DmNPData?, DmNPDataObject>(DmNPUtils.findElement(vm, names1))
-                val o2 = throwCast<DmNPData?, DmNPDataObject>(DmNPUtils.findElement(vm, names1))
+                val o1 = throwCast<DmNPData?, DmNPDataObject>(DmNPUtils.findElement(vm, throwCast(vm.stack.pop())))
+                val o2 = throwCast<DmNPData?, DmNPDataObject>(DmNPUtils.findElement(vm, throwCast(vm.stack.pop())))
 
                 if (!o1.fm.containsKey("div")) {
                     var v = o1.value
