@@ -8,8 +8,6 @@ DmNP (DomamanProject) это проект виртуальной машины ц
 
 DmNP (DomamanProject) is a virtual machine project whose goal is to combine AOP, OOP into one with the ability to mixins and change code at runtime.
 
-Проект посвещаеться ДЛС и Снежане (https://vk.com/id591334354)
-
 Благодарность за помощь выражаеться:
 1. https://vk.com/lixoxaxass1337
 2. https://vk.com/nedish_01
