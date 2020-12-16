@@ -2,7 +2,7 @@ package ru.DmN.DmNProject.OpCode
 
 import ru.DmN.DmNProject.Data.DmNPData
 import ru.DmN.DmNProject.Data.DmNPDataObject
-import ru.DmN.DmNProject.Data.IDmNPNumber
+import ru.DmN.DmNProject.Data.Math.IDmNPNumber
 import ru.DmN.DmNProject.VM.DmNPUtils
 import ru.DmN.DmNProject.VM.throwCast
 

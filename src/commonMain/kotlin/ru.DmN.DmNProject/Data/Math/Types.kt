@@ -1,16 +1,4 @@
-package ru.DmN.DmNProject.Data
-
-enum class DmNPNType
-{
-    N,  // Null
-    B,  // Byte
-    S,  // Short
-    C,  // Char
-    I,  // Int
-    F,  // Float
-    L,  // Long
-    D   // Double
-}
+package ru.DmN.DmNProject.Data.Math
 
 class DmNPNNull: IDmNPNumber {
     override val type: DmNPNType get() = DmNPNType.N

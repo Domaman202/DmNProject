@@ -1,7 +1,12 @@
 package ru.DmN.DmNProject.VM
 
-import ru.DmN.DmNProject.Data.Containers.*
-import ru.DmN.DmNProject.Data.*
+import ru.DmN.DmNProject.Data.Containers.DmNPDataMap
+import ru.DmN.DmNProject.Data.Containers.Stack
+import ru.DmN.DmNProject.Data.DmNPAData
+import ru.DmN.DmNProject.Data.DmNPData
+import ru.DmN.DmNProject.Data.DmNPDataObject
+import ru.DmN.DmNProject.Data.DmNPType
+import ru.DmN.DmNProject.Data.Math.IDmNPNumber
 
 /**
  * @author  DomamaN202
