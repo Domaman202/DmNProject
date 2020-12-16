@@ -8,6 +8,14 @@ interface IReferenceStorage
 
 interface IDmNPNumber
 {
+    fun toByte():   Byte
+    fun toShort():  Short
+    fun toChar():   Char
+    fun toInt():    Int
+    fun toFloat():  Float
+    fun toLong():   Long
+    fun toDouble(): Double
+    //
     fun inc(): IDmNPNumber
     fun dec(): IDmNPNumber
     //
@@ -22,7 +30,7 @@ interface IDmNPNumber
     val type: DmNPNType
     //
     companion object {
-        fun of(value: Any?): IDmNPNumber? {
+        fun of(value: Any?): IDmNPNumber {
             return when (value) {
                 is Double   -> ofDouble(value)
                 is Float    -> ofFloat(value)
@@ -34,7 +42,7 @@ interface IDmNPNumber
             }
         }
 
-        inline fun ofDouble(value: Double): IDmNPNumber {
+        fun ofDouble(value: Double): IDmNPNumber {
             return if (value - value.roundToLong() == 0.0) {
                 if (value >= Byte.MIN_VALUE && value <= Byte.MAX_VALUE)
                     DmNPNByte(value.toInt().toByte())
@@ -56,7 +64,7 @@ interface IDmNPNumber
             }
         }
 
-        inline fun ofFloat(value: Float): IDmNPNumber {
+        fun ofFloat(value: Float): IDmNPNumber {
             return if (value - value.roundToLong() == 0.0F) {
                 if (value >= Byte.MIN_VALUE && value <= Byte.MAX_VALUE)
                     DmNPNByte(value.toInt().toByte())
@@ -70,7 +78,7 @@ interface IDmNPNumber
                 DmNPNFloat(value)
         }
 
-        inline fun ofLong(value: Long): IDmNPNumber {
+        fun ofLong(value: Long): IDmNPNumber {
             return if (value >= Byte.MIN_VALUE && value <= Byte.MAX_VALUE)
                 DmNPNByte(value.toByte())
             else if (value >= Short.MIN_VALUE && value <= Short.MAX_VALUE)
