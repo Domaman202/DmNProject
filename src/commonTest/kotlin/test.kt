@@ -1,3 +1,14 @@
+import kotlinx.serialization.*
+import kotlinx.serialization.descriptors.PrimitiveKind
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.descriptors.serialDescriptor
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
+import kotlinx.serialization.json.*
+import kotlinx.serialization.modules.PolymorphicModuleBuilder
+import kotlinx.serialization.modules.SerializersModule
+import kotlinx.serialization.modules.polymorphic
+import ru.DmN.DmNProject.Data.ANY_SERIALIZER
 import ru.DmN.DmNProject.Data.Containers.DmNPDataMap
 import ru.DmN.DmNProject.Data.Containers.Stack
 import ru.DmN.DmNProject.Data.DmNPData
@@ -124,8 +135,27 @@ class testing {
     fun test() {
         println("Test started!!!\n\n")
         //
-
+        val data = DmNPData("ОбЬеКт", DmNPType.NULL, 321)
+        println(Json.decodeFromString(ANY_SERIALIZER(), Json.encodeToString(data)) as Any)
+        //
+//        val data = TC(21)
+//        println(Json.encodeToString(data))
         //
         println("\n\nTest competed!!!")
+    }
+}
+
+@Serializable(TS::class) data class TC(val i: Int = 0)
+
+class TS(override val descriptor: SerialDescriptor = serialDescriptor<Unit>()) : KSerializer<Any?>
+{
+    override fun deserialize(decoder: Decoder): Any? {
+        TODO("Not yet implemented")
+    }
+
+    override fun serialize(encoder: Encoder, value: Any?) {
+        val encoder = encoder as JsonEncoder
+        //
+        encoder.encodeJsonElement(Json.parseToJsonElement("{\"type\": 213, \"kek\": 321}"))
     }
 }
