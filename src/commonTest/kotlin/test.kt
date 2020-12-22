@@ -135,11 +135,6 @@ class testing {
     fun test() {
         println("Test started!!!\n\n")
         //
-        val data = DmNPData("ОбЬеКт", DmNPType.NULL, 321)
-        println(Json.decodeFromString(ANY_SERIALIZER(), Json.encodeToString(data)) as Any)
-        //
-//        val data = TC(21)
-//        println(Json.encodeToString(data))
         //
         println("\n\nTest competed!!!")
     }

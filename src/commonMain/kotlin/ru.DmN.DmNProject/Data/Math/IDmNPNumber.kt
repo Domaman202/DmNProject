@@ -11,13 +11,19 @@ interface IDmNPNumber {
     fun toLong():   Long
     fun toDouble(): Double
     //
-    fun inc(): IDmNPNumber
-    fun dec(): IDmNPNumber
+//    fun inc(): IDmNPNumber
+    operator fun inc(): IDmNPNumber
+//    fun dec(): IDmNPNumber
+    operator fun dec(): IDmNPNumber
     //
-    fun add(v: IDmNPNumber): IDmNPNumber
-    fun sub(v: IDmNPNumber): IDmNPNumber
-    fun mul(v: IDmNPNumber): IDmNPNumber
-    fun div(v: IDmNPNumber): IDmNPNumber
+//    fun add(v: IDmNPNumber): IDmNPNumber
+    operator fun plus(v: IDmNPNumber): IDmNPNumber
+//    fun sub(v: IDmNPNumber): IDmNPNumber
+    operator fun minus(v: IDmNPNumber): IDmNPNumber
+//    fun mul(v: IDmNPNumber): IDmNPNumber
+    operator fun times(v: IDmNPNumber): IDmNPNumber
+//    fun div(v: IDmNPNumber): IDmNPNumber
+    operator fun div(v: IDmNPNumber): IDmNPNumber
     //
     fun set(value: Number)
     fun get(): Number

@@ -50,7 +50,7 @@ object OCMMath {
                 if (v2 is Number)
                     v2 = IDmNPNumber.ofType(v2)
                 //
-                vm.stack.push((v1 as IDmNPNumber).add(v2 as IDmNPNumber))
+                vm.stack.push((v1 as IDmNPNumber) + (v2 as IDmNPNumber))
             } catch (e: Throwable) {
                 if (vm.e)
                     vm.eStack!!.push(e)
@@ -68,7 +68,7 @@ object OCMMath {
                 if (v2 is Number)
                     v2 = IDmNPNumber.ofType(v2)
                 //
-                vm.stack.push((v1 as IDmNPNumber).sub(v2 as IDmNPNumber))
+                vm.stack.push((v1 as IDmNPNumber) - (v2 as IDmNPNumber))
             } catch (e: Throwable) {
                 if (vm.e)
                     vm.eStack!!.push(e)
@@ -86,7 +86,7 @@ object OCMMath {
                 if (v2 is Number)
                     v2 = IDmNPNumber.ofType(v2)
                 //
-                vm.stack.push((v1 as IDmNPNumber).mul(v2 as IDmNPNumber))
+                vm.stack.push((v1 as IDmNPNumber) * (v2 as IDmNPNumber))
             } catch (e: Throwable) {
                 if (vm.e)
                     vm.eStack!!.push(e)
@@ -104,7 +104,7 @@ object OCMMath {
                 if (v2 is Number)
                     v2 = IDmNPNumber.ofType(v2)
                 //
-                vm.stack.push((v1 as IDmNPNumber).div(v2 as IDmNPNumber))
+                vm.stack.push((v1 as IDmNPNumber) / (v2 as IDmNPNumber))
             } catch (e: Throwable) {
                 if (vm.e)
                     vm.eStack!!.push(e)
@@ -166,7 +166,7 @@ object OCMMath {
                     if (v is Number)
                         v = IDmNPNumber.ofType(v)
 
-                    o1.value = (v as IDmNPNumber).add(throwCast(o2.value))
+                    o1.value = (v as IDmNPNumber) + (throwCast(o2.value))
                 } else {
                     vm.stack.push(o2)
                     DmNPUtils.callFunction(o1.fm["add"], vm, c, ci)
@@ -189,7 +189,7 @@ object OCMMath {
                     if (v is Number)
                         v = IDmNPNumber.ofType(v)
 
-                    o1.value = (v as IDmNPNumber).sub(throwCast(o2.value))
+                    o1.value = (v as IDmNPNumber) - (throwCast(o2.value))
                 } else {
                     vm.stack.push(o2)
                     DmNPUtils.callFunction(o1.fm["sub"], vm, c, ci)
@@ -212,7 +212,7 @@ object OCMMath {
                     if (v is Number)
                         v = IDmNPNumber.ofType(v)
 
-                    o1.value = (v as IDmNPNumber).mul(throwCast(o2.value))
+                    o1.value = (v as IDmNPNumber) * (throwCast(o2.value))
                 } else {
                     vm.stack.push(o2)
                     DmNPUtils.callFunction(o1.fm["mul"], vm, c, ci)
@@ -235,7 +235,7 @@ object OCMMath {
                     if (v is Number)
                         v = IDmNPNumber.ofType(v)
 
-                    o1.value = (v as IDmNPNumber).div(throwCast(o2.value))
+                    o1.value = (v as IDmNPNumber) / (throwCast(o2.value))
                 } else {
                     vm.stack.push(o2)
                     DmNPUtils.callFunction(o1.fm["div"], vm, c, ci)

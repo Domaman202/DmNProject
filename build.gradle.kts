@@ -98,5 +98,8 @@ kotlin {
         }
         val nativeMain by getting
         val nativeTest by getting
+        all {
+            languageSettings.enableLanguageFeature("InlineClasses")
+        }
     }
 }
