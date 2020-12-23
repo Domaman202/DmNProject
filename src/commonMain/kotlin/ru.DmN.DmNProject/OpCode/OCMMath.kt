@@ -2,7 +2,7 @@ package ru.DmN.DmNProject.OpCode
 
 import ru.DmN.DmNProject.Data.DmNPData
 import ru.DmN.DmNProject.Data.DmNPDataObject
-import ru.DmN.DmNProject.Data.Math.IDmNPNumber
+import ru.DmN.DmNProject.Data.Math.*
 import ru.DmN.DmNProject.VM.DmNPUtils
 import ru.DmN.DmNProject.VM.throwCast
 
@@ -119,12 +119,14 @@ object OCMMath {
                 val o = throwCast<DmNPData?, DmNPDataObject>(DmNPUtils.findElement(vm, names))
 
                 if (!o.fm.containsKey("inc")) {
-                    var v = o.value
+//                    var v = o.value
 
-                    if (v is Number)
-                        v = IDmNPNumber.ofType(v)
+//                    if (v is Number)
+//                        v = IDmNPNumber.ofType(v)
+//
+//                    o.value = (v as IDmNPNumber).inc()
 
-                    o.value = (v as IDmNPNumber).inc()
+                    o.value++
                 } else
                     DmNPUtils.callFunction(o.fm["inc"], vm, c, ci)
             } catch (e: Throwable) {
@@ -140,12 +142,14 @@ object OCMMath {
                 val o = throwCast<DmNPData?, DmNPDataObject>(DmNPUtils.findElement(vm, names))
 
                 if (!o.fm.containsKey("dec")) {
-                    var v = o.value
+//                    var v = o.value
+//
+//                    if (v is Number)
+//                        v = IDmNPNumber.ofType(v)
+//
+//                    o.value = (v as IDmNPNumber).dec
 
-                    if (v is Number)
-                        v = IDmNPNumber.ofType(v)
-
-                    o.value = (v as IDmNPNumber).dec()
+                    o.value--
                 } else
                     DmNPUtils.callFunction(o.fm["inc"], vm, c, ci)
             } catch (e: Throwable) {
@@ -161,12 +165,13 @@ object OCMMath {
                 val o2 = throwCast<DmNPData?, DmNPDataObject>(DmNPUtils.findElement(vm, throwCast(vm.stack.pop())))
 
                 if (!o1.fm.containsKey("add")) {
-                    var v = o1.value
-
-                    if (v is Number)
-                        v = IDmNPNumber.ofType(v)
-
-                    o1.value = (v as IDmNPNumber) + (throwCast(o2.value))
+//                    var v = o1.value
+//
+//                    if (v is Number)
+//                        v = IDmNPNumber.ofType(v)
+//
+//                    o1.value = (v as IDmNPNumber) + (throwCast(o2.value))
+                    o1.value += o2.value
                 } else {
                     vm.stack.push(o2)
                     DmNPUtils.callFunction(o1.fm["add"], vm, c, ci)
@@ -184,12 +189,13 @@ object OCMMath {
                 val o2 = throwCast<DmNPData?, DmNPDataObject>(DmNPUtils.findElement(vm, throwCast(vm.stack.pop())))
 
                 if (!o1.fm.containsKey("sub")) {
-                    var v = o1.value
-
-                    if (v is Number)
-                        v = IDmNPNumber.ofType(v)
-
-                    o1.value = (v as IDmNPNumber) - (throwCast(o2.value))
+//                    var v = o1.value
+//
+//                    if (v is Number)
+//                        v = IDmNPNumber.ofType(v)
+//
+//                    o1.value = (v as IDmNPNumber) - (throwCast(o2.value))
+                    o1.value -= o2.value
                 } else {
                     vm.stack.push(o2)
                     DmNPUtils.callFunction(o1.fm["sub"], vm, c, ci)
@@ -207,12 +213,13 @@ object OCMMath {
                 val o2 = throwCast<DmNPData?, DmNPDataObject>(DmNPUtils.findElement(vm, throwCast(vm.stack.pop())))
 
                 if (!o1.fm.containsKey("mul")) {
-                    var v = o1.value
-
-                    if (v is Number)
-                        v = IDmNPNumber.ofType(v)
-
-                    o1.value = (v as IDmNPNumber) * (throwCast(o2.value))
+//                    var v = o1.value
+//
+//                    if (v is Number)
+//                        v = IDmNPNumber.ofType(v)
+//
+//                    o1.value = (v as IDmNPNumber) * (throwCast(o2.value))
+                    o1.value *= o2.value
                 } else {
                     vm.stack.push(o2)
                     DmNPUtils.callFunction(o1.fm["mul"], vm, c, ci)
@@ -230,12 +237,13 @@ object OCMMath {
                 val o2 = throwCast<DmNPData?, DmNPDataObject>(DmNPUtils.findElement(vm, throwCast(vm.stack.pop())))
 
                 if (!o1.fm.containsKey("div")) {
-                    var v = o1.value
-
-                    if (v is Number)
-                        v = IDmNPNumber.ofType(v)
-
-                    o1.value = (v as IDmNPNumber) / (throwCast(o2.value))
+//                    var v = o1.value
+//
+//                    if (v is Number)
+//                        v = IDmNPNumber.ofType(v)
+//
+//                    o1.value = (v as IDmNPNumber) / (throwCast(o2.value))
+                    o1.value /= o2.value
                 } else {
                     vm.stack.push(o2)
                     DmNPUtils.callFunction(o1.fm["div"], vm, c, ci)

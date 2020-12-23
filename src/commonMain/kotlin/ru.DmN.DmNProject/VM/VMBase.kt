@@ -6,7 +6,7 @@ import ru.DmN.DmNProject.Data.DmNPAData
 import ru.DmN.DmNProject.Data.DmNPData
 import ru.DmN.DmNProject.Data.DmNPDataObject
 import ru.DmN.DmNProject.Data.DmNPType
-import ru.DmN.DmNProject.Data.Math.IDmNPNumber
+import ru.DmN.DmNProject.Data.Math.*
 
 /**
  * @author  DomamaN202
@@ -78,19 +78,23 @@ open class DmNPVM
         })
         obj["add"] = DmNPData("add", DmNPType.KMETHOD, {
                 vm: DmNPVM, _: ArrayList<Any?>, _: ListIterator<Any?> ->
-            vm.stack.push((vm.stack.pop() as IDmNPNumber).add(vm.stack.pop() as IDmNPNumber))
+//            vm.stack.push((vm.stack.pop() as IDmNPNumber).add(vm.stack.pop() as IDmNPNumber))
+            vm.stack.push(vm.stack.pop() + vm.stack.pop())
         })
         obj["sub"] = DmNPData("sub", DmNPType.KMETHOD, {
                 vm: DmNPVM, _: ArrayList<Any?>, _: ListIterator<Any?> ->
-            vm.stack.push((vm.stack.pop() as IDmNPNumber).sub(vm.stack.pop() as IDmNPNumber))
+//            vm.stack.push((vm.stack.pop() as IDmNPNumber).sub(vm.stack.pop() as IDmNPNumber))
+            vm.stack.push(vm.stack.pop() - vm.stack.pop())
         })
         obj["div"] = DmNPData("div", DmNPType.KMETHOD, {
                 vm: DmNPVM, _: ArrayList<Any?>, _: ListIterator<Any?> ->
-            vm.stack.push((vm.stack.pop() as IDmNPNumber).div(vm.stack.pop() as IDmNPNumber))
+//            vm.stack.push((vm.stack.pop() as IDmNPNumber).div(vm.stack.pop() as IDmNPNumber))
+            vm.stack.push(vm.stack.pop() / vm.stack.pop())
         })
         obj["mul"] = DmNPData("mul", DmNPType.KMETHOD, {
                 vm: DmNPVM, _: ArrayList<Any?>, _: ListIterator<Any?> ->
-            vm.stack.push((vm.stack.pop() as IDmNPNumber).mul(vm.stack.pop() as IDmNPNumber))
+//            vm.stack.push((vm.stack.pop() as IDmNPNumber).mul(vm.stack.pop() as IDmNPNumber))
+            vm.stack.push(vm.stack.pop() * vm.stack.pop())
         })
 
         // Package_System

@@ -2,6 +2,7 @@ package ru.DmN.DmNProject.Data.Math
 
 import kotlin.math.roundToLong
 
+@Suppress("OVERRIDE_BY_INLINE", "NOTHING_TO_INLINE")
 interface IDmNPNumber {
     fun toByte():   Byte
     fun toShort():  Short
@@ -11,19 +12,37 @@ interface IDmNPNumber {
     fun toLong():   Long
     fun toDouble(): Double
     //
-//    fun inc(): IDmNPNumber
     operator fun inc(): IDmNPNumber
-//    fun dec(): IDmNPNumber
     operator fun dec(): IDmNPNumber
     //
-//    fun add(v: IDmNPNumber): IDmNPNumber
-    operator fun plus(v: IDmNPNumber): IDmNPNumber
-//    fun sub(v: IDmNPNumber): IDmNPNumber
+    operator fun plus(v: IDmNPNumber):  IDmNPNumber
+    operator fun plus(v: Byte):         IDmNPNumber
+    operator fun plus(v: Short):        IDmNPNumber
+    operator fun plus(v: Int):          IDmNPNumber
+    operator fun plus(v: Float):        IDmNPNumber
+    operator fun plus(v: Long):         IDmNPNumber
+    operator fun plus(v: Double):       IDmNPNumber
     operator fun minus(v: IDmNPNumber): IDmNPNumber
-//    fun mul(v: IDmNPNumber): IDmNPNumber
+    operator fun minus(v: Byte):        IDmNPNumber
+    operator fun minus(v: Short):       IDmNPNumber
+    operator fun minus(v: Int):         IDmNPNumber
+    operator fun minus(v: Float):       IDmNPNumber
+    operator fun minus(v: Long):        IDmNPNumber
+    operator fun minus(v: Double):      IDmNPNumber
     operator fun times(v: IDmNPNumber): IDmNPNumber
-//    fun div(v: IDmNPNumber): IDmNPNumber
-    operator fun div(v: IDmNPNumber): IDmNPNumber
+    operator fun times(v: Byte):        IDmNPNumber
+    operator fun times(v: Short):       IDmNPNumber
+    operator fun times(v: Int):         IDmNPNumber
+    operator fun times(v: Float):       IDmNPNumber
+    operator fun times(v: Long):        IDmNPNumber
+    operator fun times(v: Double):      IDmNPNumber
+    operator fun div(v: IDmNPNumber):   IDmNPNumber
+    operator fun div(v: Byte):          IDmNPNumber
+    operator fun div(v: Short):         IDmNPNumber
+    operator fun div(v: Int):           IDmNPNumber
+    operator fun div(v: Float):         IDmNPNumber
+    operator fun div(v: Long):          IDmNPNumber
+    operator fun div(v: Double):        IDmNPNumber
     //
     fun set(value: Number)
     fun get(): Number
@@ -33,13 +52,14 @@ interface IDmNPNumber {
     companion object {
         fun of(value: Any?): IDmNPNumber {
             return when (value) {
-                is Double   -> ofDouble(value)
-                is Float    -> ofFloat(value)
-                is Long     -> ofLong(value)
-                is Int      -> ofInt(value)
-                is Short    -> ofShort(value)
-                is Byte     -> ofByte(value)
-                else        -> DmNPNNull()
+                is IDmNPNumber  -> return value
+                is Double       -> ofDouble(value)
+                is Float        -> ofFloat(value)
+                is Long         -> ofLong(value)
+                is Int          -> ofInt(value)
+                is Short        -> ofShort(value)
+                is Byte         -> ofByte(value)
+                else            -> DmNPNNull()
             }
         }
 
@@ -112,14 +132,15 @@ interface IDmNPNumber {
 
         fun ofType(value: Any?): IDmNPNumber? {
             return when (value) {
-                0 -> DmNPNNull()
-                is Byte -> DmNPNByte(value)
-                is Short -> DmNPNShort(value)
-                is Char -> DmNPNChar(value)
-                is Int -> DmNPNInt(value)
-                is Float -> DmNPNFloat(value)
-                is Double -> DmNPNDouble(value)
-                else -> null
+                0               -> DmNPNNull()
+                is Byte         -> DmNPNByte(value)
+                is Short        -> DmNPNShort(value)
+                is Char         -> DmNPNChar(value)
+                is Int          -> DmNPNInt(value)
+                is Float        -> DmNPNFloat(value)
+                is Double       -> DmNPNDouble(value)
+                is IDmNPNumber  -> value
+                else            -> null
             }
         }
     }
