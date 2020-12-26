@@ -6,6 +6,9 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonEncoder
+import ru.DmN.DmNProject.Compiler.DmNPCompiler
+import ru.DmN.DmNProject.Compiler.DmNPDecompiler
+import ru.DmN.DmNProject.Compiler.StringHelper
 import ru.DmN.DmNProject.Data.Containers.DmNPDataMap
 import ru.DmN.DmNProject.Data.Containers.Stack
 import ru.DmN.DmNProject.Data.DmNPData
@@ -81,10 +84,10 @@ class testing {
         code.add(12)
         code.add(OCStack.LoadConstant)
         code.add(21)
-        code.add(OCSMath.Add)
+        code.add(OCSMath.ADD)
         code.add(OCStack.LoadConstant)
         code.add(35)
-        code.add(OCSMath.Sub)
+        code.add(OCSMath.SUB)
 
         val vm = DmNPVMInterpreter()
         vm.parse(code)
@@ -131,7 +134,46 @@ class testing {
     @Test
     fun test() {
         println("Test started!!!\n\n")
+        // Code
+        val code = ArrayList<Any?>()
+
+        code.add(OCStack.LoadConstant) // Выполняем выгрузку в стек имён пакетов
+        code.add(arrayListOf("ru", "DmN", "testing")) // Имена пакетов которые отправятся в стек
+        code.add(OCStack.CloneStackElement) // Клонируем текущий элемент стека ( текущий элемент стека дублируеться )
+        code.add(OCData.CreatePackage) // Создаём пакеты ( удаляеться текущий элемент стека )
+        code.add(OCStackHeap.PushData) // Загружаем пакеты в стек ( текущий элемент стека перемещаеться в heap )
+        code.add(OCStackHeap.LoadData) // Выгружаем пакет из стека ( удаляеться текущий элемент стека )
+
+        code.add(OCStack.LoadConstant) // Выполняем выгрузку в стек модификаторов класса
+        code.add(arrayListOf(DmNPModifiers.PUBLIC)) // Модификаторы класса
+        code.add(OCStack.LoadConstant) // Выполняем выгрузку в стек имя класса
+        code.add("Main") // Имя класса
+        code.add(OCData.CreateClass) // Создаём класс
+
+        code.add(OCStack.LoadConstant) // Выполняем выгрузку в стек модификаторов функции
+        code.add(arrayListOf(DmNPModifiers.PUBLIC)) // Модификаторы функции
+        code.add(OCStack.LoadConstant) // Выполняем выгрузку в стек именя функции
+        code.add("main") // Имя функции
+        code.add(OCData.CreateMethod) // Создаём функцию
+
+        code.add(OCStack.LoadConstant) // Выгружаем в стек тело функии
+        code.add(
+            arrayListOf(
+                OCStack.LoadConstant, // Выполняем выгрузку теста в стек
+                "Тееееееееееекст)", // Текст который мы выгрузили в стек
+                OCStack.LoadConstant, // Выполняем выгрузку имён в стек
+                arrayListOf("System", "Console", "println"), // Именя которые мы выгружаем в стек
+                OCInvoke.UnsafeInvokeKotlin // Вызываем kotlin функцию
+            )
+        )
+        code.add(OCData.SetValue) // Устанавливаем значение из стека в тело функции
         //
+        val cmp = DmNPCompiler()
+        val dmp = DmNPDecompiler()
+
+//        println(cmp.compile(code))
+        println(dmp.decompile(cmp.compile(code)))
+//        dmp.decompile(cmp.compile(code))
         //
         println("\n\nTest competed!!!")
     }

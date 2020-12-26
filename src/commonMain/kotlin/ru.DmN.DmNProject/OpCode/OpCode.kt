@@ -46,22 +46,22 @@ enum class OCInvoke: IOpCode {
     InvokeStaticVirtual
 }
 
-enum class OCSMath: IOpCode {
-    Inc,
-    Dec,
-    Add,
-    Sub,
-    Mul,
-    Div
+enum class OCSMath: IMathOpCode {
+    INC,
+    DEC,
+    ADD,
+    SUB,
+    MUL,
+    DIV
 }
 
-enum class OCHMath: IOpCode {
-    Inc,
-    Dec,
-    Add,
-    Sub,
-    Mul,
-    Div
+enum class OCHMath: IMathOpCode {
+    INC,
+    DEC,
+    ADD,
+    SUB,
+    MUL,
+    DIV
 }
 
 enum class OCVMManager: IOpCode {

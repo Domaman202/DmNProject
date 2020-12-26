@@ -3,6 +3,7 @@ package ru.DmN.DmNProject.OpCode
 import ru.DmN.DmNProject.VM.DmNPVMInterpreter
 
 interface IOpCode
+interface IMathOpCode : IOpCode
 interface IPlatformOpCode : IOpCode
 interface IOpCodeManager
 {

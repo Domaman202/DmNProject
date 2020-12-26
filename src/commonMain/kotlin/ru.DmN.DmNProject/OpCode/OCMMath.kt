@@ -1,23 +1,34 @@
 package ru.DmN.DmNProject.OpCode
 
+import ru.DmN.DmNProject.Data.DmNPAData
 import ru.DmN.DmNProject.Data.DmNPData
 import ru.DmN.DmNProject.Data.DmNPDataObject
-import ru.DmN.DmNProject.Data.Math.*
-import ru.DmN.DmNProject.VM.DmNPUtils
+import ru.DmN.DmNProject.Data.Math.Extends.plus
+import ru.DmN.DmNProject.VM.kotlin_function
 import ru.DmN.DmNProject.VM.throwCast
 
 object OCMMath {
     fun init() {
         // Math
         // Stack
-        OpCodeManager.OpCodes[OCSMath.Inc] = { _, vm, _, _ ->
+        OpCodeManager.OpCodes[OCSMath.INC] = { _, vm, c, ci ->
             try {
-                var v = vm.stack.pop()
+                val o = vm.stack.pop()
 
-                if (v is Number)
-                    v = IDmNPNumber.ofType(v)
+                if (o is Number)
+                    o + 1
+                else if (o is DmNPData) {
+                    if (o is DmNPDataObject) {
+                        val inc = o.fm["inc"]
 
-                vm.stack.push((v as IDmNPNumber).inc())
+                        if (inc == null)
+                            o.value as Number + 1
+                        else
+                            throwCast<Any?, kotlin_function>(inc).invoke(vm, c, ci)
+                    } else
+                        o.value as Number + 1
+                } else
+                    throw Exception()
             } catch (e: Throwable) {
                 if (vm.e)
                     vm.eStack!!.push(e)
@@ -25,14 +36,19 @@ object OCMMath {
                     throw e
             }
         }
-        OpCodeManager.OpCodes[OCSMath.Dec] = { _, vm, _, _ ->
+        OpCodeManager.OpCodes[OCSMath.DEC] = { _, vm, _, _ ->
             try {
-                var v = vm.stack.pop()
 
-                if (v is Number)
-                    v = IDmNPNumber.ofType(v)
+            } catch (e: Throwable) {
+                if (vm.e)
+                    vm.eStack!!.push(e)
+                else
+                    throw e
+            }
+        }
+        OpCodeManager.OpCodes[OCSMath.ADD] = { _, vm, _, _ ->
+            try {
 
-                vm.stack.push((v as IDmNPNumber).dec())
             } catch (e: Throwable) {
                 if (vm.e)
                     vm.eStack!!.push(e)
@@ -40,17 +56,9 @@ object OCMMath {
                     throw e
             }
         }
-        OpCodeManager.OpCodes[OCSMath.Add] = { _, vm, _, _ ->
+        OpCodeManager.OpCodes[OCSMath.SUB] = { _, vm, _, _ ->
             try {
-                var v1 = vm.stack.pop()
-                var v2 = vm.stack.pop()
-                //
-                if (v1 is Number)
-                    v1 = IDmNPNumber.ofType(v1)
-                if (v2 is Number)
-                    v2 = IDmNPNumber.ofType(v2)
-                //
-                vm.stack.push((v1 as IDmNPNumber) + (v2 as IDmNPNumber))
+
             } catch (e: Throwable) {
                 if (vm.e)
                     vm.eStack!!.push(e)
@@ -58,17 +66,9 @@ object OCMMath {
                     throw e
             }
         }
-        OpCodeManager.OpCodes[OCSMath.Sub] = { _, vm, _, _ ->
+        OpCodeManager.OpCodes[OCSMath.MUL] = { _, vm, _, _ ->
             try {
-                var v1 = vm.stack.pop()
-                var v2 = vm.stack.pop()
-                //
-                if (v1 is Number)
-                    v1 = IDmNPNumber.ofType(v1)
-                if (v2 is Number)
-                    v2 = IDmNPNumber.ofType(v2)
-                //
-                vm.stack.push((v1 as IDmNPNumber) - (v2 as IDmNPNumber))
+
             } catch (e: Throwable) {
                 if (vm.e)
                     vm.eStack!!.push(e)
@@ -76,35 +76,9 @@ object OCMMath {
                     throw e
             }
         }
-        OpCodeManager.OpCodes[OCSMath.Mul] = { _, vm, _, _ ->
+        OpCodeManager.OpCodes[OCSMath.DIV] = { _, vm, _, _ ->
             try {
-                var v1 = vm.stack.pop()
-                var v2 = vm.stack.pop()
-                //
-                if (v1 is Number)
-                    v1 = IDmNPNumber.ofType(v1)
-                if (v2 is Number)
-                    v2 = IDmNPNumber.ofType(v2)
-                //
-                vm.stack.push((v1 as IDmNPNumber) * (v2 as IDmNPNumber))
-            } catch (e: Throwable) {
-                if (vm.e)
-                    vm.eStack!!.push(e)
-                else
-                    throw e
-            }
-        }
-        OpCodeManager.OpCodes[OCSMath.Div] = { _, vm, _, _ ->
-            try {
-                var v1 = vm.stack.pop()
-                var v2 = vm.stack.pop()
-                //
-                if (v1 is Number)
-                    v1 = IDmNPNumber.ofType(v1)
-                if (v2 is Number)
-                    v2 = IDmNPNumber.ofType(v2)
-                //
-                vm.stack.push((v1 as IDmNPNumber) / (v2 as IDmNPNumber))
+
             } catch (e: Throwable) {
                 if (vm.e)
                     vm.eStack!!.push(e)
@@ -113,22 +87,9 @@ object OCMMath {
             }
         }
         // Heap
-        OpCodeManager.OpCodes[OCHMath.Inc] = { _, vm, c, ci ->
+        OpCodeManager.OpCodes[OCHMath.INC] = { _, vm, c, ci ->
             try {
-                val names = throwCast<Any?, ArrayList<String>>(vm.stack.pop())
-                val o = throwCast<DmNPData?, DmNPDataObject>(DmNPUtils.findElement(vm, names))
 
-                if (!o.fm.containsKey("inc")) {
-//                    var v = o.value
-
-//                    if (v is Number)
-//                        v = IDmNPNumber.ofType(v)
-//
-//                    o.value = (v as IDmNPNumber).inc()
-
-                    o.value++
-                } else
-                    DmNPUtils.callFunction(o.fm["inc"], vm, c, ci)
             } catch (e: Throwable) {
                 if (vm.e)
                     vm.eStack!!.push(e)
@@ -136,22 +97,9 @@ object OCMMath {
                     throw e
             }
         }
-        OpCodeManager.OpCodes[OCHMath.Dec] = { _, vm, c, ci ->
+        OpCodeManager.OpCodes[OCHMath.DEC] = { _, vm, c, ci ->
             try {
-                val names = throwCast<Any?, ArrayList<String>>(vm.stack.pop())
-                val o = throwCast<DmNPData?, DmNPDataObject>(DmNPUtils.findElement(vm, names))
 
-                if (!o.fm.containsKey("dec")) {
-//                    var v = o.value
-//
-//                    if (v is Number)
-//                        v = IDmNPNumber.ofType(v)
-//
-//                    o.value = (v as IDmNPNumber).dec
-
-                    o.value--
-                } else
-                    DmNPUtils.callFunction(o.fm["inc"], vm, c, ci)
             } catch (e: Throwable) {
                 if (vm.e)
                     vm.eStack!!.push(e)
@@ -159,23 +107,9 @@ object OCMMath {
                     throw e
             }
         }
-        OpCodeManager.OpCodes[OCHMath.Add] = { _, vm, c, ci ->
+        OpCodeManager.OpCodes[OCHMath.ADD] = { _, vm, c, ci ->
             try {
-                val o1 = throwCast<DmNPData?, DmNPDataObject>(DmNPUtils.findElement(vm, throwCast(vm.stack.pop())))
-                val o2 = throwCast<DmNPData?, DmNPDataObject>(DmNPUtils.findElement(vm, throwCast(vm.stack.pop())))
 
-                if (!o1.fm.containsKey("add")) {
-//                    var v = o1.value
-//
-//                    if (v is Number)
-//                        v = IDmNPNumber.ofType(v)
-//
-//                    o1.value = (v as IDmNPNumber) + (throwCast(o2.value))
-                    o1.value += o2.value
-                } else {
-                    vm.stack.push(o2)
-                    DmNPUtils.callFunction(o1.fm["add"], vm, c, ci)
-                }
             } catch (e: Throwable) {
                 if (vm.e)
                     vm.eStack!!.push(e)
@@ -183,23 +117,9 @@ object OCMMath {
                     throw e
             }
         }
-        OpCodeManager.OpCodes[OCHMath.Sub] = { _, vm, c, ci ->
+        OpCodeManager.OpCodes[OCHMath.SUB] = { _, vm, c, ci ->
             try {
-                val o1 = throwCast<DmNPData?, DmNPDataObject>(DmNPUtils.findElement(vm, throwCast(vm.stack.pop())))
-                val o2 = throwCast<DmNPData?, DmNPDataObject>(DmNPUtils.findElement(vm, throwCast(vm.stack.pop())))
 
-                if (!o1.fm.containsKey("sub")) {
-//                    var v = o1.value
-//
-//                    if (v is Number)
-//                        v = IDmNPNumber.ofType(v)
-//
-//                    o1.value = (v as IDmNPNumber) - (throwCast(o2.value))
-                    o1.value -= o2.value
-                } else {
-                    vm.stack.push(o2)
-                    DmNPUtils.callFunction(o1.fm["sub"], vm, c, ci)
-                }
             } catch (e: Throwable) {
                 if (vm.e)
                     vm.eStack!!.push(e)
@@ -207,23 +127,9 @@ object OCMMath {
                     throw e
             }
         }
-        OpCodeManager.OpCodes[OCHMath.Mul] = { _, vm, c, ci ->
+        OpCodeManager.OpCodes[OCHMath.MUL] = { _, vm, c, ci ->
             try {
-                val o1 = throwCast<DmNPData?, DmNPDataObject>(DmNPUtils.findElement(vm, throwCast(vm.stack.pop())))
-                val o2 = throwCast<DmNPData?, DmNPDataObject>(DmNPUtils.findElement(vm, throwCast(vm.stack.pop())))
 
-                if (!o1.fm.containsKey("mul")) {
-//                    var v = o1.value
-//
-//                    if (v is Number)
-//                        v = IDmNPNumber.ofType(v)
-//
-//                    o1.value = (v as IDmNPNumber) * (throwCast(o2.value))
-                    o1.value *= o2.value
-                } else {
-                    vm.stack.push(o2)
-                    DmNPUtils.callFunction(o1.fm["mul"], vm, c, ci)
-                }
             } catch (e: Throwable) {
                 if (vm.e)
                     vm.eStack!!.push(e)
@@ -231,23 +137,9 @@ object OCMMath {
                     throw e
             }
         }
-        OpCodeManager.OpCodes[OCHMath.Div] = { _, vm, c, ci ->
+        OpCodeManager.OpCodes[OCHMath.DIV] = { _, vm, c, ci ->
             try {
-                val o1 = throwCast<DmNPData?, DmNPDataObject>(DmNPUtils.findElement(vm, throwCast(vm.stack.pop())))
-                val o2 = throwCast<DmNPData?, DmNPDataObject>(DmNPUtils.findElement(vm, throwCast(vm.stack.pop())))
 
-                if (!o1.fm.containsKey("div")) {
-//                    var v = o1.value
-//
-//                    if (v is Number)
-//                        v = IDmNPNumber.ofType(v)
-//
-//                    o1.value = (v as IDmNPNumber) / (throwCast(o2.value))
-                    o1.value /= o2.value
-                } else {
-                    vm.stack.push(o2)
-                    DmNPUtils.callFunction(o1.fm["div"], vm, c, ci)
-                }
             } catch (e: Throwable) {
                 if (vm.e)
                     vm.eStack!!.push(e)
