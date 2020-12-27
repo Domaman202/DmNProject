@@ -1,9 +1,8 @@
 package ru.DmN.DmNProject.Data.Containers
 
-import ru.DmN.DmNProject.Data.DmNPAData
-import ru.DmN.DmNProject.Data.DmNPData
-import ru.DmN.DmNProject.Data.DmNPModifiers
-import ru.DmN.DmNProject.Data.DmNPType
+import ru.DmN.DmNProject.Data.*
+import ru.DmN.DmNProject.VM.DmNPReference
+import ru.DmN.DmNProject.VM.throwCast
 
 open class DmNPDataMap : MutableMap<String, DmNPData>, Iterable<DmNPData>
 {
@@ -25,7 +24,7 @@ open class DmNPDataMap : MutableMap<String, DmNPData>, Iterable<DmNPData>
     }
     constructor(vararg e: DmNPData)
     {
-        this.da = e as ArrayList<DmNPData>
+        this.da = throwCast(e)
     }
 
     // Methods
@@ -132,4 +131,28 @@ open class DmNPDataMap : MutableMap<String, DmNPData>, Iterable<DmNPData>
                 m[da[i].name] = da[i]
             return m.entries
         }
+}
+
+open class DmNPDObjectMap : DmNPDataMap
+{
+    constructor()                           : super()
+    constructor(size: Int)                  : super(size)
+    constructor(da: ArrayList<DmNPData>)    : super(da)
+
+    operator fun get(key: String, instance: DmNPDataObject): DmNPData? {
+        var result = super.get(key)
+
+        if (result == null) {
+            for (e in instance.e) {
+                if (e.get() is DmNPDataObject && e.get() != instance) {
+                    result = ((e.get() as DmNPDataObject).fm as DmNPDObjectMap)[key, e.get() as DmNPDataObject]
+
+                    if (result != null)
+                        return result
+                }
+            }
+        }
+
+        return result
+    }
 }

@@ -156,3 +156,9 @@ class DmNPUtils
         }
     }
 }
+
+class DmNPReference<T>(val setter: (value: T) -> Unit, val getter: () -> T)
+{
+    fun set(value: T)   = setter(value)
+    fun get(): T        = getter()
+}
