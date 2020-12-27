@@ -130,9 +130,15 @@ class testing {
         val CSystem = DmNPDataObject("System", DmNPType.CLASS)
 
         OObject.e.add(DmNPReference({ }, { CClass }))
-        OObject.e.add(DmNPReference({ }, { CSystem }))
+        CSystem.e.add(DmNPReference({ }, { DmNPData("", DmNPType.NULL) }))
+        CSystem.e.add(DmNPReference({ }, { OObject }))
 
-        CClass.fm.add(DmNPData("className", ))
+        CClass.fm.add(DmNPData("className", DmNPType.NULL))
+        CClass.fm.add(DmNPData("getType", DmNPType.NULL))
+        OObject.fm.add(DmNPData("INC", DmNPType.NULL))
+        OObject.fm.add(DmNPData("DEC", DmNPType.NULL))
+
+        println(CSystem.fm["className"]!!.name)
         //
         println("\n\nTest competed!!!")
     }

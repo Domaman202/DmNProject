@@ -65,38 +65,6 @@ open class DmNPVM
 //    }
 
     fun init() {
-        //
-        val obj = DmNPDataObject("Object", DmNPType.OBJECT)
-
-        obj["inc"] = DmNPData("inc", DmNPType.KMETHOD, {
-                vm: DmNPVM, _: ArrayList<Any?>, _: ListIterator<Any?> ->
-            vm.stack.push((vm.stack.pop() as IDmNPNumber).inc())
-        })
-        obj["dec"] = DmNPData("dec", DmNPType.KMETHOD, {
-                vm: DmNPVM, _: ArrayList<Any?>, _: ListIterator<Any?> ->
-            vm.stack.push((vm.stack.pop() as IDmNPNumber).dec())
-        })
-        obj["add"] = DmNPData("add", DmNPType.KMETHOD, {
-                vm: DmNPVM, _: ArrayList<Any?>, _: ListIterator<Any?> ->
-//            vm.stack.push((vm.stack.pop() as IDmNPNumber).add(vm.stack.pop() as IDmNPNumber))
-            vm.stack.push(vm.stack.pop() + vm.stack.pop())
-        })
-        obj["sub"] = DmNPData("sub", DmNPType.KMETHOD, {
-                vm: DmNPVM, _: ArrayList<Any?>, _: ListIterator<Any?> ->
-//            vm.stack.push((vm.stack.pop() as IDmNPNumber).sub(vm.stack.pop() as IDmNPNumber))
-            vm.stack.push(vm.stack.pop() - vm.stack.pop())
-        })
-        obj["div"] = DmNPData("div", DmNPType.KMETHOD, {
-                vm: DmNPVM, _: ArrayList<Any?>, _: ListIterator<Any?> ->
-//            vm.stack.push((vm.stack.pop() as IDmNPNumber).div(vm.stack.pop() as IDmNPNumber))
-            vm.stack.push(vm.stack.pop() / vm.stack.pop())
-        })
-        obj["mul"] = DmNPData("mul", DmNPType.KMETHOD, {
-                vm: DmNPVM, _: ArrayList<Any?>, _: ListIterator<Any?> ->
-//            vm.stack.push((vm.stack.pop() as IDmNPNumber).mul(vm.stack.pop() as IDmNPNumber))
-            vm.stack.push(vm.stack.pop() * vm.stack.pop())
-        })
-
         // Package_System
         val ps = DmNPAData("System", DmNPType.PACKAGE)
         ps.reference.add(heap.DmNPData())

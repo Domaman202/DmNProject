@@ -1,5 +1,6 @@
 package ru.DmN.DmNProject.Data
 
+import ru.DmN.DmNProject.Data.Containers.DmNPDObjectMap
 import ru.DmN.DmNProject.Data.Containers.DmNPDataMap
 import ru.DmN.DmNProject.VM.DmNPReference
 
@@ -10,7 +11,7 @@ class DmNPDataObject// Constructors
     (
     name: String,
     type: DmNPType,
-    fm: DmNPDataMap? = null,
+    fm: DmNPDObjectMap? = null,
     e: ArrayList<DmNPReference<DmNPData>>? = null,
     modifiers: ArrayList<DmNPModifiers>? = null,
     reference: DmNPDataMap? = null,
@@ -18,7 +19,7 @@ class DmNPDataObject// Constructors
 ) : DmNPAData(name, type, modifiers, reference, value)
 {
     // Fields and methods
-    var fm: DmNPDataMap = fm ?: DmNPDataMap()
+    var fm: DmNPDObjectMap = fm ?: DmNPDObjectMap(this)
     // Extends
     var e: ArrayList<DmNPReference<DmNPData>> = e ?:  ArrayList()
 

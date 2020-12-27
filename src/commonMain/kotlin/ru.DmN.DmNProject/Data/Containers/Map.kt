@@ -135,24 +135,63 @@ open class DmNPDataMap : MutableMap<String, DmNPData>, Iterable<DmNPData>
 
 open class DmNPDObjectMap : DmNPDataMap
 {
-    constructor()                           : super()
-    constructor(size: Int)                  : super(size)
-    constructor(da: ArrayList<DmNPData>)    : super(da)
+    var instance: DmNPDataObject?
 
-    operator fun get(key: String, instance: DmNPDataObject): DmNPData? {
+    constructor(instance: DmNPDataObject) : super()
+    { this.instance = instance }
+    constructor(size: Int, instance: DmNPDataObject) : super(size)
+    { this.instance = instance }
+    constructor(da: ArrayList<DmNPData>, instance: DmNPDataObject) : super(da)
+    { this.instance = instance }
+
+    operator fun get(key: String, instance: DmNPDataObject? = null): DmNPData? {
         var result = super.get(key)
 
-        if (result == null) {
-            for (e in instance.e) {
-                if (e.get() is DmNPDataObject && e.get() != instance) {
-                    result = ((e.get() as DmNPDataObject).fm as DmNPDObjectMap)[key, e.get() as DmNPDataObject]
+        if (instance != null)
+            this.instance = instance
+
+        if (result == null && this.instance != null) {
+            for (e in this.instance!!.e) {
+                if (e.get() is DmNPDataObject && e.get() != this.instance) {
+                    result = (e.get() as DmNPDataObject).fm[key, e.get() as DmNPDataObject]
 
                     if (result != null)
                         return result
                 }
             }
+
+            if (result == null) {
+                for (e in this.instance!!.e) {
+                    if (e.get() is DmNPDataObject && e.get() != this.instance) {
+                        f(key, e.get() as DmNPDataObject)
+                    }
+                }
+            }
         }
 
         return result
+    }
+
+    fun f(key: String, instance: DmNPDataObject? = null): DmNPData? {
+        var result = super.get(key)
+
+        if (result == null && instance != null) {
+            for (e in instance.e) {
+                if (e.get() is DmNPDataObject && e.get() != instance) {
+                    result = (e.get() as DmNPDataObject).fm[key, e.get() as DmNPDataObject]
+
+                    if (result != null)
+                        return result
+                    else
+                        f(key, e.get() as DmNPDataObject)
+                }
+            }
+        }
+
+        return result
+    }
+
+    override fun get(key: String): DmNPData? {
+        return this[key, instance]
     }
 }
