@@ -56,25 +56,26 @@ open class DmNPVM
     }
 
     fun init() {
-        // Package_System
-        val ps = DmNPAData("System", DmNPType.PACKAGE)
-        ps.reference.add(heap.DmNPData())
-        ps.value = DmNPDataMap()
-        heap.add(ps)
-
-        val psd = ps.value as DmNPDataMap
-        // Class_Console
-        val cc = DmNPAData("Console", DmNPType.CLASS)
-        cc.reference.add(ps)
-        cc.value = DmNPDataMap()
-        psd.add(cc)
-
-        val ccd = cc.value as DmNPDataMap
-        // Class_Console functions
-        val mwl = DmNPAData("println", DmNPType.KMETHOD)
-        mwl.reference.add(cc)
-        mwl.value = fun(vm: DmNPVM, _: ArrayList<Any?>, _: ListIterator<Any?>) { println(vm.stack.pop()) }
-        ccd.add(mwl)
+//        // Package_System
+//        val ps = DmNPAData("System", DmNPType.PACKAGE)
+//        ps.reference.add(heap.DmNPData())
+//        ps.value = DmNPDataMap()
+//        heap.add(ps)
+//
+//        val psd = ps.value as DmNPDataMap
+//        // Class_Console
+//        val cc = DmNPAData("Console", DmNPType.CLASS)
+//        cc.reference.add(ps)
+//        cc.value = DmNPDataMap()
+//        psd.add(cc)
+//
+//        val ccd = cc.value as DmNPDataMap
+//        // Class_Console functions
+//        val mwl = DmNPAData("println", DmNPType.KMETHOD)
+//        mwl.reference.add(cc)
+//        mwl.value = fun(vm: DmNPVM, _: ArrayList<Any?>, _: ListIterator<Any?>) { println(vm.stack.pop()) }
+//        ccd.add(mwl)
+        initSystem()
     }
 
     fun initSystem() {
@@ -87,6 +88,7 @@ open class DmNPVM
             DmNPDataMap(heap.DmNPData()),
             null
         )
+        heap.add(classClass)
         //
         val objectObject = DmNPDataObject(
             "Object",
@@ -94,6 +96,7 @@ open class DmNPVM
             null,
             arrayListOf(DmNPReference({ }, { classClass }))
         )
+        heap.add(objectObject)
         //
         val packageSystem = DmNPEFData(
             "System",
@@ -103,6 +106,18 @@ open class DmNPVM
             arrayListOf(DmNPReference({ }, { objectObject }))
         )
         packageSystem.fm = DmNPDObjectMap(packageSystem)
+        heap.add(packageSystem)
         //
+        val classConsole = DmNPDataObject(
+            "Console",
+            DmNPType.CLASS,
+            null,
+            arrayListOf(DmNPReference({ }, { objectObject })),
+            arrayListOf(DmNPModifiers.PUBLIC)
+        )
+        packageSystem.fm!!.add(classConsole)
+        //
+        val methodPrintln = DmNPData("println", DmNPType.KMETHOD, fun (vm: DmNPVM, _: ArrayList<Any?>, _: ListIterator<Any?>) { println(vm.stack.pop()) })
+        classConsole.fm.add(methodPrintln)
     }
 }

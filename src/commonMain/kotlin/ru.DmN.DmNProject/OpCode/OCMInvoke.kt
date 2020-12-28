@@ -13,6 +13,11 @@ object OCMInvoke {
                     throwCast(vm.stack.pop())
                 )!!.value
             )(vm, c, ci)
+//            val s = DmNPUtils.findElement(
+//                    vm,
+//                    throwCast(vm.stack.pop())
+//                )!!.value
+//            println(s)
         }
         OpCodeManager.OpCodes[OCInvoke.InvokeKotlin] = { _, vm, c, ci ->
             try {

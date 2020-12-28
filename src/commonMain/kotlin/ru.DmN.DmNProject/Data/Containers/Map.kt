@@ -11,20 +11,15 @@ open class DmNPDataMap : MutableMap<String, IDmNPData>, Iterable<IDmNPData>
 
     // Constructors
     constructor()
-    {
-        da = ArrayList()
-    }
+    { da = ArrayList() }
     constructor(size: Int)
-    {
-        da = ArrayList(size)
-    }
+    { da = ArrayList(size) }
     constructor(da: ArrayList<IDmNPData>)
-    {
-        this.da = da
-    }
+    { this.da = da }
     constructor(vararg e: IDmNPData)
     {
-        this.da = throwCast(e)
+        da = ArrayList()
+        da.addAll(e)
     }
 
     // Methods
