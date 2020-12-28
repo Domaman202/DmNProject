@@ -125,20 +125,7 @@ class testing {
     fun test() {
         println("Test started!!!\n\n")
         //
-        val CClass  = DmNPDataObject("Class", DmNPType.CLASS)
-        val OObject = DmNPDataObject("Object", DmNPType.OBJECT)
-        val CSystem = DmNPDataObject("System", DmNPType.CLASS)
 
-        OObject.e.add(DmNPReference({ }, { CClass }))
-        CSystem.e.add(DmNPReference({ }, { DmNPData("", DmNPType.NULL) }))
-        CSystem.e.add(DmNPReference({ }, { OObject }))
-
-        CClass.fm.add(DmNPData("className", DmNPType.NULL))
-        CClass.fm.add(DmNPData("getType", DmNPType.NULL))
-        OObject.fm.add(DmNPData("INC", DmNPType.NULL))
-        OObject.fm.add(DmNPData("DEC", DmNPType.NULL))
-
-        println(CSystem.fm["className"]!!.name)
         //
         println("\n\nTest competed!!!")
     }

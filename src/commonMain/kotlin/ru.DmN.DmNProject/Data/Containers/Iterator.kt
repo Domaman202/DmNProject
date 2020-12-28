@@ -3,10 +3,11 @@ package ru.DmN.DmNProject.Data.Containers
 import ru.DmN.DmNProject.Data.DmNPData
 import ru.DmN.DmNProject.Data.DmNPModifiers
 import ru.DmN.DmNProject.Data.DmNPType
+import ru.DmN.DmNProject.Data.IDmNPData
 
-interface DmNPDataIterator : ListIterator<DmNPData>
+interface DmNPDataIterator : ListIterator<IDmNPData>
 {
-    fun last():         DmNPData
+    fun last():         IDmNPData
     fun lastIndex():    Int
 
     fun prevName():     String

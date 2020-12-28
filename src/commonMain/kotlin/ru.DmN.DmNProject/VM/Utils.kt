@@ -2,6 +2,7 @@ package ru.DmN.DmNProject.VM
 
 import ru.DmN.DmNProject.Data.DmNPData
 import ru.DmN.DmNProject.Data.DmNPDataObject
+import ru.DmN.DmNProject.Data.IDmNPData
 import kotlin.math.roundToLong
 
 typealias kotlin_function = (vm: DmNPVM, c: ArrayList<Any?>, ci: ListIterator<Any?>) -> Unit
@@ -33,8 +34,8 @@ class DmNPUtils
             names: ArrayList<String>,
             p: Boolean = true,
             n: Boolean = true
-        ): DmNPData? {
-            var le: DmNPData? = null
+        ): IDmNPData? {
+            var le: IDmNPData? = null
             for (i in 0 until names.size) {
                 le = if (le == null) {
                     val r = findElement(vm, names, i, p, n)
@@ -60,8 +61,8 @@ class DmNPUtils
             i: Int,
             p: Boolean = true,
             n: Boolean = true
-        ): Pair<DmNPData?, Boolean> {
-            var le: DmNPData? = null
+        ): Pair<IDmNPData?, Boolean> {
+            var le: IDmNPData? = null
 
             if (vm.heap.containsKey(names[i])) {
                 le = vm.heap[names[i]]
@@ -80,15 +81,15 @@ class DmNPUtils
         private fun findElement(
             vm: DmNPVM,
             names: ArrayList<String>,
-            le_: DmNPData?,
+            le_: IDmNPData?,
             i: Int,
             p: Boolean = true,
             n: Boolean = true
-        ): Pair<DmNPData?, Boolean> {
+        ): Pair<IDmNPData?, Boolean> {
             var le = le_
 
             le = when (le!!.value) {
-                is Any -> throwCast<Any?, Map<String, DmNPData>>(le.value)[names[i]]
+                is Any -> throwCast<Any?, Map<String, IDmNPData>>(le.value)[names[i]]
                 else -> {
                     if (le is DmNPDataObject) le.fm[names[i]]
                     else return Pair(le, true)
@@ -104,9 +105,9 @@ class DmNPUtils
         private fun findPrev(
             vm: DmNPVM,
             names: ArrayList<String>,
-            le_: DmNPData?,
+            le_: IDmNPData?,
             p: Boolean = true
-        ): DmNPData? {
+        ): IDmNPData? {
             var le = le_
 
             if (le == null && vm.prev.size > 0 && p) {
@@ -131,9 +132,9 @@ class DmNPUtils
         private fun findNext(
             vm: DmNPVM,
             names: ArrayList<String>,
-            le_: DmNPData?,
+            le_: IDmNPData?,
             n: Boolean = true
-        ): DmNPData? {
+        ): IDmNPData? {
             var le = le_
 
             if (le == null && vm.next.size > 0 && n) {

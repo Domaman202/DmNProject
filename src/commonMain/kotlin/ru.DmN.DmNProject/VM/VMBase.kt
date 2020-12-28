@@ -1,11 +1,9 @@
 package ru.DmN.DmNProject.VM
 
+import ru.DmN.DmNProject.Data.*
+import ru.DmN.DmNProject.Data.Containers.DmNPDObjectMap
 import ru.DmN.DmNProject.Data.Containers.DmNPDataMap
 import ru.DmN.DmNProject.Data.Containers.Stack
-import ru.DmN.DmNProject.Data.DmNPAData
-import ru.DmN.DmNProject.Data.DmNPData
-import ru.DmN.DmNProject.Data.DmNPDataObject
-import ru.DmN.DmNProject.Data.DmNPType
 import ru.DmN.DmNProject.Data.Math.*
 
 /**
@@ -57,13 +55,6 @@ open class DmNPVM
         this.next       = vm.next
     }
 
-    /**
-     * Инициализатор виртуальной машины
-     */
-//    fun fastInit() {
-//
-//    }
-
     fun init() {
         // Package_System
         val ps = DmNPAData("System", DmNPType.PACKAGE)
@@ -84,5 +75,34 @@ open class DmNPVM
         mwl.reference.add(cc)
         mwl.value = fun(vm: DmNPVM, _: ArrayList<Any?>, _: ListIterator<Any?>) { println(vm.stack.pop()) }
         ccd.add(mwl)
+    }
+
+    fun initSystem() {
+        val classClass = DmNPDataObject(
+            "Class",
+            DmNPType.CLASS,
+            null,
+            null,
+            arrayListOf(DmNPModifiers.PUBLIC),
+            DmNPDataMap(heap.DmNPData()),
+            null
+        )
+        //
+        val objectObject = DmNPDataObject(
+            "Object",
+            DmNPType.OBJECT,
+            null,
+            arrayListOf(DmNPReference({ }, { classClass }))
+        )
+        //
+        val packageSystem = DmNPEFData(
+            "System",
+            DmNPType.CLASS,
+            null,
+            null,
+            arrayListOf(DmNPReference({ }, { objectObject }))
+        )
+        packageSystem.fm = DmNPDObjectMap(packageSystem)
+        //
     }
 }

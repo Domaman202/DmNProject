@@ -11,7 +11,7 @@ object OCMData {
         OpCodeManager.OpCodes[OCData.CreatePackage] = { _, vm, _, _ ->
             val ns = throwCast<Any?, ArrayList<String>>(vm.stack.pop())
 
-            var le: DmNPData? = null
+            var le: IDmNPData? = null
             for (i in 0 until ns.size) {
                 if (le == null) {
                     if (vm.heap.containsKey(ns[i])) {

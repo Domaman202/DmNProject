@@ -4,24 +4,29 @@ import ru.DmN.DmNProject.Data.Containers.DmNPDObjectMap
 import ru.DmN.DmNProject.Data.Containers.DmNPDataMap
 import ru.DmN.DmNProject.VM.DmNPReference
 
-/**
- * @author  DomamaN202
- */
-class DmNPDataObject// Constructors
+class DmNPEFData(
+    name: String,
+    type: DmNPType,
+    value: Any?,
+    override var fm: DmNPDObjectMap? = null,
+    e: ArrayList<DmNPReference<IEFMStorage>> = ArrayList()
+) : DmNPEData(name, type, value, e), IEFMStorage
+
+class DmNPDataObject
     (
     name: String,
     type: DmNPType,
     fm: DmNPDObjectMap? = null,
-    e: ArrayList<DmNPReference<DmNPData>>? = null,
+    e: ArrayList<DmNPReference<IEFMStorage>>? = null,
     modifiers: ArrayList<DmNPModifiers>? = null,
     reference: DmNPDataMap? = null,
     value: Any? = null
-) : DmNPAData(name, type, modifiers, reference, value)
+) : DmNPAData(name, type, modifiers, reference, value), IEFMStorage
 {
     // Fields and methods
-    var fm: DmNPDObjectMap = fm ?: DmNPDObjectMap(this)
+    override var fm: DmNPDObjectMap = fm ?: DmNPDObjectMap(this)
     // Extends
-    var e: ArrayList<DmNPReference<DmNPData>> = e ?:  ArrayList()
+    override var e: ArrayList<DmNPReference<IEFMStorage>> = e ?:  ArrayList()
 
     operator fun set(name: String, value: DmNPData) { fm[name] = value }
     operator fun get(name: String) = fm[name]
