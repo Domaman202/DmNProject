@@ -12,22 +12,20 @@ class DmNPEFData(
     e: ArrayList<DmNPReference<IEFMStorage>> = ArrayList()
 ) : DmNPEData(name, type, value, e), IEFMStorage
 
-class DmNPDataObject
-    (
+
+open class DmNPAData
+/**
+ * @param name Имя обьекта
+ * @param type Тип обьекта
+ */(
     name: String,
     type: DmNPType,
-    fm: DmNPDObjectMap? = null,
-    e: ArrayList<DmNPReference<IEFMStorage>>? = null,
     modifiers: ArrayList<DmNPModifiers>? = null,
     reference: DmNPDataMap? = null,
     value: Any? = null
-) : DmNPAData(name, type, modifiers, reference, value), IEFMStorage
+) : DmNPData(name, type, value), IModifiersStorage, IReferenceStorage
 {
-    // Fields and methods
-    override var fm: DmNPDObjectMap = fm ?: DmNPDObjectMap(this)
-    // Extends
-    override var e: ArrayList<DmNPReference<IEFMStorage>> = e ?:  ArrayList()
+    override var modifiers: ArrayList<DmNPModifiers> = modifiers ?: ArrayList()
+    override var reference: DmNPDataMap = reference ?: DmNPDataMap()
 
-    operator fun set(name: String, value: DmNPData) { fm[name] = value }
-    operator fun get(name: String) = fm[name]
 }
