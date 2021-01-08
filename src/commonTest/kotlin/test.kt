@@ -1,8 +1,6 @@
 import ru.DmN.DmNProject.Data.Containers.DmNPDataMap
 import ru.DmN.DmNProject.Data.Containers.Stack
 import ru.DmN.DmNProject.Data.DmNPData
-import ru.DmN.DmNProject.Data.DmNPDataObject
-import ru.DmN.DmNProject.Data.DmNPModifiers
 import ru.DmN.DmNProject.Data.DmNPType
 import ru.DmN.DmNProject.OpCode.*
 import ru.DmN.DmNProject.VM.*
@@ -19,25 +17,11 @@ class testing {
         //
         val code = ArrayList<Any?>()
 
-        code.add(OCStack.LoadConstant) // Выполняем выгрузку в стек имён пакетов
-        code.add(arrayListOf("ru", "DmN", "testing")) // Имена пакетов которые отправятся в стек
-        code.add(OCStack.CloneStackElement) // Клонируем текущий элемент стека ( текущий элемент стека дублируеться )
-        code.add(OCData.CreatePackage) // Создаём пакеты ( удаляеться текущий элемент стека )
-        code.add(OCStackHeap.PushData) // Загружаем пакеты в стек ( текущий элемент стека перемещаеться в heap )
-        code.add(OCStackHeap.LoadData) // Выгружаем пакет из стека ( удаляеться текущий элемент стека )
-
-        code.add(OCStack.LoadConstant) // Выполняем выгрузку в стек модификаторов класса
-        code.add(arrayListOf(DmNPModifiers.PUBLIC)) // Модификаторы класса
-        code.add(OCStack.LoadConstant) // Выполняем выгрузку в стек имя класса
-        code.add("Main") // Имя класса
-        code.add(OCData.CreateClass) // Создаём класс
-
-        code.add(OCStack.LoadConstant) // Выполняем выгрузку в стек модификаторов функции
-        code.add(arrayListOf(DmNPModifiers.PUBLIC)) // Модификаторы функции
         code.add(OCStack.LoadConstant) // Выполняем выгрузку в стек именя функции
         code.add("main") // Имя функции
         code.add(OCData.CreateMethod) // Создаём функцию
 
+        code.add(OCStack.CloneStackElement) // Клонируем функцию
         code.add(OCStack.LoadConstant) // Выгружаем в стек тело функии
         code.add(
             arrayListOf(
@@ -49,6 +33,7 @@ class testing {
             )
         )
         code.add(OCData.SetValue) // Устанавливаем значение из стека в тело функции
+        code.add(OCStackHeap.PushData)
         //
         val vm = DmNPVMInterpreter() // создаём интерпритатор-виртуальную машину
         vm.init() // вызываем инициализацию виртуальной машини
@@ -56,7 +41,7 @@ class testing {
         //
         val ct = ArrayList<Any?>()
         ct.add(OCStack.LoadConstant)
-        ct.add(arrayListOf("ru", "DmN", "testing", "Main", "main"))
+        ct.add(arrayListOf("main"))
         ct.add(OCInvoke.UnsafeInvokeVirtual)
         vm.parse(ct)
         //

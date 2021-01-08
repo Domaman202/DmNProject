@@ -4,30 +4,20 @@ import ru.DmN.DmNProject.Data.Containers.DmNPDObjectMap
 import ru.DmN.DmNProject.Data.Containers.DmNPDataMap
 import ru.DmN.DmNProject.VM.DmNPReference
 
-class DmNPEFData(
+open class DmNPEFMData(
     name: String,
     type: DmNPType,
-    value: Any?,
-    override var fm: DmNPDObjectMap? = null,
-    e: ArrayList<DmNPReference<IEFMStorage>> = ArrayList()
-) : DmNPEData(name, type, value, e), IEFMStorage
-
-class DmNPDataObject
-    (
-    name: String,
-    type: DmNPType,
+    value: Any? = null,
     fm: DmNPDObjectMap? = null,
-    e: ArrayList<DmNPReference<IEFMStorage>>? = null,
-    modifiers: ArrayList<DmNPModifiers>? = null,
-    reference: DmNPDataMap? = null,
-    value: Any? = null
-) : DmNPAData(name, type, modifiers, reference, value), IEFMStorage
-{
-    // Fields and methods
-    override var fm: DmNPDObjectMap = fm ?: DmNPDObjectMap(this)
-    // Extends
-    override var e: ArrayList<DmNPReference<IEFMStorage>> = e ?:  ArrayList()
-
-    operator fun set(name: String, value: DmNPData) { fm[name] = value }
-    operator fun get(name: String) = fm[name]
+    override val ext: ArrayList<DmNPReference<IEFMStorage>> = ArrayList()
+): DmNPData(name, type, value), IEFMStorage {
+    override val fm: DmNPDObjectMap = fm ?: DmNPDObjectMap(this)
 }
+
+open class DmNPRFMData(
+    name: String,
+    type: DmNPType,
+    value: Any? = null,
+    fm: DmNPDObjectMap? = null,
+    override val reference: DmNPDataMap = DmNPDataMap()
+): DmNPFMData(name, type, value, fm), IReferenceStorage

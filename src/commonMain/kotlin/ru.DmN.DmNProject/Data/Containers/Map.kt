@@ -52,9 +52,9 @@ open class DmNPDataMap : MutableMap<String, IDmNPData>, Iterable<IDmNPData>
             override fun lastValue(): Any? = da[c].value
             override fun nextValue(): Any? = da[++c].value
 
-            override fun prevModifiers(): ArrayList<DmNPModifiers>? = if (da[--c] is IModifiersStorage) (da[c] as IModifiersStorage).modifiers else null
-            override fun lastModifiers(): ArrayList<DmNPModifiers>? = if (da[c] is IModifiersStorage) (da[c] as IModifiersStorage).modifiers else null
-            override fun nextModifiers(): ArrayList<DmNPModifiers>? = if (da[++c] is IModifiersStorage) (da[c] as IModifiersStorage).modifiers else null
+            override fun prevAnnotations(): ArrayList<IDmNPData>? = if (da[--c] is IAnnotationStorage) (da[c] as IAnnotationStorage).annotations else null
+            override fun lastAnnotations(): ArrayList<IDmNPData>? = if (da[c]   is IAnnotationStorage) (da[c] as IAnnotationStorage).annotations else null
+            override fun nextAnnotations(): ArrayList<IDmNPData>? = if (da[++c] is IAnnotationStorage) (da[c] as IAnnotationStorage).annotations else null
 
             override fun prevReference(): DmNPDataMap? = if (da[--c] is IReferenceStorage) (da[c] as IReferenceStorage).reference else null
             override fun lastReference(): DmNPDataMap? = if (da[c] is IReferenceStorage) (da[c] as IReferenceStorage).reference else null
@@ -146,9 +146,9 @@ open class DmNPDObjectMap : DmNPDataMap
             this.instance = instance
 
         if (result == null && this.instance != null) {
-            for (e in this.instance!!.e) {
+            for (e in this.instance!!.ext) {
                 if (e.get() != this.instance) {
-                    result = (e.get() as DmNPDataObject).fm[key, e.get() as DmNPDataObject]
+                    result = e.get().fm[key, e.get()]
 
                     if (result != null)
                         return result
@@ -156,9 +156,9 @@ open class DmNPDObjectMap : DmNPDataMap
             }
 
             if (result == null) {
-                for (e in this.instance!!.e) {
-                    if (e.get() is DmNPDataObject && e.get() != this.instance) {
-                        f(key, e.get() as DmNPDataObject)
+                for (e in this.instance!!.ext) {
+                    if (e.get() != this.instance) {
+                        f(key, e.get())
                     }
                 }
             }
@@ -167,18 +167,18 @@ open class DmNPDObjectMap : DmNPDataMap
         return result
     }
 
-    fun f(key: String, instance: DmNPDataObject? = null): IDmNPData? {
+    fun f(key: String, instance: IEFMStorage? = null): IDmNPData? {
         var result = super.get(key)
 
         if (result == null && instance != null) {
-            for (e in instance.e) {
-                if (e.get() is DmNPDataObject && e.get() != instance) {
-                    result = (e.get() as DmNPDataObject).fm[key, e.get() as DmNPDataObject]
+            for (e in instance.ext) {
+                if (e.get() != instance) {
+                    result = e.get().fm[key, e.get()]
 
                     if (result != null)
                         return result
                     else
-                        f(key, e.get() as DmNPDataObject)
+                        f(key, e.get())
                 }
             }
         }

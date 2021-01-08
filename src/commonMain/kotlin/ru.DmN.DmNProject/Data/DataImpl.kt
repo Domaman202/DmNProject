@@ -11,13 +11,14 @@ interface IDmNPData {
 }
 
 interface IExtending {
-    val e: ArrayList<DmNPReference<IEFMStorage>>
+    val ext: ArrayList<DmNPReference<IEFMStorage>>
 }
 interface IFMStorage {
-    val fm: DmNPDObjectMap?
+    val fm: DmNPDObjectMap
 }
-interface IModifiersStorage {
-    val modifiers: ArrayList<DmNPModifiers>
+
+interface IAnnotationStorage {
+    val annotations: ArrayList<IDmNPData>
 }
 interface IReferenceStorage {
     val reference: DmNPDataMap
