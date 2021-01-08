@@ -1,10 +1,7 @@
 package ru.DmN.DmNProject.VM
 
-import ru.DmN.DmNProject.Data.DmNPData
-import ru.DmN.DmNProject.Data.DmNPDataObject
 import ru.DmN.DmNProject.Data.IDmNPData
 import ru.DmN.DmNProject.Data.IFMStorage
-import kotlin.math.roundToLong
 
 typealias kotlin_function = (vm: DmNPVM, c: ArrayList<Any?>, ci: ListIterator<Any?>) -> Unit
 inline fun <In, reified Out> throwCast(v: In): Out = if (v is Out) v else throw ClassCastException()

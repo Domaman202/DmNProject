@@ -1,12 +1,5 @@
 package ru.DmN.DmNProject.Data
 
-enum class DmNPDataType
-{
-    DmNPData,
-    DmNPAData,
-    DmNPDataObject
-}
-
 enum class DmNPType
 {
     NULL,
@@ -48,47 +41,6 @@ object DmNPTypeUtil
             "CLASS"     -> DmNPType.CLASS
             "PACKAGE"   -> DmNPType.PACKAGE
             else        -> DmNPType.NULL
-        }
-    }
-}
-
-/**
- * @author  DomamaN202
- */
-enum class DmNPModifiers
-{
-    // Access
-    PUBLIC,
-    PROTECTED,
-    PRIVATE,
-    //
-    STATIC,
-    FINAL
-}
-
-object DmNPModifiersUtil
-{
-    fun toString(type: DmNPModifiers): String
-    {
-        return when (type) {
-            DmNPModifiers.PUBLIC    -> "DmNPModifiers:PUBLIC"
-            DmNPModifiers.PROTECTED -> "DmNPModifiers:PROTECTED"
-            DmNPModifiers.PRIVATE   -> "DmNPModifiers:PRIVATE"
-            DmNPModifiers.STATIC    -> "DmNPModifiers:STATIC"
-            DmNPModifiers.FINAL     -> "DmNPModifiers:FINAL"
-        }
-    }
-
-    fun ofString(str: String): DmNPModifiers
-    {
-
-        return when (str.substring(str.indexOf(':'))) {
-            "DmNPModifiers:PUBLIC"      -> DmNPModifiers.PUBLIC
-            "DmNPModifiers:PROTECTED"   -> DmNPModifiers.PROTECTED
-            "DmNPModifiers:PRIVATE"     -> DmNPModifiers.PRIVATE
-            "DmNPModifiers:STATIC"      -> DmNPModifiers.STATIC
-            "DmNPModifiers:FINAL"       -> DmNPModifiers.FINAL
-            else -> throw Exception()
         }
     }
 }

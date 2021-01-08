@@ -1,9 +1,6 @@
 package ru.DmN.DmNProject.Data.Containers
 
-import ru.DmN.DmNProject.Data.DmNPData
-import ru.DmN.DmNProject.Data.DmNPModifiers
-import ru.DmN.DmNProject.Data.DmNPType
-import ru.DmN.DmNProject.Data.IDmNPData
+import ru.DmN.DmNProject.Data.*
 
 interface DmNPDataIterator : ListIterator<IDmNPData>
 {
@@ -22,9 +19,9 @@ interface DmNPDataIterator : ListIterator<IDmNPData>
     fun lastValue():    Any?
     fun nextValue():    Any?
 
-    fun prevModifiers(): ArrayList<DmNPModifiers>?
-    fun lastModifiers(): ArrayList<DmNPModifiers>?
-    fun nextModifiers(): ArrayList<DmNPModifiers>?
+    fun prevAnnotations(): ArrayList<IDmNPData>?
+    fun lastAnnotations(): ArrayList<IDmNPData>?
+    fun nextAnnotations(): ArrayList<IDmNPData>?
 
     fun prevReference(): DmNPDataMap?
     fun lastReference(): DmNPDataMap?
