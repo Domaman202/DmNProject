@@ -2,8 +2,10 @@ package ru.DmN.DmNProject.OpCode
 
 enum class OCStack: IOpCode {
     LoadConstant,
+    LoadAllConstants,
     UnLoadConstant,
-    CloneStackElement
+    CloneStackElement,
+    Reverse
 }
 
 enum class OCException: IOpCode {
@@ -27,6 +29,13 @@ enum class OCData: IOpCode {
     CopyAddData,
     RemoveData,
     GetRemoveData,
+
+    AddToValue,
+    CopyAddToValue,
+    RemoveInValue,
+    CopyRemoveInValue,
+
+    FindPackage
 }
 
 enum class OCStackHeap: IOpCode {

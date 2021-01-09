@@ -2,6 +2,7 @@ package ru.DmN.DmNProject.OpCode
 
 import ru.DmN.DmNProject.Data.*
 import ru.DmN.DmNProject.Data.Containers.DmNPDataMap
+import ru.DmN.DmNProject.VM.DmNPUtils
 import ru.DmN.DmNProject.VM.throwCast
 
 object OCMData {
@@ -149,9 +150,9 @@ object OCMData {
         }
         //
         OpCodeManager.OpCodes[OCData.SetValue] = { _, vm, _, _ ->
-            val v = vm.stack.pop()
-            (vm.stack.pop() as DmNPData).value = v
-//            (vm.stack.pop() as IDmNPData).value = vm.stack.pop()
+//            val v = vm.stack.pop()
+//            (vm.stack.pop() as DmNPData).value = v
+            (vm.stack.pop() as IDmNPData).value = vm.stack.pop()
         }
         OpCodeManager.OpCodes[OCData.CopySetValue] = { _, vm, _, _ ->
 //            val v = vm.stack.pop()
@@ -191,5 +192,26 @@ object OCMData {
 //            o.fm.remove(n)
             vm.stack.push((vm.stack.pop() as IFMStorage).fm.remove(vm.stack.pop()))
         }
+        OpCodeManager.OpCodes[OCData.AddToValue] = { _, vm, _, _ ->
+            ((vm.stack.pop() as IDmNPData).value as DmNPDataMap).add(vm.stack.pop() as IDmNPData)
+        }
+        OpCodeManager.OpCodes[OCData.CopyAddToValue] = { _, vm, _, _ ->
+            val o = vm.stack.pop() as IDmNPData
+            (o.value as DmNPDataMap).add(vm.stack.pop() as IDmNPData)
+            vm.stack.push(o)
+        }
+        OpCodeManager.OpCodes[OCData.RemoveInValue] = { _, vm, _, _ ->
+            ((vm.stack.pop() as IDmNPData).value as DmNPDataMap).remove(vm.stack.pop())
+        }
+        OpCodeManager.OpCodes[OCData.CopyRemoveInValue] = { _, vm, _, _ ->
+            val o = vm.stack.pop() as IDmNPData
+            (o.value as DmNPDataMap).remove(vm.stack.pop())
+            vm.stack.push(o)
+        }
+        OpCodeManager.OpCodes[OCData.FindPackage] = { _, vm, _, _ ->
+            vm.stack.push(DmNPUtils.findPackage(
+                throwCast(vm.stack.pop()),
+                vm.stack.pop() as IDmNPData
+        ))}
     }
 }

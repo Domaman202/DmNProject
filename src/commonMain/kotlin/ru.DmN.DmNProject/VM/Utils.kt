@@ -1,6 +1,7 @@
 package ru.DmN.DmNProject.VM
 
 import ru.DmN.DmNProject.Data.Containers.DmNPDataMap
+import ru.DmN.DmNProject.Data.Containers.Stack
 import ru.DmN.DmNProject.Data.DmNPType
 import ru.DmN.DmNProject.Data.IDmNPData
 import ru.DmN.DmNProject.Data.IExtending
@@ -28,6 +29,29 @@ class DmNPUtils
             } else {
                 throwCast<Any?, kotlin_function>(f)(vm, c, ci)
             }
+        }
+
+        fun findPackage(
+            names: ArrayList<String>,
+            p: IDmNPData
+        ): IDmNPData? {
+            var le: IDmNPData? = null
+
+            for (i in 0 until names.size) {
+                if (i == 0)
+                    le = (p.value as DmNPDataMap)[names[i]]
+                else {
+                    val name = names[i]
+                    val ole = le!!; le = null
+
+                    if (ole.type == DmNPType.PACKAGE)
+                        le = (ole.value as DmNPDataMap)[name]
+                    else
+                        return ole
+                }
+            }
+
+            return le
         }
 
         fun findElement(
