@@ -1,6 +1,7 @@
 import ru.DmN.DmNProject.Data.Containers.DmNPDataMap
 import ru.DmN.DmNProject.Data.Containers.Stack
 import ru.DmN.DmNProject.Data.DmNPData
+import ru.DmN.DmNProject.Data.DmNPDataVariants
 import ru.DmN.DmNProject.Data.DmNPType
 import ru.DmN.DmNProject.OpCode.*
 import ru.DmN.DmNProject.VM.*
@@ -17,6 +18,9 @@ class testing {
         //
         val code = ArrayList<Any?>()
 
+        // Создаём функцию и добавляем ей тело
+        // Stack: Ничего
+        // Heap: Ничего
         code.add(OCStack.LoadConstant) // Выполняем выгрузку в стек именя функции
         code.add("main") // Имя функции
         code.add(OCData.CreateMethod) // Создаём функцию
@@ -33,8 +37,11 @@ class testing {
             )
         )
         code.add(OCData.SetValue) // Устанавливаем значение из стека в тело функции
+        // Stack: [функция Main]
+        // Heap: Ничего
+
         code.add(OCStackHeap.PushData)
-        //
+
         val vm = DmNPVMInterpreter() // создаём интерпритатор-виртуальную машину
         vm.init() // вызываем инициализацию виртуальной машини
         vm.parse(code) // парсим код

@@ -21,7 +21,7 @@ open class DmNPAData(
 open class DmNPFMData : DmNPData, IFMStorage {
     override val fm: DmNPDObjectMap
 
-    constructor(name: String, type: DmNPType, value: Any?, fm: DmNPDObjectMap?) : super(name, type, value) {
+    constructor(name: String, type: DmNPType, value: Any?, fm: DmNPDObjectMap? = null) : super(name, type, value) {
         this.fm = fm ?: DmNPDObjectMap(toEFMStorage())
     }
 

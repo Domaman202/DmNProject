@@ -14,7 +14,6 @@ enum class OCException: IOpCode {
 
 enum class OCData: IOpCode {
     CreatePackage,
-    CreateClass,
     CreateMethod,
     CreateVariable,
     CreateObject,
@@ -38,12 +37,8 @@ enum class OCStackHeap: IOpCode {
 enum class OCInvoke: IOpCode {
     // Kotlin
     UnsafeInvokeKotlin,
-    InvokeKotlin,
-    InvokeStaticKotlin,
     // Virtual
-    UnsafeInvokeVirtual,
-    InvokeVirtual,
-    InvokeStaticVirtual
+    UnsafeInvokeVirtual
 }
 
 enum class OCSMath: IMathOpCode {
