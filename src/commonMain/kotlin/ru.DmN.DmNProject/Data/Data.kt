@@ -44,3 +44,17 @@ object DmNPTypeUtil
         }
     }
 }
+
+enum class DmNPDataVariants {
+    Default,
+    Extendable,
+    Annotateble,
+    Referencable,
+    FM,
+    EFM,
+    RFM,
+    AFM,
+    REFM,
+    AEFM,
+    AREFM
+}

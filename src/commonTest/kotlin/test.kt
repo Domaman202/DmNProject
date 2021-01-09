@@ -1,6 +1,7 @@
 import ru.DmN.DmNProject.Data.Containers.DmNPDataMap
 import ru.DmN.DmNProject.Data.Containers.Stack
 import ru.DmN.DmNProject.Data.DmNPData
+import ru.DmN.DmNProject.Data.DmNPDataVariants
 import ru.DmN.DmNProject.Data.DmNPType
 import ru.DmN.DmNProject.OpCode.*
 import ru.DmN.DmNProject.VM.*
@@ -17,11 +18,9 @@ class testing {
         //
         val code = ArrayList<Any?>()
 
-        code.add(OCStack.LoadConstant) // Выполняем выгрузку в стек именя функции
-        code.add("main") // Имя функции
-        code.add(OCData.CreateMethod) // Создаём функцию
-
-        code.add(OCStack.CloneStackElement) // Клонируем функцию
+        // Создаём функцию "main" и добавляем ей тело
+        // Stack: Empty
+        // Heap: Empty
         code.add(OCStack.LoadConstant) // Выгружаем в стек тело функии
         code.add(
             arrayListOf(
@@ -32,16 +31,51 @@ class testing {
                 OCInvoke.UnsafeInvokeKotlin // Вызываем kotlin функцию
             )
         )
-        code.add(OCData.SetValue) // Устанавливаем значение из стека в тело функции
+
+        code.add(OCStack.LoadConstant) // Выполняем выгрузку в стек именя функции
+        code.add("main") // Имя функции
+        code.add(OCData.CreateMethod) // Создаём функцию
+
+        code.add(OCData.CopySetValue) // Устанавливаем значение из стека в тело функции
+        // Stack: [Method "main"]
+        // Heap: Empty
+
+        // Создаём класс "Main" и добавляем в него функцию
+        // Stack: [Method "main"]
+        // Heap: Empty
+        code.add(OCStack.LoadAllConstants)
+        code.add(arrayListOf(
+            null,
+            null,
+            DmNPType.CLASS,
+            "Main",
+            DmNPDataVariants.FM
+        ))
+        code.add(OCData.CreateObject)
+        code.add(OCData.CopyAddData)
+        // Stack: [Class "Main"]
+        // Heap: Empty
+
+        // Создаём пакеты [ru, DmN, test], загружаем в них класс "Main" и выгружаем их в heap
+        // Stack: [Class "Main"]
+        // Heap: Empty
+        code.add(OCStack.LoadConstant)
+        code.add(arrayListOf("ru", "DmN", "test"))
+        code.add(OCData.CreatePackage)
+        code.add(OCStack.CloneStackElement)
         code.add(OCStackHeap.PushData)
-        //
+        code.add(OCStack.LoadConstant)
+        code.add(arrayListOf("DmN", "test"))
+        code.add(OCData.FindPackage)
+        code.add(OCData.AddToValue)
+
         val vm = DmNPVMInterpreter() // создаём интерпритатор-виртуальную машину
         vm.init() // вызываем инициализацию виртуальной машини
         vm.parse(code) // парсим код
         //
         val ct = ArrayList<Any?>()
         ct.add(OCStack.LoadConstant)
-        ct.add(arrayListOf("main"))
+        ct.add(arrayListOf("ru", "DmN", "test", "Main", "main"))
         ct.add(OCInvoke.UnsafeInvokeVirtual)
         vm.parse(ct)
         //

@@ -21,3 +21,11 @@ open class DmNPRFMData(
     fm: DmNPDObjectMap? = null,
     override val reference: DmNPDataMap = DmNPDataMap()
 ): DmNPFMData(name, type, value, fm), IReferenceStorage
+
+open class DmNPAFMData(
+    name: String,
+    type: DmNPType,
+    value: Any? = null,
+    fm: DmNPDObjectMap? = null,
+    override val annotations: ArrayList<IDmNPData>
+): DmNPFMData(name, type, value, fm), IAnnotationStorage

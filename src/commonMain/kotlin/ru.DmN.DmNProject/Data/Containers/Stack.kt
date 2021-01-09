@@ -1,7 +1,7 @@
 package ru.DmN.DmNProject.Data.Containers
 
 class Stack<T> {
-    private val elements: MutableList<T?> = mutableListOf()
+    val elements: MutableList<T?> = mutableListOf()
 
     fun isEmpty() = elements.isEmpty()
     val size get() = elements.size
@@ -10,7 +10,7 @@ class Stack<T> {
     fun pop() : T? {
         val item = elements.lastOrNull()
         if (!isEmpty()){
-            elements.removeAt(elements.size -1)
+            elements.removeAt(elements.size - 1)
         }
         return item
     }

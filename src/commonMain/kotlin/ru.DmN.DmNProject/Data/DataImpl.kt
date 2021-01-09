@@ -7,7 +7,7 @@ import ru.DmN.DmNProject.VM.DmNPReference
 interface IDmNPData {
     val name: String
     val type: DmNPType
-    val value: Any?
+    var value: Any?
 }
 
 interface IExtending {
