@@ -71,42 +71,66 @@ class DmNPUtils
 
                     if (le == null) {
                         if (p)
-                            for (prev in vm.prev) {
-                                le = findElement(prev, names, n = false)
-
-                                if (le != null) break
-                            }
+                            le = findPrev(vm, names, le)
 
                         if (le == null && n)
-                            for (next in vm.next) {
-                                le = findElement(next, names, p = false)
-
-                                if (le != null) break
-                            }
+                            le = findNext(vm, names, le)
                     }
 
                     if (le == null)
                         return null
                 } else {
-                    val ole = le
-                    if (le!!.type == DmNPType.PACKAGE) {
-                        le = (le.value!! as DmNPDataMap)[name]
-                    }
+                    val result = f1(le, name)
 
-                    if ((le == null || le == ole) && ole is IFMStorage) {
-                        le = ole.fm[name]
-                    }
-
-                    if ((le == null || le == ole) && ole is IExtending) {
-                        le = findE(ole, name)
-                    }
-
-                    if (le == null)
-                        return ole
+                    if (result.second)
+                        return result.first
+                    le = result.first
                 }
             }
 
             return le
+        }
+
+        private fun f1(le_: IDmNPData?, name: String): Pair<IDmNPData?, Boolean> {
+            var le = le_
+            val ole = le!!
+            if (le.type == DmNPType.PACKAGE) {
+                le = (le.value as DmNPDataMap)[name]
+            }
+
+            if ((le == null || le == ole) && ole is IFMStorage) {
+                le = ole.fm[name]
+            }
+
+            if ((le == null || le == ole) && ole is IExtending) {
+                le = findE(ole, name)
+            }
+
+            if (le == null)
+                return Pair(ole, true)
+            return Pair(le, false)
+        }
+
+        private fun findPrev(vm: DmNPVM, names: ArrayList<String>, ole: IDmNPData?): IDmNPData? {
+            for (prev in vm.prev) {
+                val le = findElement(prev, names, n = false)
+
+                if (le != null)
+                    return le
+            }
+
+            return ole
+        }
+
+        private fun findNext(vm: DmNPVM, names: ArrayList<String>, ole: IDmNPData?): IDmNPData? {
+            for (next in vm.next) {
+                val le = findElement(next, names, p = false)
+
+                if (le != null)
+                    return le
+            }
+
+            return ole
         }
 
         private fun findE(ole: IExtending, name: String): IDmNPData? {
