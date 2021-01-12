@@ -23,61 +23,59 @@ class testing {
         // Heap: Empty
         code.add(OCStack.LoadConstant) // Выгружаем в стек тело функии
         code.add(
-            arrayListOf(
+            arrayListOf( // *Тело функции*
                 OCStack.LoadConstant, // Выполняем выгрузку теста в стек
-                "Тееееееееееекст)", // Текст который мы выгрузили в стек
+                "Тееееееееееекст)", // *Текст который мы выгрузили в стек*
                 OCStack.LoadConstant, // Выполняем выгрузку имён в стек
-                arrayListOf("System", "Console", "println"), // Именя которые мы выгружаем в стек
+                arrayListOf("System", "Console", "println"), // *Именя которые мы выгружаем в стек*
                 OCInvoke.UnsafeInvokeKotlin // Вызываем kotlin функцию
             )
         )
-
         code.add(OCStack.LoadConstant) // Выполняем выгрузку в стек именя функции
-        code.add("main") // Имя функции
+        code.add("main") // *Имя функции*
         code.add(OCData.CreateMethod) // Создаём функцию
-
         code.add(OCData.CopySetValue) // Устанавливаем значение из стека в тело функции
         // Stack: [Method "main"]
         // Heap: Empty
 
-        // Создаём класс "Main" и добавляем в него функцию
+        // Создаём обьект "Main" и добавляем в него функцию
         // Stack: [Method "main"]
         // Heap: Empty
-        code.add(OCStack.LoadAllConstants)
-        code.add(arrayListOf(
+        code.add(OCStack.LoadAllConstants) // Выгружаем в стек параметры обьекта "Main"
+        code.add(arrayListOf( // *Параметры обьекта "Main"*
             null,
             null,
-            DmNPType.CLASS,
-            "Main",
-            DmNPDataVariants.FM
+            DmNPType.OBJECT, // Указываем что мы создаём обьект
+            "Main", // *Имя обьекта*
+            DmNPDataVariants.FM // Указываем тип обьекта
         ))
-        code.add(OCData.CreateObject)
-        code.add(OCData.CopyAddData)
+        code.add(OCData.CreateObject) // Создаём обьект
+        code.add(OCData.CopyAddData) // Закидываем метод "main" в обьект "Main"
         // Stack: [Class "Main"]
         // Heap: Empty
 
-        // Создаём пакеты [ru, DmN, test], загружаем в них класс "Main" и выгружаем их в heap
+        // Создаём пакеты [ru, DmN, test], загружаем в них обьект "Main" и выгружаем их в heap
         // Stack: [Class "Main"]
         // Heap: Empty
-        code.add(OCStack.LoadConstant)
-        code.add(arrayListOf("ru", "DmN", "test"))
-        code.add(OCData.CreatePackage)
-        code.add(OCStack.CloneStackElement)
-        code.add(OCStackHeap.PushData)
-        code.add(OCStack.LoadConstant)
-        code.add(arrayListOf("DmN", "test"))
-        code.add(OCData.FindPackage)
-        code.add(OCData.AddToValue)
+        code.add(OCStack.LoadConstant) // Загружаем имена пакетов
+        code.add(arrayListOf("ru", "DmN", "test")) // *Имена пакетов*
+        code.add(OCData.CreatePackage) // Создаём пакеты
+        code.add(OCStack.CloneStackElement) // Клонируем пакет "ru"
+        code.add(OCStackHeap.PushData) // Выкидываем пакет "ru" в heap
+        code.add(OCStack.LoadConstant) // Загружаем в стек имена пакетов [DmN, test]
+        code.add(arrayListOf("DmN", "test")) // *Имена пакетов*
+        code.add(OCData.FindPackage) // Поиск пакета "test" в пакете "ru"
+        code.add(OCData.AddToValue) // Закидываем обьект "Main" в пакет "test"
 
         val vm = DmNPVMInterpreter() // создаём интерпритатор-виртуальную машину
         vm.init() // вызываем инициализацию виртуальной машини
         vm.parse(code) // парсим код
         //
         val ct = ArrayList<Any?>()
-        ct.add(OCStack.LoadConstant)
-        ct.add(arrayListOf("ru", "DmN", "test", "Main", "main"))
-        ct.add(OCInvoke.UnsafeInvokeVirtual)
-        vm.parse(ct)
+        ct.add(OCStack.LoadConstant) // Выгружаем в стек имена
+        ct.add(arrayListOf("ru", "DmN", "test", "Main", "main")) // *имена*
+        ct.add(OCInvoke.UnsafeInvokeVirtual) // Вызываем метод "main"
+        vm.parse(ct) // Парсим код
         //
         println("\n\nTesting completed!")
     }

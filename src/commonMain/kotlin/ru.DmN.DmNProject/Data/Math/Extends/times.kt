@@ -1,5 +1,17 @@
 package ru.DmN.DmNProject.Data.Math.Extends
 
+operator fun Number.times(v: Number): Number {
+    return when (v) {
+        is Byte     -> times(v)
+        is Short    -> times(v)
+        is Int      -> times(v)
+        is Long     -> times(v)
+        is Float    -> times(v)
+        is Double   -> times(v)
+        else        -> 0
+    }
+}
+
 operator fun Number.times(v: Byte): Number {
     return when (this) {
         is Byte     -> this.times(v)
