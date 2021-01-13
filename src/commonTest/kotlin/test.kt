@@ -1,3 +1,5 @@
+import ru.DmN.DmNProject.CDCS.CS
+import ru.DmN.DmNProject.CDCS.ODCS
 import ru.DmN.DmNProject.Data.Containers.DmNPDataMap
 import ru.DmN.DmNProject.Data.Containers.Stack
 import ru.DmN.DmNProject.Data.DmNPData
@@ -142,7 +144,8 @@ class testing {
     fun test() {
         println("Test started!!!\n\n")
         //
-
+        val v = ODCS.StringToValue(CS.ArrayToString(arrayListOf(123, arrayListOf(null, null, null), 321)))
+        println(v)
         //
         println("\n\nTest competed!!!")
     }
