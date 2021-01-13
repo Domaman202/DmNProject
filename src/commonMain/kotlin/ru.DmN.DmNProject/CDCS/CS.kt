@@ -3,12 +3,12 @@ package ru.DmN.DmNProject.CDCS
 import ru.DmN.DmNProject.OpCode.IOpCode
 
 object CS {
-    fun OCToString(oc: IOpCode) {
-
-    }
-
-    fun OCToString(oc: IOpCode, value: Any?) {
-
+    fun OCToString(oc: IOpCode): String {
+        for (e in ODCS.OCC.entries) {
+            if (e.value == oc)
+                return "OC:${e.key}"
+        }
+        return "NULL:"
     }
 
     fun ValueToString(value: Any?): String {
@@ -22,6 +22,7 @@ object CS {
             is Double   -> "D:$value"
             is String   -> "ST:$value"
             is List<*>  -> ArrayToString(value)
+            is IOpCode  -> OCToString(value)
             else -> "NULL:"
         }
     }

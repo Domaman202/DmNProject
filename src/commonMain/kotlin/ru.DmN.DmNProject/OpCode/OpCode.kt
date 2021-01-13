@@ -68,7 +68,9 @@ enum class OCHMath: IMathOpCode {
     DIV
 }
 
-enum class OCVMManager: IOpCode {
-    LoadVM,
-    LoadLinkVM
+enum class OCVM: IOpCode {
+    CodeToString,
+    StringToCode,
+    EvalCode,
+    EvalString
 }

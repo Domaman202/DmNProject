@@ -1,9 +1,9 @@
 package ru.DmN.DmNProject.CDCS
 
-object ODCS {
-    fun StringToOC(str: String) {
+import ru.DmN.DmNProject.OpCode.IOpCode
 
-    }
+object ODCS {
+    val OCC = HashMap<String, IOpCode>()
 
     fun StringToValue(str: String): Any? {
         if (str[0] != '$' || str[1] != '[') {
@@ -12,16 +12,17 @@ object ODCS {
             val value = str.substring(i + 1)
 
             return when (type) {
-                "B" -> value.toBoolean()
-                "BT" -> value.toByte()
-                "S" -> value.toShort()
-                "I" -> value.toInt()
-                "L" -> value.toLong()
-                "F" -> value.toFloat()
-                "D" -> value.toDouble()
-                "ST" -> value
-                "NULL" -> null
-                else -> null
+                "B"     -> value.toBoolean()
+                "BT"    -> value.toByte()
+                "S"     -> value.toShort()
+                "I"     -> value.toInt()
+                "L"     -> value.toLong()
+                "F"     -> value.toFloat()
+                "D"     -> value.toDouble()
+                "ST"    -> value
+                "NULL"  -> null
+                "OC"    -> StringToOpCode(value)
+                else    -> null
             }
         } else if (str[0] == '$' && str[1] == '[') {
             val result = ArrayList<Any?>()
@@ -98,4 +99,6 @@ object ODCS {
 
         return null
     }
+
+    inline fun StringToOpCode(str: String): IOpCode? = OCC[str]
 }

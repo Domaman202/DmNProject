@@ -11,6 +11,20 @@ class OpCodeManager {
     companion object : IOpCodeManager {
         val OpCodes = HashMap<IOpCode, (oc: IOpCode, vm: DmNPVMInterpreter, c: ArrayList<Any?>, ci: ListIterator<Any?>) -> Unit>()
 
+        private var isInit = false
+        fun init() {
+            if (!isInit) {
+                OCMStack.init()
+                OCMStackHeap.init()
+                OCMException.init()
+                OCMData.init()
+                OCMInvoke.init()
+                OCMMath.init()
+                OCMVM.init()
+                isInit = true
+            }
+        }
+
         override fun parse(oc: IOpCode, vm: DmNPVMInterpreter, c: ArrayList<Any?>, ci: ListIterator<*>) {
             val f = OpCodes[oc]
             if (f != null)
@@ -20,12 +34,7 @@ class OpCodeManager {
         }
 
         init {
-            OCMStack    .init()
-            OCMStackHeap.init()
-            OCMException.init()
-            OCMData     .init()
-            OCMInvoke   .init()
-            OCMMath     .init()
+            init()
         }
     }
 }

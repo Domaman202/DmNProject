@@ -5,6 +5,7 @@ import ru.DmN.DmNProject.Data.Containers.DmNPDObjectMap
 import ru.DmN.DmNProject.Data.Containers.DmNPDataMap
 import ru.DmN.DmNProject.Data.Containers.Stack
 import ru.DmN.DmNProject.Data.Math.*
+import ru.DmN.DmNProject.OpCode.OpCodeManager
 
 /**
  * @author  DomamaN202
@@ -56,7 +57,20 @@ open class DmNPVM
     }
 
     fun init() {
+        fastInit()
         initSystem()
+    }
+
+    fun fastInit() {
+        OpCodeManager.init()
+        //
+        val functionPrintln = DmNPData(
+            "println",
+            DmNPType.KMETHOD,
+            { vm: DmNPVM, _: ArrayList<Any?>, _: ListIterator<Any?> -> println(vm.stack.pop()) }
+        )
+
+        heap.add(functionPrintln)
     }
 
     fun initSystem() {

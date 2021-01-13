@@ -1,5 +1,6 @@
 package ru.DmN.DmNProject.OpCode
 
+import ru.DmN.DmNProject.CDCS.ODCS
 import ru.DmN.DmNProject.Data.*
 import ru.DmN.DmNProject.Data.Containers.DmNPDataMap
 import ru.DmN.DmNProject.VM.DmNPUtils
@@ -9,6 +10,7 @@ object OCMData {
     fun init() {
         // Data
         // Data.Object
+        ODCS.OCC["CP"] = OCData.CreatePackage
         OpCodeManager.OpCodes[OCData.CreatePackage] = { _, vm, _, _ ->
             val n = vm.stack.pop()!!
             if (n is String) {
@@ -40,9 +42,11 @@ object OCMData {
                 vm.stack.push(ne)
             }
         }
+        ODCS.OCC["CM"] = OCData.CreateMethod
         OpCodeManager.OpCodes[OCData.CreateMethod] = { _, vm, _, _ ->
             vm.stack.push(DmNPData(vm.stack.pop() as String, DmNPType.METHOD))
         }
+        ODCS.OCC["CV"] = OCData.CreateVariable
         OpCodeManager.OpCodes[OCData.CreateVariable] = { _, vm, _, _ ->
             vm.stack.push(
                 DmNPAData(
@@ -52,6 +56,7 @@ object OCMData {
                 )
             )
         }
+        ODCS.OCC["CO"] = OCData.CreateObject
         OpCodeManager.OpCodes[OCData.CreateObject] = { _, vm, _, _ ->
             val dt = vm.stack.pop() as DmNPDataVariants
             val name = vm.stack.pop() as String
@@ -149,65 +154,63 @@ object OCMData {
             )
         }
         //
+        ODCS.OCC["SV"] = OCData.SetValue
         OpCodeManager.OpCodes[OCData.SetValue] = { _, vm, _, _ ->
-//            val v = vm.stack.pop()
-//            (vm.stack.pop() as DmNPData).value = v
             (vm.stack.pop() as IDmNPData).value = vm.stack.pop()
         }
+        ODCS.OCC["CSV"] = OCData.CopySetValue
         OpCodeManager.OpCodes[OCData.CopySetValue] = { _, vm, _, _ ->
-//            val v = vm.stack.pop()
-//            (vm.stack.peek() as DmNPData).value = v
             val o = vm.stack.pop() as IDmNPData
             o.value = vm.stack.pop()
             vm.stack.push(o)
         }
+        ODCS.OCC["GV"] = OCData.GetValue
         OpCodeManager.OpCodes[OCData.GetValue] = { _, vm, _, _ ->
             vm.stack.push((vm.stack.pop() as IDmNPData).value)
         }
+        ODCS.OCC["CGV"] = OCData.CopyGetValue
         OpCodeManager.OpCodes[OCData.CopyGetValue] = { _, vm, _, _ ->
             vm.stack.push((vm.stack.peek() as IDmNPData).value)
         }
+        ODCS.OCC["AD"] = OCData.AddData
         OpCodeManager.OpCodes[OCData.AddData] = { _, vm, _, _ ->
-//            val d = vm.stack.pop() as DmNPData
-//            (vm.stack.pop() as IFMStorage).fm.add(d)
             (vm.stack.pop() as IFMStorage).fm.add(vm.stack.pop() as IDmNPData)
         }
+        ODCS.OCC["CAD"] = OCData.CopyAddData
         OpCodeManager.OpCodes[OCData.CopyAddData] = { _, vm, _, _ ->
-//            val d = vm.stack.pop() as DmNPData
-//            (vm.stack.peek() as IFMStorage).fm.add(d)
             val o = vm.stack.pop() as IFMStorage
             o.fm.add(vm.stack.pop() as IDmNPData)
             vm.stack.push(o)
         }
+        ODCS.OCC["RD"] = OCData.RemoveData
         OpCodeManager.OpCodes[OCData.RemoveData] = { _, vm, _, _ ->
-//            val n = vm.stack.pop() as String
-//            (vm.stack.peek() as IFMStorage).fm.remove(n)
             (vm.stack.pop() as IFMStorage).fm.remove(vm.stack.pop())
         }
+        ODCS.OCC["GRD"] = OCData.GetRemoveData
         OpCodeManager.OpCodes[OCData.GetRemoveData] = { _, vm, _, _ ->
-//            val n = vm.stack.pop() as String
-//            val o = vm.stack.peek() as IFMStorage
-//
-//            vm.stack.push(o.fm[n])
-//            o.fm.remove(n)
             vm.stack.push((vm.stack.pop() as IFMStorage).fm.remove(vm.stack.pop()))
         }
+        ODCS.OCC["ATV"] = OCData.AddToValue
         OpCodeManager.OpCodes[OCData.AddToValue] = { _, vm, _, _ ->
             ((vm.stack.pop() as IDmNPData).value as DmNPDataMap).add(vm.stack.pop() as IDmNPData)
         }
+        ODCS.OCC["CATV"] = OCData.CopyAddToValue
         OpCodeManager.OpCodes[OCData.CopyAddToValue] = { _, vm, _, _ ->
             val o = vm.stack.pop() as IDmNPData
             (o.value as DmNPDataMap).add(vm.stack.pop() as IDmNPData)
             vm.stack.push(o)
         }
+        ODCS.OCC["RIV"] = OCData.RemoveInValue
         OpCodeManager.OpCodes[OCData.RemoveInValue] = { _, vm, _, _ ->
             ((vm.stack.pop() as IDmNPData).value as DmNPDataMap).remove(vm.stack.pop())
         }
+        ODCS.OCC["CRIV"] = OCData.CopyRemoveInValue
         OpCodeManager.OpCodes[OCData.CopyRemoveInValue] = { _, vm, _, _ ->
             val o = vm.stack.pop() as IDmNPData
             (o.value as DmNPDataMap).remove(vm.stack.pop())
             vm.stack.push(o)
         }
+        ODCS.OCC["FP"] = OCData.FindPackage
         OpCodeManager.OpCodes[OCData.FindPackage] = { _, vm, _, _ ->
             vm.stack.push(DmNPUtils.findPackage(
                 throwCast(vm.stack.pop()),

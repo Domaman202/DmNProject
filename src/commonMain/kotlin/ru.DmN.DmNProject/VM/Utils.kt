@@ -8,7 +8,7 @@ import ru.DmN.DmNProject.Data.IExtending
 import ru.DmN.DmNProject.Data.IFMStorage
 
 typealias kotlin_function = (vm: DmNPVM, c: ArrayList<Any?>, ci: ListIterator<Any?>) -> Unit
-inline fun <In, reified Out> throwCast(v: In): Out = if (v is Out) v else throw ClassCastException()
+inline fun <reified Out> throwCast(v: Any?): Out = if (v is Out) v else throw ClassCastException()
 
 /**
  * @author  DomamaN202
@@ -27,7 +27,7 @@ class DmNPUtils
 
                 vm.next.remove(mVM)
             } else {
-                throwCast<Any?, kotlin_function>(f)(vm, c, ci)
+                throwCast<kotlin_function>(f)(vm, c, ci)
             }
         }
 

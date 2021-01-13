@@ -144,8 +144,26 @@ class testing {
     fun test() {
         println("Test started!!!\n\n")
         //
-        val v = ODCS.StringToValue(CS.ArrayToString(arrayListOf(123, arrayListOf(null, null, null), 321)))
-        println(v)
+        val code = ArrayList<Any?>()
+        //
+        code.add(OCStack.LoadConstant)
+        code.add("Hello, World!")
+        code.add(OCStack.LoadConstant)
+        code.add("println")
+        code.add(OCInvoke.UnsafeInvokeKotlin)
+        //
+        OpCodeManager.init()
+        println(CS.ArrayToString(code))
+        //
+        code.clear()
+        //
+        code.add(OCStack.LoadConstant)
+        code.add("\$[OC:LC\$,ST:Hello, World!\$,OC:LC\$,ST:println\$,OC:UIK\$,\$]")
+        code.add(OCVM.EvalString)
+        //
+        val vm = DmNPVMInterpreter()
+        vm.fastInit()
+        vm.parse(code)
         //
         println("\n\nTest competed!!!")
     }
