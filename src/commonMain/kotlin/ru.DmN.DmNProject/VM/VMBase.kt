@@ -33,6 +33,9 @@ open class DmNPVM
     /**
      * Конструктор, но поля для обьекта задаёт пользыватель
      * @param stack стек
+     * @param heap хип обьектов
+     * @param prev список преведущих виртуальных машин
+     * @param next список следующий виртуальных машин
      */
     constructor(stack: Stack<Any?>, heap: DmNPDataMap, prev: ArrayList<DmNPVM>, next: ArrayList<DmNPVM>) {
         this.stack  = stack
@@ -56,11 +59,17 @@ open class DmNPVM
         this.next       = vm.next
     }
 
+    /**
+     * Полная инициализация всех систем
+     */
     fun init() {
         fastInit()
         initSystem()
     }
 
+    /**
+     * Быстрая инициализация - инициализируются только важные компоненты
+     */
     fun fastInit() {
         OpCodeManager.init()
         // function "println" init
@@ -92,6 +101,9 @@ open class DmNPVM
         objectObject.fm.add(DmNPData("Inc", DmNPType.KMETHOD))
     }
 
+    /**
+     * Инициализация системных утилит
+     */
     fun initSystem() {
         //
         val packageSystem = DmNPEFMData(
@@ -114,5 +126,24 @@ open class DmNPVM
         packageSystem.fm.add(classConsole)
         //
         classConsole.fm.add(DmNPData("println", DmNPType.KMETHOD, fun (vm: DmNPVM, _: ArrayList<Any?>, _: ListIterator<Any?>, _: IDmNPData) = println(vm.stack.pop())))
+    }
+
+    /**
+     * Обьект компаньон
+     */
+    companion object {
+        /**
+         * Чистая виртуальная машина проинициализированная через fast init
+         */
+        val fastIVM = DmNPVM()
+        /**
+         * Чистая виртуальная машина проинициализированная через init (полная инициализация)
+         */
+        val fullIVM = DmNPVM()
+
+        init {
+            fastIVM.fastInit()
+            fullIVM.init()
+        }
     }
 }
