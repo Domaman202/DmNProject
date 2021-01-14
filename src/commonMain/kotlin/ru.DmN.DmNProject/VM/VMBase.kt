@@ -15,7 +15,7 @@ open class DmNPVM
     var prev:        ArrayList<DmNPVM>
     var next:        ArrayList<DmNPVM>
 
-    var stack: Stack<Any>
+    var stack: Stack<Any?>
     var heap: DmNPDataMap
 
     /**
@@ -32,8 +32,9 @@ open class DmNPVM
 
     /**
      * Конструктор, но поля для обьекта задаёт пользыватель
+     * @param stack стек
      */
-    constructor(stack: Stack<Any>, heap: DmNPDataMap, prev: ArrayList<DmNPVM>, next: ArrayList<DmNPVM>) {
+    constructor(stack: Stack<Any?>, heap: DmNPDataMap, prev: ArrayList<DmNPVM>, next: ArrayList<DmNPVM>) {
         this.stack  = stack
         this.heap   = heap
 
@@ -43,7 +44,7 @@ open class DmNPVM
     }
 
     /**
-     * Клонирует обект
+     * Копирует обект
      *
      * @param vm обьект который будем клонировать
      */
