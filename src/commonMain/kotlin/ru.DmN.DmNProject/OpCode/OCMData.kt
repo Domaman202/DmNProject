@@ -3,6 +3,7 @@ package ru.DmN.DmNProject.OpCode
 import ru.DmN.DmNProject.CDCS.ODCS
 import ru.DmN.DmNProject.Data.*
 import ru.DmN.DmNProject.Data.Containers.DmNPDataMap
+import ru.DmN.DmNProject.VM.DmNPReference
 import ru.DmN.DmNProject.VM.DmNPUtils
 import ru.DmN.DmNProject.VM.throwCast
 
@@ -49,7 +50,7 @@ object OCMData {
         ODCS.OCC["CV"] = OCData.CreateVariable
         OpCodeManager.OpCodes[OCData.CreateVariable] = { _, vm, _, _ ->
             vm.stack.push(
-                DmNPAData(
+                DmNPData(
                     vm.stack.pop() as String,
                     DmNPType.VAR,
                     throwCast(vm.stack.pop())
@@ -216,5 +217,19 @@ object OCMData {
                 throwCast(vm.stack.pop()),
                 vm.stack.pop() as IDmNPData
         ))}
+        ODCS.OCC["AE"] = OCData.AddExt
+        OpCodeManager.OpCodes[OCData.AddExt] = { _, vm, _, _ ->
+            val o = vm.stack.pop()
+            val e = vm.stack.pop()
+            (o as IExtending).ext.add(DmNPReference({ }, { e as IDmNPData }))
+            vm.stack.push(o)
+        }
+        ODCS.OCC["RE"] = OCData.RemoveExt
+        OpCodeManager.OpCodes[OCData.RemoveExt] = { _, vm, _, _ ->
+            val o = vm.stack.pop()
+            val n = vm.stack.pop()
+            (o as IExtending).ext.remove(n as String)
+            vm.stack.push(o)
+        }
     }
 }

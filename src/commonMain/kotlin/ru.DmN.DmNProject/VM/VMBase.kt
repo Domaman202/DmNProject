@@ -1,10 +1,9 @@
 package ru.DmN.DmNProject.VM
 
 import ru.DmN.DmNProject.Data.*
-import ru.DmN.DmNProject.Data.Containers.DmNPDObjectMap
 import ru.DmN.DmNProject.Data.Containers.DmNPDataMap
+import ru.DmN.DmNProject.Data.Containers.DmNPRDataMap
 import ru.DmN.DmNProject.Data.Containers.Stack
-import ru.DmN.DmNProject.Data.Math.*
 import ru.DmN.DmNProject.OpCode.OpCodeManager
 
 /**
@@ -85,7 +84,7 @@ open class DmNPVM
             DmNPType.CLASS,
             null,
             null,
-            arrayListOf(DmNPReference({ }, { classClass }))
+            DmNPRDataMap(DmNPReference({ }, { classClass }))
         )
         heap.add(objectObject)
         // math functions init
@@ -99,7 +98,7 @@ open class DmNPVM
             DmNPType.CLASS,
             null,
             null,
-            arrayListOf(DmNPReference({ }, { heap["Object"]!! }))
+            DmNPRDataMap(DmNPReference({ }, { heap["Object"]!! }))
         )
         packageSystem.fm.add(packageSystem)
         heap.add(packageSystem)
@@ -109,7 +108,7 @@ open class DmNPVM
             DmNPType.CLASS,
             null,
             null,
-            arrayListOf(DmNPReference({ }, { heap["Object"]!! }))
+            DmNPRDataMap(DmNPReference({ }, { heap["Object"]!! }))
         )
         packageSystem.fm.add(classConsole)
         //

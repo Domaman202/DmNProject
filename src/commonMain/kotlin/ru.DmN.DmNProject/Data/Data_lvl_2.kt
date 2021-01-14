@@ -2,13 +2,14 @@ package ru.DmN.DmNProject.Data
 
 import ru.DmN.DmNProject.Data.Containers.DmNPDObjectMap
 import ru.DmN.DmNProject.Data.Containers.DmNPDataMap
+import ru.DmN.DmNProject.Data.Containers.DmNPRDataMap
 import ru.DmN.DmNProject.VM.DmNPReference
 
 open class DmNPEData(
     name: String,
     type: DmNPType,
     value: Any? = null,
-    override val ext: ArrayList<DmNPReference<IDmNPData>> = ArrayList()
+    override val ext: DmNPRDataMap = DmNPRDataMap()
 ) : DmNPData(name, type, value), IExtending
 
 open class DmNPAData(
@@ -36,8 +37,8 @@ open class DmNPFMData(
         return object : IEFMStorage {
             override val fm: DmNPDObjectMap
                 get() = fmr
-            override val ext: ArrayList<DmNPReference<IDmNPData>>
-                get() = ArrayList()
+            override val ext: DmNPRDataMap
+                get() = DmNPRDataMap()
         }
     }
 }

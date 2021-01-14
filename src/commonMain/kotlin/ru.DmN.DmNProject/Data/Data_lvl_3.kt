@@ -2,6 +2,7 @@ package ru.DmN.DmNProject.Data
 
 import ru.DmN.DmNProject.Data.Containers.DmNPDObjectMap
 import ru.DmN.DmNProject.Data.Containers.DmNPDataMap
+import ru.DmN.DmNProject.Data.Containers.DmNPRDataMap
 import ru.DmN.DmNProject.VM.DmNPReference
 
 open class DmNPEFMData(
@@ -9,7 +10,7 @@ open class DmNPEFMData(
     type: DmNPType,
     value: Any? = null,
     fm: DmNPDObjectMap? = null,
-    override val ext: ArrayList<DmNPReference<IDmNPData>> = ArrayList()
+    override val ext: DmNPRDataMap = DmNPRDataMap()
 ): DmNPData(name, type, value), IEFMStorage {
     override val fm: DmNPDObjectMap = fm ?: DmNPDObjectMap(this)
 }

@@ -15,27 +15,31 @@ enum class OCException: IOpCode {
 }
 
 enum class OCData: IOpCode {
+    // Data constructors
     CreatePackage,
     CreateMethod,
     CreateVariable,
     CreateObject,
-
+    // Value manipulations
     SetValue,
     CopySetValue,
     GetValue,
     CopyGetValue,
-
+    // FM manipulations
     AddData,
     CopyAddData,
     RemoveData,
     GetRemoveData,
-
+    //
     AddToValue,
     CopyAddToValue,
     RemoveInValue,
     CopyRemoveInValue,
-
-    FindPackage
+    //
+    FindPackage,
+    //
+    AddExt,
+    RemoveExt
 }
 
 enum class OCStackHeap: IOpCode {

@@ -2,6 +2,7 @@ package ru.DmN.DmNProject.Data
 
 import ru.DmN.DmNProject.Data.Containers.DmNPDObjectMap
 import ru.DmN.DmNProject.Data.Containers.DmNPDataMap
+import ru.DmN.DmNProject.Data.Containers.DmNPRDataMap
 import ru.DmN.DmNProject.VM.DmNPReference
 
 interface IDmNPData {
@@ -11,7 +12,7 @@ interface IDmNPData {
 }
 
 interface IExtending {
-    val ext: ArrayList<DmNPReference<IDmNPData>>
+    val ext: DmNPRDataMap
 }
 interface IFMStorage {
     val fm: DmNPDObjectMap

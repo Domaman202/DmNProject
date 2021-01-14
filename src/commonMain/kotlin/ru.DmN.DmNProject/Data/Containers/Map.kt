@@ -1,6 +1,7 @@
 package ru.DmN.DmNProject.Data.Containers
 
 import ru.DmN.DmNProject.Data.*
+import ru.DmN.DmNProject.VM.DmNPReference
 
 open class DmNPDataMap : MutableMap<String, IDmNPData>, Iterable<IDmNPData>
 {
@@ -187,4 +188,130 @@ open class DmNPDObjectMap : DmNPDataMap
     override fun get(key: String): IDmNPData? {
         return this[key, instance]
     }
+}
+
+open class DmNPRDataMap : MutableMap<String, DmNPReference<IDmNPData>>, Iterable<DmNPReference<IDmNPData>>
+{
+    // Fields
+    var da: ArrayList<DmNPReference<IDmNPData>>
+
+    // Constructors
+    constructor()
+    { da = ArrayList() }
+    constructor(size: Int)
+    { da = ArrayList(size) }
+    constructor(da: ArrayList<DmNPReference<IDmNPData>>)
+    { this.da = da }
+    constructor(vararg e: DmNPReference<IDmNPData>)
+    {
+        da = ArrayList()
+        da.addAll(e)
+    }
+
+    // Methods
+    fun DmNPData(): IDmNPData {
+        val data = DmNPData("", DmNPType.REFERENCE)
+        data.value = this
+        return data
+    }
+    fun DmNPData(name: String): DmNPData {
+        val data = DmNPData(name, DmNPType.REFERENCE)
+        data.value = this
+        return data
+    }
+    //
+    fun add(data: DmNPReference<IDmNPData>) = put(data.get().name, data)
+
+    override fun iterator(): Iterator<DmNPReference<IDmNPData>> = TODO("Not yet implemented")
+//    override fun iterator(): DmNPDataIterator {
+//        return object : DmNPDataIterator {
+//            val size: Int get() = da.size
+//            var c: Int = 0
+//
+//            override fun prevName(): String = da[--c].name
+//            override fun lastName(): String = da[c].name
+//            override fun nextName(): String = da[c++].name
+//
+//            override fun prevType(): DmNPType = da[--c].type
+//            override fun lastType(): DmNPType = da[c].type
+//            override fun nextType(): DmNPType = da[++c].type
+//
+//            override fun prevValue(): Any? = da[--c].value
+//            override fun lastValue(): Any? = da[c].value
+//            override fun nextValue(): Any? = da[++c].value
+//
+//            override fun prevAnnotations(): ArrayList<IDmNPData>? = if (da[--c] is IAnnotationStorage) (da[c] as IAnnotationStorage).annotations else null
+//            override fun lastAnnotations(): ArrayList<IDmNPData>? = if (da[c]   is IAnnotationStorage) (da[c] as IAnnotationStorage).annotations else null
+//            override fun nextAnnotations(): ArrayList<IDmNPData>? = if (da[++c] is IAnnotationStorage) (da[c] as IAnnotationStorage).annotations else null
+//
+//            override fun prevReference(): DmNPDataMap? = if (da[--c] is IReferenceStorage) (da[c] as IReferenceStorage).reference else null
+//            override fun lastReference(): DmNPDataMap? = if (da[c] is IReferenceStorage) (da[c] as IReferenceStorage).reference else null
+//            override fun nextReference(): DmNPDataMap? = if (da[++c] is IReferenceStorage) (da[c] as IReferenceStorage).reference else null
+//
+//            override fun hasNext():     Boolean = c < size
+//            override fun next():        IDmNPData = da[++c]
+//            override fun nextIndex():   Int = c + 1
+//
+//            override fun last():        IDmNPData = da[c]
+//            override fun lastIndex():   Int = c
+//
+//            override fun hasPrevious():     Boolean = c > 0
+//            override fun previous():        IDmNPData = da[--c]
+//            override fun previousIndex():   Int = c - 1
+//        }
+//    }
+
+    // Default methods
+    override fun equals(other: Any?): Boolean = da == other
+    override fun hashCode(): Int = da.hashCode()
+
+    // From Map
+    override val size: Int
+        get() = da.size
+    override fun isEmpty(): Boolean = da.isEmpty()
+    override fun containsKey(key: String): Boolean = get(key) != null
+    override fun containsValue(value: DmNPReference<IDmNPData>): Boolean = da.contains(value)
+    override fun get(key: String): DmNPReference<IDmNPData>? {
+        for (i in 0 until da.size) {
+            if (da[i].get().name == key)
+                return da[i]
+            else if (i - da.size - 1 >= 0 && da[i - da.size - 1].get().name == key)
+                return da[i - da.size - 1]
+        }
+        return null
+    }
+
+    // From MutableMap
+    override fun put(key: String, value: DmNPReference<IDmNPData>): DmNPReference<IDmNPData>? {
+        if (key == value.get().name)
+            if (da.add(value))
+                return value
+        return null
+    }
+    override fun remove(key: String): DmNPReference<IDmNPData>? {
+        val v = this[key]
+        da.remove(v)
+        return v
+    }
+    override fun putAll(from: Map<out String, DmNPReference<IDmNPData>>) {
+        for (v in from.values)
+            da.add(v)
+    }
+    override fun clear() = da.clear()
+    override val keys: MutableSet<String>
+        get() {
+            val keys = mutableSetOf<String>()
+            for (i in 0 until da.size)
+                keys.add(da[i].get().name)
+            return keys
+        }
+    override val values: MutableCollection<DmNPReference<IDmNPData>>
+        get() = da.toMutableSet()
+    override val entries: MutableSet<MutableMap.MutableEntry<String, DmNPReference<IDmNPData>>>
+        get() {
+            val m = mutableMapOf<String, DmNPReference<IDmNPData>>()
+            for (i in 0 until da.size)
+                m[da[i].get().name] = da[i]
+            return m.entries
+        }
 }
