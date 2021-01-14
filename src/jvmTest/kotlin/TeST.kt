@@ -13,7 +13,8 @@ object JVMT {
         result.append("$[")
         for (line in file.reader().readLines()) {
             if (line != "")
-                result.append("$line$,")
+                if (line[0] != '/' && line[1] != '/')
+                    result.append("$line$,")
         }
         result.append("$]")
         //
