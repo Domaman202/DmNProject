@@ -63,17 +63,14 @@ open class DmNPVM
 
     fun fastInit() {
         OpCodeManager.init()
-        //
+        // function "println" init
         val functionPrintln = DmNPData(
             "println",
             DmNPType.KMETHOD,
-            { vm: DmNPVM, _: ArrayList<Any?>, _: ListIterator<Any?> -> println(vm.stack.pop()) }
+            fun (vm: DmNPVM, _: ArrayList<Any?>, _: ListIterator<Any?>, _: IDmNPData) = println(vm.stack.pop())
         )
-
         heap.add(functionPrintln)
-    }
-
-    fun initSystem() {
+        // class "Class" init
         val classClass = DmNPRFMData(
             "Class",
             DmNPType.CLASS,
@@ -82,22 +79,27 @@ open class DmNPVM
             DmNPDataMap(heap.DmNPData())
         )
         heap.add(classClass)
-        //
+        // class "Object" init
         val objectObject = DmNPEFMData(
             "Object",
-            DmNPType.OBJECT,
+            DmNPType.CLASS,
             null,
             null,
-            arrayListOf(DmNPReference({ }, { classClass.toEFMStorage() }))
+            arrayListOf(DmNPReference({ }, { classClass }))
         )
         heap.add(objectObject)
+        // math functions init
+        objectObject.fm.add(DmNPData("Inc", DmNPType.KMETHOD))
+    }
+
+    fun initSystem() {
         //
         val packageSystem = DmNPEFMData(
             "System",
             DmNPType.CLASS,
             null,
             null,
-            arrayListOf(DmNPReference({ }, { objectObject }))
+            arrayListOf(DmNPReference({ }, { heap["Object"]!! }))
         )
         packageSystem.fm.add(packageSystem)
         heap.add(packageSystem)
@@ -107,11 +109,10 @@ open class DmNPVM
             DmNPType.CLASS,
             null,
             null,
-            arrayListOf(DmNPReference({ }, { objectObject }))
+            arrayListOf(DmNPReference({ }, { heap["Object"]!! }))
         )
         packageSystem.fm.add(classConsole)
         //
-        val methodPrintln = DmNPData("println", DmNPType.KMETHOD, fun (vm: DmNPVM, _: ArrayList<Any?>, _: ListIterator<Any?>) { println(vm.stack.pop()) })
-        classConsole.fm.add(methodPrintln)
+        classConsole.fm.add(DmNPData("println", DmNPType.KMETHOD, fun (vm: DmNPVM, _: ArrayList<Any?>, _: ListIterator<Any?>, _: IDmNPData) = println(vm.stack.pop())))
     }
 }

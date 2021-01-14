@@ -11,7 +11,7 @@ interface IDmNPData {
 }
 
 interface IExtending {
-    val ext: ArrayList<DmNPReference<IEFMStorage>>
+    val ext: ArrayList<DmNPReference<IDmNPData>>
 }
 interface IFMStorage {
     val fm: DmNPDObjectMap

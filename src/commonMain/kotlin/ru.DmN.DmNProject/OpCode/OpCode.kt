@@ -59,7 +59,7 @@ enum class OCSMath: IMathOpCode {
     DIV
 }
 
-enum class OCHMath: IMathOpCode {
+enum class OCAMath: IMathOpCode {
     INC,
     DEC,
     ADD,

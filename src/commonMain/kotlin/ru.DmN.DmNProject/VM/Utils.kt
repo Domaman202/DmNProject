@@ -7,7 +7,7 @@ import ru.DmN.DmNProject.Data.IDmNPData
 import ru.DmN.DmNProject.Data.IExtending
 import ru.DmN.DmNProject.Data.IFMStorage
 
-typealias kotlin_function = (vm: DmNPVM, c: ArrayList<Any?>, ci: ListIterator<Any?>) -> Unit
+typealias kotlin_function = (vm: DmNPVM, c: ArrayList<Any?>, ci: ListIterator<Any?>, instance: IDmNPData?) -> Unit
 inline fun <reified Out> throwCast(v: Any?): Out = if (v is Out) v else throw ClassCastException()
 
 /**
@@ -17,7 +17,7 @@ inline fun <reified Out> throwCast(v: Any?): Out = if (v is Out) v else throw Cl
 class DmNPUtils
 {
     companion object {
-        fun callFunction(f: Any?, vm: DmNPVM, c: ArrayList<Any?>, ci: ListIterator<Any?>) {
+        fun callFunction(f: Any?, vm: DmNPVM, c: ArrayList<Any?>, ci: ListIterator<Any?>, instance: IDmNPData) {
             if (f is ArrayList<*>) {
                 val mVM = DmNPVMInterpreter()
                 mVM.prev.add(vm)
@@ -27,7 +27,7 @@ class DmNPUtils
 
                 vm.next.remove(mVM)
             } else {
-                throwCast<kotlin_function>(f)(vm, c, ci)
+                throwCast<kotlin_function>(f)(vm, c, ci, instance)
             }
         }
 
@@ -137,13 +137,31 @@ class DmNPUtils
             var le: IDmNPData? = null
 
             for (e in ole.ext) {
-                le = e.get().fm[name]
+                le = (e.get() as IFMStorage).fm[name]
 
                 if (le == null)
-                    le = findE(e.get(), name)
+                    le = findE(e.get() as IExtending, name)
             }
 
             return le
+        }
+
+        fun findWith(
+            e: IDmNPData,
+            name: String
+        ): IDmNPData? {
+            var result: IDmNPData? = null
+
+            if (e is IFMStorage)
+                result = e.fm[name]
+            else if (e is IExtending) {
+                for (ext in e.ext) {
+                    findWith(ext.get(), name)
+                    if (result != null) break
+                }
+            }
+
+            return result
         }
 
 //        fun findElement(

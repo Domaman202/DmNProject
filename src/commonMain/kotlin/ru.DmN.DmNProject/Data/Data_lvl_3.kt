@@ -9,7 +9,7 @@ open class DmNPEFMData(
     type: DmNPType,
     value: Any? = null,
     fm: DmNPDObjectMap? = null,
-    override val ext: ArrayList<DmNPReference<IEFMStorage>> = ArrayList()
+    override val ext: ArrayList<DmNPReference<IDmNPData>> = ArrayList()
 ): DmNPData(name, type, value), IEFMStorage {
     override val fm: DmNPDObjectMap = fm ?: DmNPDObjectMap(this)
 }

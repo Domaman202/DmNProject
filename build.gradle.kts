@@ -15,7 +15,7 @@ plugins {
     id("org.jetbrains.kotlin.plugin.serialization") version "1.4.10"
 }
 group = "me.user"
-version = "1.0-SNAPSHOT"
+version = "BETA"
 
 repositories {
     mavenCentral()
@@ -52,7 +52,6 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                // Works as common dependency as well as the platform one
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.0.1")
             }
         }
@@ -64,12 +63,8 @@ kotlin {
         }
         val jvmMain by getting {
             dependencies {
-                implementation("com.github.Mouse0w0:FastReflection:1.0.1")
-
                 implementation(kotlin("script-runtime", "1.4.20"))
                 implementation(kotlin("reflect", "1.4.20"))
-
-                implementation("org.codehaus.groovy:groovy-all:2.6.0-alpha-4")
             }
         }
         val jvmTest by getting {

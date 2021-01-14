@@ -2,6 +2,7 @@ package ru.DmN.DmNProject.OpCode
 
 import ru.DmN.DmNProject.CDCS.ODCS
 import ru.DmN.DmNProject.Data.IDmNPData
+import ru.DmN.DmNProject.Data.IFMStorage
 import ru.DmN.DmNProject.VM.*
 
 object OCMInvoke {
@@ -12,16 +13,15 @@ object OCMInvoke {
         OpCodeManager.OpCodes[OCInvoke.UnsafeInvokeKotlin] = { _, vm, c, ci ->
             val names = vm.stack.pop()
             if (names is String) {
+                val f = DmNPUtils.findElement(vm, arrayListOf(names))!!
                 throwCast<kotlin_function>(
-                    DmNPUtils.findElement(vm, arrayListOf(names))!!.value
-                )(vm, c, ci)
-            } else {
+                    f.value
+                )(vm, c, ci, f)
+            } else if (names is List<*>) {
+                val o = DmNPUtils.findElement(vm, throwCast(names.subList(0, names.lastIndex - 1)))!!
                 throwCast<kotlin_function>(
-                    DmNPUtils.findElement(
-                        vm,
-                        throwCast(names)
-                    )!!.value
-                )(vm, c, ci)
+                    DmNPUtils.findWith(o, names[names.lastIndex] as String)!!.value
+                )(vm, c, ci, o)
             }
         }
         // Virtual

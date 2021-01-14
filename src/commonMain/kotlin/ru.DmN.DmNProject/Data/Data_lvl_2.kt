@@ -8,7 +8,7 @@ open class DmNPEData(
     name: String,
     type: DmNPType,
     value: Any? = null,
-    override val ext: ArrayList<DmNPReference<IEFMStorage>> = ArrayList()
+    override val ext: ArrayList<DmNPReference<IDmNPData>> = ArrayList()
 ) : DmNPData(name, type, value), IExtending
 
 open class DmNPAData(
@@ -18,12 +18,17 @@ open class DmNPAData(
     override val annotations: ArrayList<IDmNPData> = ArrayList()
 ) : DmNPData(name, type, value), IAnnotationStorage
 
-open class DmNPFMData : DmNPData, IFMStorage {
-    override val fm: DmNPDObjectMap
+open class DmNPFMData(
+    name: String,
+    type: DmNPType,
+    value: Any?,
+    fm: DmNPDObjectMap? = null
+) : DmNPData(name, type, value), IFMStorage {
+    override val fm: DmNPDObjectMap = fm ?: DmNPDObjectMap(this)
 
-    constructor(name: String, type: DmNPType, value: Any?, fm: DmNPDObjectMap? = null) : super(name, type, value) {
-        this.fm = fm ?: DmNPDObjectMap(toEFMStorage())
-    }
+//    constructor(name: String, type: DmNPType, value: Any?, fm: DmNPDObjectMap? = null) : super(name, type, value) {
+//        this.fm = fm ?: DmNPDObjectMap(this)
+//    }
 
     fun toEFMStorage(): IEFMStorage {
         val fmr = fm
@@ -31,7 +36,7 @@ open class DmNPFMData : DmNPData, IFMStorage {
         return object : IEFMStorage {
             override val fm: DmNPDObjectMap
                 get() = fmr
-            override val ext: ArrayList<DmNPReference<IEFMStorage>>
+            override val ext: ArrayList<DmNPReference<IDmNPData>>
                 get() = ArrayList()
         }
     }

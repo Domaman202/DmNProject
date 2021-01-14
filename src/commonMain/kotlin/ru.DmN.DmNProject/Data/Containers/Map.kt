@@ -1,8 +1,6 @@
 package ru.DmN.DmNProject.Data.Containers
 
 import ru.DmN.DmNProject.Data.*
-import ru.DmN.DmNProject.VM.DmNPReference
-import ru.DmN.DmNProject.VM.throwCast
 
 open class DmNPDataMap : MutableMap<String, IDmNPData>, Iterable<IDmNPData>
 {
@@ -130,25 +128,25 @@ open class DmNPDataMap : MutableMap<String, IDmNPData>, Iterable<IDmNPData>
 
 open class DmNPDObjectMap : DmNPDataMap
 {
-    var instance: IEFMStorage?
+    var instance: IDmNPData?
 
-    constructor(instance: IEFMStorage) : super()
+    constructor(instance: IDmNPData) : super()
     { this.instance = instance }
-    constructor(size: Int, instance: IEFMStorage) : super(size)
+    constructor(size: Int, instance: IDmNPData) : super(size)
     { this.instance = instance }
-    constructor(da: ArrayList<IDmNPData>, instance: IEFMStorage) : super(da)
+    constructor(da: ArrayList<IDmNPData>, instance: IDmNPData) : super(da)
     { this.instance = instance }
 
-    operator fun get(key: String, instance: IEFMStorage? = null): IDmNPData? {
+    operator fun get(key: String, instance: IDmNPData? = null, parent: Boolean = true): IDmNPData? {
         var result = super.get(key)
 
         if (instance != null)
             this.instance = instance
 
-        if (result == null && this.instance != null) {
-            for (e in this.instance!!.ext) {
+        if (parent && result == null && this.instance != null) {
+            for (e in (this.instance!! as IExtending).ext) {
                 if (e.get() != this.instance) {
-                    result = e.get().fm[key, e.get()]
+                    result = (e.get() as IFMStorage).fm[key, e.get()]
 
                     if (result != null)
                         return result
@@ -156,7 +154,7 @@ open class DmNPDObjectMap : DmNPDataMap
             }
 
             if (result == null) {
-                for (e in this.instance!!.ext) {
+                for (e in (this.instance!! as IExtending).ext) {
                     if (e.get() != this.instance) {
                         f(key, e.get())
                     }
@@ -167,13 +165,13 @@ open class DmNPDObjectMap : DmNPDataMap
         return result
     }
 
-    fun f(key: String, instance: IEFMStorage? = null): IDmNPData? {
+    fun f(key: String, instance: IDmNPData? = null): IDmNPData? {
         var result = super.get(key)
 
         if (result == null && instance != null) {
-            for (e in instance.ext) {
+            for (e in (instance as IExtending).ext) {
                 if (e.get() != instance) {
-                    result = e.get().fm[key, e.get()]
+                    result = (e.get() as IFMStorage).fm[key, e.get()]
 
                     if (result != null)
                         return result

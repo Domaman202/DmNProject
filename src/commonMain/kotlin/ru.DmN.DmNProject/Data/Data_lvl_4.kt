@@ -9,7 +9,7 @@ open class DmNPREFMData(
     type: DmNPType,
     value: Any? = null,
     fm: DmNPDObjectMap? = null,
-    ext: ArrayList<DmNPReference<IEFMStorage>> = ArrayList(),
+    ext: ArrayList<DmNPReference<IDmNPData>> = ArrayList(),
     override val reference: DmNPDataMap = DmNPDataMap()
 ) : DmNPEFMData(name, type, value, fm, ext), IReferenceStorage
 
@@ -18,6 +18,6 @@ open class DmNPAEFMData(
     type: DmNPType,
     value: Any? = null,
     fm: DmNPDObjectMap? = null,
-    ext: ArrayList<DmNPReference<IEFMStorage>> = ArrayList(),
+    ext: ArrayList<DmNPReference<IDmNPData>> = ArrayList(),
     override var annotations: ArrayList<IDmNPData> = ArrayList()
 ) : DmNPEFMData(name, type, value, fm, ext), IAnnotationStorage

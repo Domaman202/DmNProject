@@ -1,5 +1,4 @@
 import ru.DmN.DmNProject.CDCS.CS
-import ru.DmN.DmNProject.CDCS.ODCS
 import ru.DmN.DmNProject.Data.Containers.DmNPDataMap
 import ru.DmN.DmNProject.Data.Containers.Stack
 import ru.DmN.DmNProject.Data.DmNPData
@@ -145,9 +144,18 @@ class testing {
         println("Test started!!!\n\n")
         //
         val code = ArrayList<Any?>()
-        //
+        // Example №1
+//        code.add(OCStack.LoadConstant)
+//        code.add("Hello, World!")
+//        code.add(OCStack.LoadConstant)
+//        code.add("println")
+//        code.add(OCInvoke.UnsafeInvokeKotlin)
+        // Example №2
         code.add(OCStack.LoadConstant)
-        code.add("Hello, World!")
+        code.add(12)
+        code.add(OCStack.LoadConstant)
+        code.add(21)
+        code.add(OCSMath.ADD)
         code.add(OCStack.LoadConstant)
         code.add("println")
         code.add(OCInvoke.UnsafeInvokeKotlin)
@@ -158,7 +166,7 @@ class testing {
         code.clear()
         //
         code.add(OCStack.LoadConstant)
-        code.add("\$[OC:LC\$,ST:Hello, World!\$,OC:LC\$,ST:println\$,OC:UIK\$,\$]")
+        code.add("\$[OC:LC\$,I:12\$,OC:LC\$,I:21\$,OC:SAdd\$,OC:LC\$,ST:println\$,OC:UIK\$,\$]")
         code.add(OCVM.EvalString)
         //
         val vm = DmNPVMInterpreter()
