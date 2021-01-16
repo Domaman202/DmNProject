@@ -1,15 +1,13 @@
 package ru.DmN.DmNProject.OpCode
 
-import ru.DmN.DmNProject.Data.*
-import ru.DmN.DmNProject.Data.Containers.DmNPDataMap
 import ru.DmN.DmNProject.VM.*
 
 /**
  * @author  DomamaN202
  */
-class OpCodeManager {
+class OCManager {
     companion object : IOpCodeManager {
-        val OpCodes = HashMap<IOpCode, (oc: IOpCode, vm: DmNPVMInterpreter, c: ArrayList<Any?>, ci: ListIterator<Any?>) -> Unit>()
+        val OC = HashMap<IOpCode, (oc: IOpCode, vm: DmNPVMInterpreter, c: ArrayList<Any?>, ci: ListIterator<Any?>) -> Unit>()
 
         private var isInit = false
         fun init() {
@@ -26,7 +24,7 @@ class OpCodeManager {
         }
 
         override fun parse(oc: IOpCode, vm: DmNPVMInterpreter, c: ArrayList<Any?>, ci: ListIterator<*>) {
-            val f = OpCodes[oc]
+            val f = OC[oc]
             if (f != null)
                 f(oc, vm, c, ci)
             else

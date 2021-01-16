@@ -9,12 +9,12 @@ object OCMStackHeap {
     fun init() {
         // Stack Heap
         ODCS.OCC["LD"] = OCStackHeap.LoadData
-        OpCodeManager.OpCodes[OCStackHeap.LoadData] = { _, vm, _, _ ->
+        OCManager.OC[OCStackHeap.LoadData] = { _, vm, _, _ ->
             val le = DmNPUtils.findElement(vm, throwCast(vm.stack.pop()))
             if (le != null) vm.stack.push(le)
         }
         ODCS.OCC["PD"] = OCStackHeap.PushData
-        OpCodeManager.OpCodes[OCStackHeap.PushData] = { _, vm, _, _ ->
+        OCManager.OC[OCStackHeap.PushData] = { _, vm, _, _ ->
             val data = vm.stack.pop()!!
             if (data is DmNPData) {
                 if (vm.heap.containsKey(data.name)) {

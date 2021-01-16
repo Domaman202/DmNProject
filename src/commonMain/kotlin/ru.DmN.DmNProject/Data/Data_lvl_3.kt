@@ -10,9 +10,9 @@ open class DmNPEFMData(
     type: DmNPType,
     value: Any? = null,
     fm: DmNPDObjectMap? = null,
-    override val ext: DmNPRDataMap = DmNPRDataMap()
-): DmNPData(name, type, value), IEFMStorage {
-    override val fm: DmNPDObjectMap = fm ?: DmNPDObjectMap(this)
+    ext: DmNPRDataMap? = null
+): DmNPFMData(name, type, value, fm), IEFMStorage {
+    override val ext: DmNPRDataMap = ext ?: DmNPRDataMap()
 }
 
 open class DmNPRFMData(
@@ -20,13 +20,19 @@ open class DmNPRFMData(
     type: DmNPType,
     value: Any? = null,
     fm: DmNPDObjectMap? = null,
-    override val reference: DmNPDataMap = DmNPDataMap()
-): DmNPFMData(name, type, value, fm), IReferenceStorage
+    reference: DmNPDataMap? = null
+): DmNPFMData(name, type, value, fm), IFMStorage, IReferenceStorage
+{
+    override val reference: DmNPDataMap = reference ?: DmNPDataMap()
+}
 
 open class DmNPAFMData(
     name: String,
     type: DmNPType,
     value: Any? = null,
     fm: DmNPDObjectMap? = null,
-    override val annotations: ArrayList<IDmNPData>
-): DmNPFMData(name, type, value, fm), IAnnotationStorage
+    annotations: ArrayList<IDmNPData>? = null
+): DmNPFMData(name, type, value, fm), IFMStorage, IAnnotationStorage
+{
+    override val annotations: ArrayList<IDmNPData> = annotations ?: ArrayList()
+}

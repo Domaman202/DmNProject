@@ -1,16 +1,10 @@
 package ru.DmN.DmNProject.CDCS
 
+import ru.DmN.DmNProject.Data.DmNPDVars
+import ru.DmN.DmNProject.Data.DmNPType
 import ru.DmN.DmNProject.OpCode.IOpCode
 
 object CS {
-    fun OCToString(oc: IOpCode): String {
-        for (e in ODCS.OCC.entries) {
-            if (e.value == oc)
-                return "OC:${e.key}"
-        }
-        return "NULL:"
-    }
-
     fun ValueToString(value: Any?): String {
         return when (value) {
             is Boolean  -> "B:$value"
@@ -22,7 +16,9 @@ object CS {
             is Double   -> "D:$value"
             is String   -> "ST:$value"
             is List<*>  -> ArrayToString(value)
-            is IOpCode  -> OCToString(value)
+            is IOpCode  -> OCToString   (value)
+            is DmNPDVars-> DVToString   (value)
+            is DmNPType -> TToString    (value)
             else -> "NULL:"
         }
     }
@@ -56,5 +52,43 @@ object CS {
         result.append("$]")
 
         return result.toString()
+    }
+
+    fun DVToString(v: DmNPDVars): String {
+        return "DV:" + when (v) {
+            DmNPDVars.Default       -> "Def"
+            DmNPDVars.Extendable    -> "Ext"
+            DmNPDVars.Annotateble   -> "Ann"
+            DmNPDVars.Referencable  -> "Ref"
+            DmNPDVars.FM            -> "FM"
+            DmNPDVars.EFM           -> "EFM"
+            DmNPDVars.RFM           -> "RFM"
+            DmNPDVars.AFM           -> "AFM"
+            DmNPDVars.REFM          -> "REFM"
+            DmNPDVars.AEFM          -> "AEFM"
+            DmNPDVars.AREFM         -> "AREFM"
+        }
+    }
+
+    fun OCToString(oc: IOpCode): String {
+        for (e in ODCS.OCC.entries) {
+            if (e.value == oc)
+                return "OC:${e.key}"
+        }
+        return "NULL:"
+    }
+
+    fun TToString(t: DmNPType): String {
+        return "T:" + when (t) {
+            DmNPType.NULL       -> "N"
+            DmNPType.OBJECT     -> "O"
+            DmNPType.REFERENCE  -> "R"
+
+            DmNPType.VAR        -> "V"
+            DmNPType.KMETHOD    -> "K"
+            DmNPType.METHOD     -> "M"
+            DmNPType.CLASS      -> "C"
+            DmNPType.PACKAGE    -> "P"
+        }
     }
 }

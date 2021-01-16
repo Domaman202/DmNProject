@@ -12,7 +12,7 @@ object OCMData {
         // Data
         // Data.Object
         ODCS.OCC["CP"] = OCData.CreatePackage
-        OpCodeManager.OpCodes[OCData.CreatePackage] = { _, vm, _, _ ->
+        OCManager.OC[OCData.CreatePackage] = { _, vm, _, _ ->
             val n = vm.stack.pop()!!
             if (n is String) {
                 vm.stack.push(DmNPFMData(n, DmNPType.PACKAGE, DmNPDataMap()))
@@ -44,11 +44,11 @@ object OCMData {
             }
         }
         ODCS.OCC["CM"] = OCData.CreateMethod
-        OpCodeManager.OpCodes[OCData.CreateMethod] = { _, vm, _, _ ->
+        OCManager.OC[OCData.CreateMethod] = { _, vm, _, _ ->
             vm.stack.push(DmNPData(vm.stack.pop() as String, DmNPType.METHOD))
         }
         ODCS.OCC["CV"] = OCData.CreateVariable
-        OpCodeManager.OpCodes[OCData.CreateVariable] = { _, vm, _, _ ->
+        OCManager.OC[OCData.CreateVariable] = { _, vm, _, _ ->
             vm.stack.push(
                 DmNPData(
                     vm.stack.pop() as String,
@@ -58,49 +58,49 @@ object OCMData {
             )
         }
         ODCS.OCC["CO"] = OCData.CreateObject
-        OpCodeManager.OpCodes[OCData.CreateObject] = { _, vm, _, _ ->
-            val dt = vm.stack.pop() as DmNPDataVariants
+        OCManager.OC[OCData.CreateObject] = { _, vm, _, _ ->
+            val dt = vm.stack.pop() as DmNPDVars
             val name = vm.stack.pop() as String
             val type = vm.stack.pop() as DmNPType
             val value = vm.stack.pop()
 
             vm.stack.push(
                 when (dt) {
-                    DmNPDataVariants.Default ->
+                    DmNPDVars.Default ->
                         DmNPData(
                             name,
                             type,
                             value
                         )
-                    DmNPDataVariants.Annotateble ->
+                    DmNPDVars.Annotateble ->
                         DmNPAData(
                             name,
                             type,
                             value,
                             throwCast(vm.stack.pop())
                         )
-                    DmNPDataVariants.Referencable ->
+                    DmNPDVars.Referencable ->
                         DmNPRData(
                             name,
                             type,
                             value,
                             throwCast(vm.stack.pop())
                         )
-                    DmNPDataVariants.Extendable ->
+                    DmNPDVars.Extendable ->
                         DmNPEData(
                             name,
                             type,
                             value,
                             throwCast(vm.stack.pop())
                         )
-                    DmNPDataVariants.FM ->
+                    DmNPDVars.FM ->
                         DmNPFMData(
                             name,
                             type,
                             value,
                             throwCast(vm.stack.pop())
                         )
-                    DmNPDataVariants.EFM ->
+                    DmNPDVars.EFM ->
                         DmNPEFMData(
                             name,
                             type,
@@ -108,7 +108,7 @@ object OCMData {
                             throwCast(vm.stack.pop()),
                             throwCast(vm.stack.pop())
                         )
-                    DmNPDataVariants.RFM ->
+                    DmNPDVars.RFM ->
                         DmNPRFMData(
                             name,
                             type,
@@ -116,7 +116,7 @@ object OCMData {
                             throwCast(vm.stack.pop()),
                             throwCast(vm.stack.pop())
                         )
-                    DmNPDataVariants.AFM ->
+                    DmNPDVars.AFM ->
                         DmNPAFMData(
                             name,
                             type,
@@ -124,7 +124,7 @@ object OCMData {
                             throwCast(vm.stack.pop()),
                             throwCast(vm.stack.pop())
                         )
-                    DmNPDataVariants.REFM ->
+                    DmNPDVars.REFM ->
                         DmNPREFMData(
                             name,
                             type,
@@ -133,7 +133,7 @@ object OCMData {
                             throwCast(vm.stack.pop()),
                             throwCast(vm.stack.pop())
                         )
-                    DmNPDataVariants.AEFM ->
+                    DmNPDVars.AEFM ->
                         DmNPAEFMData(
                             name,
                             type,
@@ -142,7 +142,7 @@ object OCMData {
                             throwCast(vm.stack.pop()),
                             throwCast(vm.stack.pop())
                         )
-                    DmNPDataVariants.AREFM ->
+                    DmNPDVars.AREFM ->
                         DmNPAREFMData(
                             name,
                             type,
@@ -156,80 +156,99 @@ object OCMData {
         }
         //
         ODCS.OCC["SV"] = OCData.SetValue
-        OpCodeManager.OpCodes[OCData.SetValue] = { _, vm, _, _ ->
+        OCManager.OC[OCData.SetValue] = { _, vm, _, _ ->
             (vm.stack.pop() as IDmNPData).value = vm.stack.pop()
         }
         ODCS.OCC["CSV"] = OCData.CopySetValue
-        OpCodeManager.OpCodes[OCData.CopySetValue] = { _, vm, _, _ ->
+        OCManager.OC[OCData.CopySetValue] = { _, vm, _, _ ->
             val o = vm.stack.pop() as IDmNPData
             o.value = vm.stack.pop()
             vm.stack.push(o)
         }
         ODCS.OCC["GV"] = OCData.GetValue
-        OpCodeManager.OpCodes[OCData.GetValue] = { _, vm, _, _ ->
+        OCManager.OC[OCData.GetValue] = { _, vm, _, _ ->
             vm.stack.push((vm.stack.pop() as IDmNPData).value)
         }
         ODCS.OCC["CGV"] = OCData.CopyGetValue
-        OpCodeManager.OpCodes[OCData.CopyGetValue] = { _, vm, _, _ ->
+        OCManager.OC[OCData.CopyGetValue] = { _, vm, _, _ ->
             vm.stack.push((vm.stack.peek() as IDmNPData).value)
         }
         ODCS.OCC["AD"] = OCData.AddData
-        OpCodeManager.OpCodes[OCData.AddData] = { _, vm, _, _ ->
+        OCManager.OC[OCData.AddData] = { _, vm, _, _ ->
             (vm.stack.pop() as IFMStorage).fm.add(vm.stack.pop() as IDmNPData)
         }
         ODCS.OCC["CAD"] = OCData.CopyAddData
-        OpCodeManager.OpCodes[OCData.CopyAddData] = { _, vm, _, _ ->
+        OCManager.OC[OCData.CopyAddData] = { _, vm, _, _ ->
             val o = vm.stack.pop() as IFMStorage
             o.fm.add(vm.stack.pop() as IDmNPData)
             vm.stack.push(o)
         }
         ODCS.OCC["RD"] = OCData.RemoveData
-        OpCodeManager.OpCodes[OCData.RemoveData] = { _, vm, _, _ ->
+        OCManager.OC[OCData.RemoveData] = { _, vm, _, _ ->
             (vm.stack.pop() as IFMStorage).fm.remove(vm.stack.pop())
         }
         ODCS.OCC["GRD"] = OCData.GetRemoveData
-        OpCodeManager.OpCodes[OCData.GetRemoveData] = { _, vm, _, _ ->
+        OCManager.OC[OCData.GetRemoveData] = { _, vm, _, _ ->
             vm.stack.push((vm.stack.pop() as IFMStorage).fm.remove(vm.stack.pop()))
         }
         ODCS.OCC["ATV"] = OCData.AddToValue
-        OpCodeManager.OpCodes[OCData.AddToValue] = { _, vm, _, _ ->
+        OCManager.OC[OCData.AddToValue] = { _, vm, _, _ ->
             ((vm.stack.pop() as IDmNPData).value as DmNPDataMap).add(vm.stack.pop() as IDmNPData)
         }
         ODCS.OCC["CATV"] = OCData.CopyAddToValue
-        OpCodeManager.OpCodes[OCData.CopyAddToValue] = { _, vm, _, _ ->
+        OCManager.OC[OCData.CopyAddToValue] = { _, vm, _, _ ->
             val o = vm.stack.pop() as IDmNPData
             (o.value as DmNPDataMap).add(vm.stack.pop() as IDmNPData)
             vm.stack.push(o)
         }
         ODCS.OCC["RIV"] = OCData.RemoveInValue
-        OpCodeManager.OpCodes[OCData.RemoveInValue] = { _, vm, _, _ ->
+        OCManager.OC[OCData.RemoveInValue] = { _, vm, _, _ ->
             ((vm.stack.pop() as IDmNPData).value as DmNPDataMap).remove(vm.stack.pop())
         }
         ODCS.OCC["CRIV"] = OCData.CopyRemoveInValue
-        OpCodeManager.OpCodes[OCData.CopyRemoveInValue] = { _, vm, _, _ ->
+        OCManager.OC[OCData.CopyRemoveInValue] = { _, vm, _, _ ->
             val o = vm.stack.pop() as IDmNPData
             (o.value as DmNPDataMap).remove(vm.stack.pop())
             vm.stack.push(o)
         }
         ODCS.OCC["FP"] = OCData.FindPackage
-        OpCodeManager.OpCodes[OCData.FindPackage] = { _, vm, _, _ ->
+        OCManager.OC[OCData.FindPackage] = { _, vm, _, _ ->
             vm.stack.push(DmNPUtils.findPackage(
                 throwCast(vm.stack.pop()),
                 vm.stack.pop() as IDmNPData
         ))}
         ODCS.OCC["AE"] = OCData.AddExt
-        OpCodeManager.OpCodes[OCData.AddExt] = { _, vm, _, _ ->
+        OCManager.OC[OCData.AddExt] = { _, vm, _, _ ->
             val o = vm.stack.pop()
             val e = vm.stack.pop()
             (o as IExtending).ext.add(DmNPReference({ }, { e as IDmNPData }))
             vm.stack.push(o)
         }
         ODCS.OCC["RE"] = OCData.RemoveExt
-        OpCodeManager.OpCodes[OCData.RemoveExt] = { _, vm, _, _ ->
+        OCManager.OC[OCData.RemoveExt] = { _, vm, _, _ ->
             val o = vm.stack.pop()
             val n = vm.stack.pop()
             (o as IExtending).ext.remove(n as String)
             vm.stack.push(o)
+        }
+        ODCS.OCC["GD"] = OCData.GetData
+        OCManager.OC[OCData.GetData] = { _, vm, _, _ ->
+            val n = vm.stack.pop() as String
+            val o = vm.stack.pop()
+            if (o is IFMStorage)
+                vm.stack.push(o.fm[n])
+            else if (o is IExtending) {
+                vm.stack.push(DmNPUtils.findWithExtends(o, n))
+            }
+        }
+        ODCS.OCC["CGD"] = OCData.CopyGetData
+        OCManager.OC[OCData.CopyGetData] = { _, vm, _, _ ->
+            val o = vm.stack.elements[vm.stack.elements.lastIndex - 1]
+            if (o is IFMStorage)
+                vm.stack.push(o.fm[vm.stack.pop()])
+            else if (o is IExtending) {
+                vm.stack.push(DmNPUtils.findWithExtends(o, vm.stack.pop() as String))
+            }
         }
     }
 }

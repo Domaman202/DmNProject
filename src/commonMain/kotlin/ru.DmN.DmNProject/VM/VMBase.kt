@@ -4,7 +4,7 @@ import ru.DmN.DmNProject.Data.*
 import ru.DmN.DmNProject.Data.Containers.DmNPDataMap
 import ru.DmN.DmNProject.Data.Containers.DmNPRDataMap
 import ru.DmN.DmNProject.Data.Containers.Stack
-import ru.DmN.DmNProject.OpCode.OpCodeManager
+import ru.DmN.DmNProject.OpCode.OCManager
 
 /**
  * @author  DomamaN202
@@ -71,7 +71,7 @@ open class DmNPVM
      * Быстрая инициализация - инициализируются только важные компоненты
      */
     fun fastInit() {
-        OpCodeManager.init()
+        OCManager.init()
         // function "println" init
         val functionPrintln = DmNPData(
             "println",

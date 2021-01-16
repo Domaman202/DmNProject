@@ -2,7 +2,7 @@ import ru.DmN.DmNProject.CDCS.CS
 import ru.DmN.DmNProject.Data.Containers.DmNPDataMap
 import ru.DmN.DmNProject.Data.Containers.Stack
 import ru.DmN.DmNProject.Data.DmNPData
-import ru.DmN.DmNProject.Data.DmNPDataVariants
+import ru.DmN.DmNProject.Data.DmNPDVars
 import ru.DmN.DmNProject.Data.DmNPType
 import ru.DmN.DmNProject.OpCode.*
 import ru.DmN.DmNProject.VM.*
@@ -48,7 +48,7 @@ class testing {
             null,
             DmNPType.OBJECT, // Указываем что мы создаём обьект
             "Main", // *Имя обьекта*
-            DmNPDataVariants.FM // Указываем тип обьекта
+            DmNPDVars.FM // Указываем тип обьекта
         ))
         code.add(OCData.CreateObject) // Создаём обьект
         code.add(OCData.CopyAddData) // Закидываем метод "main" в обьект "Main"
@@ -160,14 +160,14 @@ class testing {
         code.add("println")
         code.add(OCInvoke.UnsafeInvokeKotlin)
         //
-        OpCodeManager.init()
+        OCManager.init()
         println(CS.ArrayToString(code))
         //
         code.clear()
         //
         code.add(OCStack.LoadConstant)
         code.add("\$[OC:LC\$,I:12\$,OC:LC\$,I:21\$,OC:SAdd\$,OC:LC\$,ST:println\$,OC:UIK\$,\$]")
-        code.add(OCVM.EvalString)
+        code.add(OCVM.LinkEvalString)
         //
         val vm = DmNPVMInterpreter()
         vm.fastInit()

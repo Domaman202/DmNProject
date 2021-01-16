@@ -1,5 +1,7 @@
 package ru.DmN.DmNProject.CDCS
 
+import ru.DmN.DmNProject.Data.DmNPDVars
+import ru.DmN.DmNProject.Data.DmNPType
 import ru.DmN.DmNProject.OpCode.IOpCode
 
 object ODCS {
@@ -8,22 +10,29 @@ object ODCS {
     fun StringToValue(str: String): Any? {
         if (str[0] != '$' || str[1] != '[') {
             val i = str.indexOf(':')
-            val type = str.substring(0, i)
-            val value = str.substring(i + 1)
 
-            return when (type) {
-                "B"     -> value.toBoolean()
-                "BT"    -> value.toByte()
-                "S"     -> value.toShort()
-                "I"     -> value.toInt()
-                "L"     -> value.toLong()
-                "F"     -> value.toFloat()
-                "D"     -> value.toDouble()
-                "ST"    -> value
-                "NULL"  -> null
-                "OC"    -> StringToOpCode(value)
-                else    -> null
+            if (i >= 0) {
+                val type = str.substring(0, i)
+                val value = str.substring(i + 1)
+
+                return when (type) {
+                    "B"     -> value.toBoolean()
+                    "BT"    -> value.toByte()
+                    "S"     -> value.toShort()
+                    "I"     -> value.toInt()
+                    "L"     -> value.toLong()
+                    "F"     -> value.toFloat()
+                    "D"     -> value.toDouble()
+                    "ST"    -> value
+                    "NULL"  -> null
+                    "OC"    -> StringToOpCode   (value)
+                    "DV"    -> StringToDV       (value)
+                    "T"     -> StringToT        (value)
+                    else -> null
+                }
             }
+
+            return str
         } else if (str[0] == '$' && str[1] == '[') {
             val result = ArrayList<Any?>()
 
@@ -101,4 +110,36 @@ object ODCS {
     }
 
     inline fun StringToOpCode(str: String): IOpCode? = OCC[str]
+
+    fun StringToDV(str: String): DmNPDVars {
+        return when (str) {
+            "Def"           -> DmNPDVars.Default
+            "Ext"           -> DmNPDVars.Extendable
+            "Ann"           -> DmNPDVars.Annotateble
+            "Ref"           -> DmNPDVars.Referencable
+            "FM"            -> DmNPDVars.FM
+            "EFM"           -> DmNPDVars.EFM
+            "RFM"           -> DmNPDVars.RFM
+            "AFM"           -> DmNPDVars.AFM
+            "REFM"          -> DmNPDVars.REFM
+            "AEFM"          -> DmNPDVars.AEFM
+            "AREFM"         -> DmNPDVars.AREFM
+            else            -> throw Exception()
+        }
+    }
+
+    fun StringToT(str: String): DmNPType {
+        return when (str) {
+            "N" -> DmNPType.NULL
+            "O" -> DmNPType.OBJECT
+            "R" -> DmNPType.REFERENCE
+
+            "V" -> DmNPType.VAR
+            "K" -> DmNPType.KMETHOD
+            "M" -> DmNPType.METHOD
+            "C" -> DmNPType.CLASS
+            "P" -> DmNPType.PACKAGE
+            else -> throw Exception()
+        }
+    }
 }

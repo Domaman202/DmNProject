@@ -34,42 +34,10 @@ open class DmNPDataMap : MutableMap<String, IDmNPData>, Iterable<IDmNPData>
     }
     //
     fun add(data: IDmNPData) = put(data.name, data)
-    override fun iterator(): DmNPDataIterator {
-        return object : DmNPDataIterator {
-            val size: Int get() = da.size
-            var c: Int = 0
-
-            override fun prevName(): String = da[--c].name
-            override fun lastName(): String = da[c].name
-            override fun nextName(): String = da[c++].name
-
-            override fun prevType(): DmNPType = da[--c].type
-            override fun lastType(): DmNPType = da[c].type
-            override fun nextType(): DmNPType = da[++c].type
-
-            override fun prevValue(): Any? = da[--c].value
-            override fun lastValue(): Any? = da[c].value
-            override fun nextValue(): Any? = da[++c].value
-
-            override fun prevAnnotations(): ArrayList<IDmNPData>? = if (da[--c] is IAnnotationStorage) (da[c] as IAnnotationStorage).annotations else null
-            override fun lastAnnotations(): ArrayList<IDmNPData>? = if (da[c]   is IAnnotationStorage) (da[c] as IAnnotationStorage).annotations else null
-            override fun nextAnnotations(): ArrayList<IDmNPData>? = if (da[++c] is IAnnotationStorage) (da[c] as IAnnotationStorage).annotations else null
-
-            override fun prevReference(): DmNPDataMap? = if (da[--c] is IReferenceStorage) (da[c] as IReferenceStorage).reference else null
-            override fun lastReference(): DmNPDataMap? = if (da[c] is IReferenceStorage) (da[c] as IReferenceStorage).reference else null
-            override fun nextReference(): DmNPDataMap? = if (da[++c] is IReferenceStorage) (da[c] as IReferenceStorage).reference else null
-
-            override fun hasNext():     Boolean = c < size
-            override fun next():        IDmNPData = da[++c]
-            override fun nextIndex():   Int = c + 1
-
-            override fun last():        IDmNPData = da[c]
-            override fun lastIndex():   Int = c
-
-            override fun hasPrevious():     Boolean = c > 0
-            override fun previous():        IDmNPData = da[--c]
-            override fun previousIndex():   Int = c - 1
-        }
+    override fun iterator(): Iterator<IDmNPData> = object : Iterator<IDmNPData> {
+        var i = 0
+        override fun hasNext(): Boolean = i != size
+        override fun next(): IDmNPData = da[i++]
     }
 
     // Default methods
@@ -144,7 +112,7 @@ open class DmNPDObjectMap : DmNPDataMap
         if (instance != null)
             this.instance = instance
 
-        if (parent && result == null && this.instance != null) {
+        if (parent && result == null && this.instance is IExtending) {
             for (e in (this.instance!! as IExtending).ext) {
                 if (e.get() != this.instance) {
                     result = (e.get() as IFMStorage).fm[key, e.get()]
@@ -222,45 +190,6 @@ open class DmNPRDataMap : MutableMap<String, DmNPReference<IDmNPData>>, Iterable
     //
     fun add(data: DmNPReference<IDmNPData>) = put(data.get().name, data)
 
-    override fun iterator(): Iterator<DmNPReference<IDmNPData>> = TODO("Not yet implemented")
-//    override fun iterator(): DmNPDataIterator {
-//        return object : DmNPDataIterator {
-//            val size: Int get() = da.size
-//            var c: Int = 0
-//
-//            override fun prevName(): String = da[--c].name
-//            override fun lastName(): String = da[c].name
-//            override fun nextName(): String = da[c++].name
-//
-//            override fun prevType(): DmNPType = da[--c].type
-//            override fun lastType(): DmNPType = da[c].type
-//            override fun nextType(): DmNPType = da[++c].type
-//
-//            override fun prevValue(): Any? = da[--c].value
-//            override fun lastValue(): Any? = da[c].value
-//            override fun nextValue(): Any? = da[++c].value
-//
-//            override fun prevAnnotations(): ArrayList<IDmNPData>? = if (da[--c] is IAnnotationStorage) (da[c] as IAnnotationStorage).annotations else null
-//            override fun lastAnnotations(): ArrayList<IDmNPData>? = if (da[c]   is IAnnotationStorage) (da[c] as IAnnotationStorage).annotations else null
-//            override fun nextAnnotations(): ArrayList<IDmNPData>? = if (da[++c] is IAnnotationStorage) (da[c] as IAnnotationStorage).annotations else null
-//
-//            override fun prevReference(): DmNPDataMap? = if (da[--c] is IReferenceStorage) (da[c] as IReferenceStorage).reference else null
-//            override fun lastReference(): DmNPDataMap? = if (da[c] is IReferenceStorage) (da[c] as IReferenceStorage).reference else null
-//            override fun nextReference(): DmNPDataMap? = if (da[++c] is IReferenceStorage) (da[c] as IReferenceStorage).reference else null
-//
-//            override fun hasNext():     Boolean = c < size
-//            override fun next():        IDmNPData = da[++c]
-//            override fun nextIndex():   Int = c + 1
-//
-//            override fun last():        IDmNPData = da[c]
-//            override fun lastIndex():   Int = c
-//
-//            override fun hasPrevious():     Boolean = c > 0
-//            override fun previous():        IDmNPData = da[--c]
-//            override fun previousIndex():   Int = c - 1
-//        }
-//    }
-
     // Default methods
     override fun equals(other: Any?): Boolean = da == other
     override fun hashCode(): Int = da.hashCode()
@@ -314,4 +243,10 @@ open class DmNPRDataMap : MutableMap<String, DmNPReference<IDmNPData>>, Iterable
                 m[da[i].get().name] = da[i]
             return m.entries
         }
+
+    override fun iterator(): Iterator<DmNPReference<IDmNPData>> = object : Iterator<DmNPReference<IDmNPData>> {
+        var i = 0
+        override fun hasNext(): Boolean = i != size
+        override fun next(): DmNPReference<IDmNPData> = da[i++]
+    }
 }

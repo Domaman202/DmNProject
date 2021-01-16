@@ -30,6 +30,8 @@ enum class OCData: IOpCode {
     CopyAddData,
     RemoveData,
     GetRemoveData,
+    GetData,
+    CopyGetData,
     //
     AddToValue,
     CopyAddToValue,
@@ -75,6 +77,13 @@ enum class OCAMath: IMathOpCode {
 enum class OCVM: IOpCode {
     CodeToString,
     StringToCode,
-    EvalCode,
-    EvalString
+
+    GlobalEvalCode,
+    GlobalEvalString,
+
+    NoLinkEvalCode,
+    NoLinkEvalString,
+
+    LinkEvalCode,
+    LinkEvalString
 }

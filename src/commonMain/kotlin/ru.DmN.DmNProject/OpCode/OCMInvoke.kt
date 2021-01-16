@@ -2,7 +2,6 @@ package ru.DmN.DmNProject.OpCode
 
 import ru.DmN.DmNProject.CDCS.ODCS
 import ru.DmN.DmNProject.Data.IDmNPData
-import ru.DmN.DmNProject.Data.IFMStorage
 import ru.DmN.DmNProject.VM.*
 
 object OCMInvoke {
@@ -10,9 +9,9 @@ object OCMInvoke {
         // Invoke
         // Kotlin
         ODCS.OCC["UIK"] = OCInvoke.UnsafeInvokeKotlin
-        OpCodeManager.OpCodes[OCInvoke.UnsafeInvokeKotlin] = { _, vm, c, ci ->
+        OCManager.OC[OCInvoke.UnsafeInvokeKotlin] = { _, vm, c, ci ->
             val names = vm.stack.pop()
-            if (names is String) {
+                if (names is String) {
                 val f = DmNPUtils.findElement(vm, arrayListOf(names))!!
                 throwCast<kotlin_function>(
                     f.value
@@ -26,7 +25,7 @@ object OCMInvoke {
         }
         // Virtual
         ODCS.OCC["UIV"] = OCInvoke.UnsafeInvokeVirtual
-        OpCodeManager.OpCodes[OCInvoke.UnsafeInvokeVirtual] = { _, vm, _, _ ->
+        OCManager.OC[OCInvoke.UnsafeInvokeVirtual] = { _, vm, _, _ ->
             val names = vm.stack.pop()
 
             val m: IDmNPData? = if (names is String)

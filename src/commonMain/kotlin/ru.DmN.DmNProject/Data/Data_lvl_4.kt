@@ -10,15 +10,21 @@ open class DmNPREFMData(
     type: DmNPType,
     value: Any? = null,
     fm: DmNPDObjectMap? = null,
-    ext: DmNPRDataMap = DmNPRDataMap(),
-    override val reference: DmNPDataMap = DmNPDataMap()
+    ext: DmNPRDataMap? = null,
+    reference: DmNPDataMap? = null
 ) : DmNPEFMData(name, type, value, fm, ext), IReferenceStorage
+{
+    override val reference: DmNPDataMap = reference ?: DmNPDataMap()
+}
 
 open class DmNPAEFMData(
     name: String,
     type: DmNPType,
     value: Any? = null,
     fm: DmNPDObjectMap? = null,
-    ext: DmNPRDataMap = DmNPRDataMap(),
-    override var annotations: ArrayList<IDmNPData> = ArrayList()
+    ext: DmNPRDataMap? = null,
+    annotations: ArrayList<IDmNPData>? = null
 ) : DmNPEFMData(name, type, value, fm, ext), IAnnotationStorage
+{
+    override val annotations: ArrayList<IDmNPData> = annotations ?: ArrayList()
+}

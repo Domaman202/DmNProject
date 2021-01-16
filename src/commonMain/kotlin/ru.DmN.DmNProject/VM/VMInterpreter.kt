@@ -27,7 +27,7 @@ open class DmNPVMInterpreter : DmNPVM
         while (codeIterator.hasNext()) {
             val codeLine = codeIterator.next()
             if (codeLine is IOpCode)
-                OpCodeManager.parse(codeLine, this, code, codeIterator)
+                OCManager.parse(codeLine, this, code, codeIterator)
         }
     }
 }
