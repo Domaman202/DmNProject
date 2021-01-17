@@ -140,7 +140,7 @@ class testing {
     }
 
     @Test
-    fun test() {
+    fun stringEvalTest() {
         println("Test started!!!\n\n")
         //
         val code = ArrayList<Any?>()

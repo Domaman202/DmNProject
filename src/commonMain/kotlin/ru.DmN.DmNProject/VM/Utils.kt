@@ -17,6 +17,15 @@ inline fun <reified Out> throwCast(v: Any?): Out = if (v is Out) v else throw Cl
 class DmNPUtils
 {
     companion object {
+        /**
+         * Вызывает функцию
+         * @param f Функция
+         * @param vm Виртуальная машина
+         * @param c Массив кода
+         * @param ci Итератор кода
+         * @param instance Обьект которому принадлежит функция
+         * @return Она ничего не возвращает лол
+         */
         fun callFunction(f: Any?, vm: DmNPVM, c: ArrayList<Any?>, ci: ListIterator<Any?>, instance: IDmNPData) {
             if (f is ArrayList<*>) {
                 val mVM = DmNPVMInterpreter()
@@ -33,6 +42,9 @@ class DmNPUtils
 
         /**
          * Осуществляет поиск обьекта по пакету
+         * @param names Имена которые нужно искать
+         * @param p Обьект в котором нужно искать
+         * @return Обьект который мы нашли или null в случае если обьект не был найден
          */
         fun findPackage(
             names: ArrayList<String>,
@@ -64,6 +76,7 @@ class DmNPUtils
          * @param p Парамент разрешает/запрещает (по умолчанию разрешает) использовать преведущие VM для поиска элемента
          * @param n Парамент разрешает/запрещает (по умолчанию разрешает) использовать следующей VM для поиска элемента
          * @param le_ Текущий элемент (если есть)
+         * @return Найденый элемент или null в случае если элемент не удалось найти
          */
         fun findElement(
             vm: DmNPVM?,
@@ -111,6 +124,7 @@ class DmNPUtils
          * Осуществяет поиск обьекта в текущем обьекте
          * @param le_ Текущий обьект
          * @param name Имя нужного обьекта
+         * @return Возвращает пару значений: <Обьект который мы нашли> <Булевое значение нужное для функции findElement
          */
         fun findWithElement(le_: IDmNPData?, name: String): Pair<IDmNPData?, Boolean> {
             var le = le_
@@ -132,7 +146,14 @@ class DmNPUtils
             return Pair(le, false)
         }
 
-        private fun findPrev(vm: DmNPVM, names: ArrayList<String>, ole: IDmNPData?): IDmNPData? {
+        /**
+         * Выполняет поиск по преведущим VM текущем VM
+         * @param vm Текущая VM
+         * @param names Имена по которым будет осуществляться поиск
+         * @param ole Текущий обьект (если есть)
+         * @return Найденный обьект или null если обьект не был найден
+         */
+        fun findPrev(vm: DmNPVM, names: ArrayList<String>, ole: IDmNPData? = null): IDmNPData? {
             for (prev in vm.prev) {
                 val le = findElement(prev, names, n = false)
 
@@ -143,7 +164,14 @@ class DmNPUtils
             return ole
         }
 
-        private fun findNext(vm: DmNPVM, names: ArrayList<String>, ole: IDmNPData?): IDmNPData? {
+        /**
+         * Выполняет поиск по следующим VM текущем VM
+         * @param vm Текущая VM
+         * @param names Имена по которым будет осуществляться поиск
+         * @param ole Текущий обьект (если есть)
+         * @return Найденный обьект или null если обьект не был найден
+         */
+        fun findNext(vm: DmNPVM, names: ArrayList<String>, ole: IDmNPData? = null): IDmNPData? {
             for (next in vm.next) {
                 val le = findElement(next, names, p = false)
 
@@ -174,6 +202,12 @@ class DmNPUtils
             return ole as IDmNPData
         }
 
+        /**
+         * Осуществляет поиск обьекта по обьекту
+         * @param e Обьект по которому осуществяется поиск
+         * @param name Имя нужного нам обьекта
+         * @return Нужный нам обьект или null в случае если обьект не был найден
+         */
         fun findWith(
             e: IDmNPData,
             name: String

@@ -141,6 +141,11 @@ open class DmNPVM
          */
         val fullIVM = DmNPVM()
 
+        /**
+         * Null-овый обьект
+         */
+        val nullObject = DmNPData("", DmNPType.NULL, null)
+
         init {
             fastIVM.fastInit()
             fullIVM.init()

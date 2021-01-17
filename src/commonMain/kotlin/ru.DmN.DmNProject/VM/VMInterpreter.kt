@@ -21,6 +21,10 @@ open class DmNPVMInterpreter : DmNPVM
             eStack = Stack()
     }
 
+    /**
+     * Выполняет код
+     * @param code Код который нужно выполнять
+     */
     fun parse(code: ArrayList<Any?>) {
         val codeIterator = code.listIterator()
 
