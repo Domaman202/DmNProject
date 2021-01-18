@@ -89,3 +89,39 @@ fun smartSlice(str: String, splitter: Char): ArrayList<String> {
 
     return r
 }
+
+fun smartSlice(str: String, start: Char, end: Char, mode: SmartSliceMode): String {
+    return if (mode == SmartSliceMode.NORMAL) {
+        str.substring(str.indexOf(start)..str.indexOf(end))
+    } else {
+        val result = StringBuilder()
+
+        var j = 0
+        for (i in str.indices) {
+            val c = str[i]
+
+            if (j > 0) {
+                if (c == start || c == end) {
+                    if (c == end && (str[i - 1] != '$' || (str.length > 1 && str[i - 1] == '$' && str[i - 2] == '$'))) {
+                        j--
+
+                        if (j == 0)
+                            break
+                    } else if (c == start && (str[i - 1] != '$' || (str.length > 1 && str[i - 1] == '$' && str[i - 2] == '$')))
+                        j++
+                    else
+                        result.append(c)
+                } else
+                    result.append(c)
+            } else if (c == start && ((str.length == 1 || str[i - 1] != '$') || (str.length > 1 && str[i - 1] == '$' && str[i - 2] == '$')))
+                j++
+        }
+
+        result.toString()
+    }
+}
+
+enum class SmartSliceMode {
+    NORMAL,
+    FUNCTION
+}

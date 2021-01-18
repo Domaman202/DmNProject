@@ -73,14 +73,14 @@ open class DmNPVM
     fun fastInit() {
         OCManager.init()
         // function "println" init
-        val functionPrintln = DmNPData(
+        val functionPrintln = DmNPVData(
             "println",
             DmNPType.KMETHOD,
             fun (vm: DmNPVM, _: ArrayList<Any?>, _: ListIterator<Any?>, _: IDmNPData) = println(vm.stack.pop())
         )
         heap.add(functionPrintln)
         // class "Class" init
-        val classClass = DmNPRFMData(
+        val classClass = DmNPVRFMData(
             "Class",
             DmNPType.CLASS,
             null,
@@ -89,7 +89,7 @@ open class DmNPVM
         )
         heap.add(classClass)
         // class "Object" init
-        val objectObject = DmNPEFMData(
+        val objectObject = DmNPVEFMData(
             "Object",
             DmNPType.CLASS,
             null,
@@ -106,7 +106,7 @@ open class DmNPVM
      */
     fun initSystem() {
         //
-        val packageSystem = DmNPEFMData(
+        val packageSystem = DmNPVEFMData(
             "System",
             DmNPType.CLASS,
             null,
@@ -116,7 +116,7 @@ open class DmNPVM
         packageSystem.fm.add(packageSystem)
         heap.add(packageSystem)
         //
-        val classConsole = DmNPEFMData(
+        val classConsole = DmNPVEFMData(
             "Console",
             DmNPType.CLASS,
             null,
@@ -125,7 +125,7 @@ open class DmNPVM
         )
         packageSystem.fm.add(classConsole)
         //
-        classConsole.fm.add(DmNPData("println", DmNPType.KMETHOD, fun (vm: DmNPVM, _: ArrayList<Any?>, _: ListIterator<Any?>, _: IDmNPData) = println(vm.stack.pop())))
+        classConsole.fm.add(DmNPVData("println", DmNPType.KMETHOD, fun (vm: DmNPVM, _: ArrayList<Any?>, _: ListIterator<Any?>, _: IDmNPData) = println(vm.stack.pop())))
     }
 
     /**
@@ -144,7 +144,7 @@ open class DmNPVM
         /**
          * Null-овый обьект
          */
-        val nullObject = DmNPData("", DmNPType.NULL, null)
+        val nullObject = DmNPData("", DmNPType.NULL)
 
         init {
             fastIVM.fastInit()

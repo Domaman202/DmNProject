@@ -2,6 +2,7 @@ package ru.DmN.DmNProject.OpCode
 
 import ru.DmN.DmNProject.CDCS.ODCS
 import ru.DmN.DmNProject.Data.IDmNPData
+import ru.DmN.DmNProject.Data.IValueStorage
 import ru.DmN.DmNProject.VM.*
 
 object OCMInvoke {
@@ -14,12 +15,12 @@ object OCMInvoke {
                 if (names is String) {
                 val f = DmNPUtils.findElement(vm, arrayListOf(names))!!
                 throwCast<kotlin_function>(
-                    f.value
+                    (f as IValueStorage).value
                 )(vm, c, ci, f)
             } else if (names is List<*>) {
                 val o = DmNPUtils.findElement(vm, throwCast(names.subList(0, names.lastIndex - 1)))!!
                 throwCast<kotlin_function>(
-                    DmNPUtils.findWith(o, names[names.lastIndex] as String)!!.value
+                    (DmNPUtils.findWith(o, names[names.lastIndex] as String) as IValueStorage).value
                 )(vm, c, ci, o)
             }
         }
@@ -38,7 +39,7 @@ object OCMInvoke {
                 mVM.prev.add(vm)
                 vm.next.add(mVM)
 
-                mVM.parse(throwCast(m.value))
+                mVM.parse(throwCast((m as IValueStorage).value))
 
                 vm.next.remove(mVM)
             }

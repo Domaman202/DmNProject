@@ -22,13 +22,13 @@ open class DmNPDataMap : MutableMap<String, IDmNPData>, Iterable<IDmNPData>
     }
 
     // Methods
-    fun DmNPData(): IDmNPData {
-        val data = DmNPData("", DmNPType.REFERENCE)
+    fun DmNPData(): DmNPVData {
+        val data = DmNPVData("", DmNPType.REFERENCE)
         data.value = this
         return data
     }
-    fun DmNPData(name: String): DmNPData {
-        val data = DmNPData(name, DmNPType.REFERENCE)
+    fun DmNPData(name: String): DmNPVData {
+        val data = DmNPVData(name, DmNPType.REFERENCE)
         data.value = this
         return data
     }
@@ -177,13 +177,13 @@ open class DmNPRDataMap : MutableMap<String, DmNPReference<IDmNPData>>, Iterable
     }
 
     // Methods
-    fun DmNPData(): IDmNPData {
-        val data = DmNPData("", DmNPType.REFERENCE)
+    fun DmNPVData(): DmNPVData {
+        val data = DmNPVData("", DmNPType.REFERENCE)
         data.value = this
         return data
     }
-    fun DmNPData(name: String): DmNPData {
-        val data = DmNPData(name, DmNPType.REFERENCE)
+    fun DmNPVData(name: String): DmNPVData {
+        val data = DmNPVData(name, DmNPType.REFERENCE)
         data.value = this
         return data
     }

@@ -8,11 +8,22 @@ import ru.DmN.DmNProject.VM.DmNPReference
 open class DmNPREFMData(
     name: String,
     type: DmNPType,
+    fm: DmNPDObjectMap? = null,
+    ext: DmNPRDataMap? = null,
+    reference: DmNPDataMap? = null
+) : DmNPEFMData(name, type, fm, ext), IReferenceStorage
+{
+    override val reference: DmNPDataMap = reference ?: DmNPDataMap()
+}
+
+open class DmNPVREFMData(
+    name: String,
+    type: DmNPType,
     value: Any? = null,
     fm: DmNPDObjectMap? = null,
     ext: DmNPRDataMap? = null,
     reference: DmNPDataMap? = null
-) : DmNPEFMData(name, type, value, fm, ext), IReferenceStorage
+) : DmNPVEFMData(name, type, value, fm, ext), IReferenceStorage
 {
     override val reference: DmNPDataMap = reference ?: DmNPDataMap()
 }
@@ -20,11 +31,22 @@ open class DmNPREFMData(
 open class DmNPAEFMData(
     name: String,
     type: DmNPType,
+    fm: DmNPDObjectMap? = null,
+    ext: DmNPRDataMap? = null,
+    annotations: ArrayList<IDmNPData>? = null
+) : DmNPEFMData(name, type, fm, ext), IAnnotationStorage
+{
+    override val annotations: ArrayList<IDmNPData> = annotations ?: ArrayList()
+}
+
+open class DmNPVAEFMData(
+    name: String,
+    type: DmNPType,
     value: Any? = null,
     fm: DmNPDObjectMap? = null,
     ext: DmNPRDataMap? = null,
     annotations: ArrayList<IDmNPData>? = null
-) : DmNPEFMData(name, type, value, fm, ext), IAnnotationStorage
+) : DmNPVEFMData(name, type, value, fm, ext), IAnnotationStorage
 {
     override val annotations: ArrayList<IDmNPData> = annotations ?: ArrayList()
 }

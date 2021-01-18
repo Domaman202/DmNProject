@@ -1,11 +1,8 @@
 package ru.DmN.DmNProject.VM
 
+import ru.DmN.DmNProject.Data.*
 import ru.DmN.DmNProject.Data.Containers.DmNPDataMap
 import ru.DmN.DmNProject.Data.Containers.Stack
-import ru.DmN.DmNProject.Data.DmNPType
-import ru.DmN.DmNProject.Data.IDmNPData
-import ru.DmN.DmNProject.Data.IExtending
-import ru.DmN.DmNProject.Data.IFMStorage
 
 typealias kotlin_function = (vm: DmNPVM, c: ArrayList<Any?>, ci: ListIterator<Any?>, instance: IDmNPData?) -> Unit
 inline fun <reified Out> throwCast(v: Any?): Out = if (v is Out) v else throw ClassCastException()
@@ -53,14 +50,17 @@ class DmNPUtils
             var le: IDmNPData? = null
 
             for (i in 0 until names.size) {
-                le = if (i == 0)
-                    (p.value as DmNPDataMap)[names[i]]
-                else {
+                le = if (i == 0) {
+                    if (p is IValueStorage)
+                        (p.value as DmNPDataMap)[names[i]]
+                    else
+                        null
+                } else {
                     val name = names[i]
                     val ole = le!!
 
                     if (ole.type == DmNPType.PACKAGE)
-                        (ole.value as DmNPDataMap)[name]
+                        ((ole as IValueStorage).value as DmNPDataMap)[name]
                     else
                         return ole
                 }
@@ -130,7 +130,7 @@ class DmNPUtils
             var le = le_
             val ole = le!!
             if (le.type == DmNPType.PACKAGE) {
-                le = (le.value as DmNPDataMap)[name]
+                le = ((le as IValueStorage).value as DmNPDataMap)[name]
             }
 
             if ((le == null || le == ole) && ole is IFMStorage) {

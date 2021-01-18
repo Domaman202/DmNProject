@@ -8,6 +8,9 @@ import ru.DmN.DmNProject.VM.DmNPReference
 interface IDmNPData {
     val name: String
     val type: DmNPType
+}
+
+interface IValueStorage {
     var value: Any?
 }
 

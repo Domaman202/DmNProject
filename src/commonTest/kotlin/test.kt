@@ -1,4 +1,6 @@
 import ru.DmN.DmNProject.CDCS.CS
+import ru.DmN.DmNProject.CDCS.SmartSliceMode
+import ru.DmN.DmNProject.CDCS.smartSlice
 import ru.DmN.DmNProject.Data.Containers.DmNPDataMap
 import ru.DmN.DmNProject.Data.Containers.Stack
 import ru.DmN.DmNProject.Data.DmNPData
@@ -174,5 +176,10 @@ class testing {
         vm.parse(code)
         //
         println("\n\nTest competed!!!")
+    }
+
+    @Test
+    fun test() {
+        println(smartSlice("123 { 202, 213, 666, 999 } 321", '{', '}', SmartSliceMode.FUNCTION))
     }
 }
